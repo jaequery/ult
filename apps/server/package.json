@@ -18,7 +18,10 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "db:migrate:new": "npx typeorm-ts-node-commonjs migration:generate -d ./db/config.ts",
+    "db:migrate:up": "npx typeorm-ts-node-commonjs migration:run -d ./db/config.ts",
+    "db:migrate:down": "npx typeorm-ts-node-commonjs migration:revert -d ./db/config.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -28,9 +31,10 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/typeorm": "^10.0.2",
     "@trpc/server": "^10.45.1",
+    "cors": "^2.8.5",
     "joi": "^17.12.1",
     "pg": "^8.11.3",
-    "reflect-metadata": "^0.2.0",
+    "reflect-metadata": "^0.2.1",
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.20",
     "typeorm-naming-strategies": "^4.1.0",
@@ -40,6 +44,7 @@
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
+    "@nestjs/swagger": "^7.3.0",
     "@nestjs/testing": "^10.0.0",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.2",
@@ -47,6 +52,7 @@
     "@types/supertest": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
+    "dotenv": "^16.4.4",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",

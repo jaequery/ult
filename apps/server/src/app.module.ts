@@ -1,19 +1,17 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as Joi from 'joi';
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
-import { initializeTransactionalContext } from 'typeorm-transactional';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
 import { TrpcModule } from './trpc/trpc.module';
 import { UserModule } from './user/user.module';
-
-// enable TypeORM @Transactional()
-initializeTransactionalContext();
+import { dbConfigOptions } from '../db/config';
 
 @Module({
   imports: [
+    AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
       expandVariables: true,
@@ -31,21 +29,7 @@ initializeTransactionalContext();
         DB_PASS: Joi.string().default('postgres'),
       }),
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [],
-      useFactory: (configService: ConfigService) => ({
-        type: (configService.get<string>('DB_TYPE') as any) ?? 'postgres',
-        host: configService.get<string>('DB_HOST'),
-        port: configService.get<number>('DB_PORT'),
-        ssl: configService.get<boolean>('DB_SSL'),
-        username: configService.get<string>('DB_USER'),
-        password: configService.get<string>('DB_PASS'),
-        database: configService.get<string>('DB_NAME'),
-        autoLoadEntities: true,
-        namingStrategy: new SnakeNamingStrategy(),
-      }),
-      inject: [ConfigService],
-    }),
+    TypeOrmModule.forRoot(dbConfigOptions),
     TrpcModule,
     UserModule,
   ],
