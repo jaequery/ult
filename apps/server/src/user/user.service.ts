@@ -1,10 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { Repository } from 'typeorm/repository/Repository';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm/repository/Repository';
+import { z } from 'zod';
+import { CreateUserDto } from './dto/create-user.dto';
+import { User } from './user.entity';
 
 @Injectable()
 export class UserService {
@@ -19,8 +19,9 @@ export class UserService {
     return users;
   }
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(createUserDto: z.infer<typeof CreateUserDto>) {
+    const user = await this.userRepository.save(createUserDto);
+    return user;
   }
 
   async findAll() {
@@ -30,11 +31,11 @@ export class UserService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+    return this.userRepository.findOne({
+      where: {
+        id,
+      },
+    });
   }
 
   remove(id: number) {
