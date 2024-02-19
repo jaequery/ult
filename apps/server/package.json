@@ -1,5 +1,5 @@
 {
-  "name": "ultimate-stack",
+  "name": "server",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -26,9 +26,15 @@
     "@nestjs/core": "^10.0.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/typeorm": "^10.0.2",
     "@trpc/server": "^10.45.1",
+    "joi": "^17.12.1",
+    "pg": "^8.11.3",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
+    "typeorm": "^0.3.20",
+    "typeorm-naming-strategies": "^4.1.0",
+    "typeorm-transactional": "^0.5.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
