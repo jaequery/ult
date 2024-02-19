@@ -62,6 +62,10 @@ export class User {
 
   @ApiPropertyOptional()
   @Column('timestamp', { nullable: true })
+  public visited: Date;
+
+  @ApiPropertyOptional()
+  @Column('timestamp', { nullable: true })
   public authenticated?: Date;
 
   @DeleteDateColumn()

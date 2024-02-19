@@ -19,9 +19,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "db:migrate:new": "npx typeorm-ts-node-commonjs migration:generate -d ./db/config.ts",
-    "db:migrate:up": "npx typeorm-ts-node-commonjs migration:run -d ./db/config.ts",
-    "db:migrate:down": "npx typeorm-ts-node-commonjs migration:revert -d ./db/config.ts"
+    "prestart": "rimraf dist && yarn run build",
+    "db:migrate:new": "pnpm prestart && NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node ./node_modules/typeorm/cli.js migration:generate -d ./db/config.ts",
+    "db:migrate:up": "pnpm prestart && NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node ./node_modules/typeorm/cli.js migration:run -d ./db/config.ts",
+    "db:migrate:down": "pnpm prestart && NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node ./node_modules/typeorm/cli.js migration:revert -d ./db/config.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as Joi from 'joi';
+import { dataSourceOptions } from '../db/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { TrpcModule } from './trpc/trpc.module';
 import { UserModule } from './user/user.module';
-import { dbConfigOptions } from '../db/config';
 
 @Module({
   imports: [
@@ -29,7 +29,7 @@ import { dbConfigOptions } from '../db/config';
         DB_PASS: Joi.string().default('postgres'),
       }),
     }),
-    TypeOrmModule.forRoot(dbConfigOptions),
+    TypeOrmModule.forRoot(dataSourceOptions),
     TrpcModule,
     UserModule,
   ],

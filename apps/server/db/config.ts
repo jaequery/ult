@@ -14,10 +14,10 @@ export const dataSourceOptions: DataSourceOptions = {
   synchronize: false,
   logging: true,
   entities: [
-    './src/**/*.entity{.ts,.js}',
-    './src/**/entities/*.entity{.ts,.js}',
+    './dist/src/**/*.entity{.ts,.js}',
+    './dist/src/**/entities/*.entity{.ts,.js}',
   ],
-  migrations: ['./db/migrations/*{.ts,.js}'],
+  migrations: ['./dist/db/migrations/*{.ts,.js}'],
 };
 
 const dataSource = new DataSource(dataSourceOptions);
