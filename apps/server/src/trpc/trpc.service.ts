@@ -4,7 +4,8 @@ import { initTRPC } from '@trpc/server';
 @Injectable()
 export class TrpcService {
   trpc = initTRPC.create();
-  procedure = this.trpc.procedure;
+  publicProcedure = this.trpc.procedure;
+  authProcedure = this.trpc.procedure;
   router = this.trpc.router;
   mergeRouters = this.trpc.mergeRouters;
 }
