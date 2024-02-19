@@ -1,31 +1,34 @@
 import { useCallback, useEffect, useState } from "react";
 
-// Updated to accept a function that returns a tRPC procedure call
-export function useTrpcQuery<TResult>(
-  queryFn: () => Promise<TResult>,
-  load = false
+export function useTrpcQuery<TResult, TParams extends any[]>(
+  queryFn: (...params: TParams) => Promise<TResult>,
+  autoLoad: boolean = true
 ) {
   const [data, setData] = useState<TResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const query = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const result = await queryFn();
-      setData(result);
-    } catch (error) {
-      setError(error as Error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  // Adjusted to handle calls without parameters more gracefully
+  const query = useCallback(
+    async (...params: TParams | []) => {
+      setIsLoading(true);
+      try {
+        const result = await queryFn(...(params as TParams));
+        setData(result);
+      } catch (error) {
+        setError(error as Error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [queryFn]
+  );
 
   useEffect(() => {
-    if (load) {
+    if (autoLoad) {
       query();
     }
-  }, [load, query]);
+  }, [autoLoad, query]);
 
   return { query, data, isLoading, error };
 }

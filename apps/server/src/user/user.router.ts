@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { TrpcService } from '@server/trpc/trpc.service';
 import { UserService } from '@server/user/user.service';
 import { z } from 'zod';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, UserFindAllDto } from './dto/user.dto';
 
 @Injectable()
 export class UserRouter {
@@ -30,9 +30,9 @@ export class UserRouter {
             return this.userService.findOne(input.id);
           }),
         findAll: this.trpcService.publicProcedure
-          .input(z.object({}))
-          .query(async ({}) => {
-            return this.userService.findAll();
+          .input(UserFindAllDto)
+          .query(async ({ input }) => {
+            return this.userService.findAll(input);
           }),
       }),
     };

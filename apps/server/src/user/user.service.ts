@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm/repository/Repository';
 import { z } from 'zod';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto } from './dto/user.dto';
 import { User } from './user.entity';
 
 @Injectable()
@@ -24,8 +24,10 @@ export class UserService {
     return user;
   }
 
-  async findAll() {
-    const users = await this.userRepository.find();
+  async findAll(where?: { email?: string }) {
+    const users = await this.userRepository.find({
+      where,
+    });
     console.log('uss', users);
     return users;
   }
