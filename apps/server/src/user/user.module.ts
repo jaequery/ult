@@ -7,7 +7,6 @@ import { UserService } from './user.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User]), forwardRef(() => TrpcModule)],
-  controllers: [],
   providers: [UserService, UserRouter],
   exports: [UserService, UserRouter],
 })
