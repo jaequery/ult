@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm/repository/Repository';
-import { z } from 'zod';
-import { CreateUserDto } from './dto/user.dto';
+import { UserCreateDtoType } from './dto/user.dto';
 import { User } from './user.entity';
 
 @Injectable()
@@ -14,13 +13,8 @@ export class UserService {
     private readonly configService: ConfigService,
   ) {}
 
-  async test() {
-    const users = await this.userRepository.find();
-    return users;
-  }
-
-  async create(createUserDto: z.infer<typeof CreateUserDto>) {
-    const user = await this.userRepository.save(createUserDto);
+  async create(dto: UserCreateDtoType) {
+    const user = await this.userRepository.save(dto);
     return user;
   }
 
@@ -32,7 +26,7 @@ export class UserService {
     return users;
   }
 
-  findOne(id: number) {
+  async findById(id: number) {
     return this.userRepository.findOne({
       where: {
         id,
@@ -40,7 +34,7 @@ export class UserService {
     });
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return `This action removes a #${id} user`;
   }
 }

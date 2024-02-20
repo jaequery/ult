@@ -1,10 +1,15 @@
 "use client";
 
 import { useTrpcQuery } from "@web/hooks/useTrpcQuery";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
-import { UserFindAllDtoType } from "@server/user/dto/user.dto";
+import {
+  UserCreateDtoType,
+  UserFindAllDtoType,
+  UserRemoveDtoType,
+} from "@server/user/dto/user.dto";
 import { trpc } from "@web/app/trpc";
+import { useTrpcMutate } from "@web/hooks/useTrpcMutate";
 
 export default function Home() {
   const [email, setEmail] = useState<string>("");
@@ -36,14 +41,25 @@ export default function Home() {
   //   false
   // );
 
-  // const {
-  //   mutate: createUser,
-  //   data: createdUser,
-  //   isLoading: creatingUser,
-  //   error: creatingUserError,
-  // } = useTrpcMutate(async (userData: z.infer<typeof CreateUserDto>) =>
-  //   trpc.userRouter.create.mutate(userData)
-  // );
+  const {
+    // mutate: createUser,
+    mutateAsync: createUser,
+    data: createdUser,
+    isLoading: creatingUser,
+    error: creatingUserError,
+  } = useTrpcMutate(async (userData: UserCreateDtoType) =>
+    trpc.userRouter.create.mutate(userData)
+  );
+
+  const {
+    mutate: removeUser,
+    // mutateAsync: createUser,
+    data: removedUser,
+    isLoading: removingUser,
+    error: removingUserError,
+  } = useTrpcMutate(async (userData: UserRemoveDtoType) =>
+    trpc.userRouter.remove.mutate(userData)
+  );
 
   // const {
   //   query: getUsers,
@@ -85,13 +101,17 @@ export default function Home() {
           });
         }}
       />
+      {createdUser && <div>{JSON.stringify(createdUser)}</div>}
       <button
-        onClick={() => {
-          // createUser({
-          //   email: email || "jn@n.com",
-          //   firstName: "john",
-          //   lastName: "cena",
-          // });
+        onClick={async () => {
+          const createdUser = await createUser({
+            email: email || "jn@n.com",
+            firstName: "john",
+            lastName: "cena",
+          });
+          console.log("createdUserr", createdUser);
+
+          await removeUser({ id: createdUser.id || 0 });
         }}
       >
         create
