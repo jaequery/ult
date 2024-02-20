@@ -44,6 +44,9 @@ export class User {
   @Column('text', { nullable: true })
   public countryCode: string;
 
+  @Column('text', { nullable: true })
+  public gender: string;
+
   @Column('timestamp', { nullable: true })
   public verified: Date;
 

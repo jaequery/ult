@@ -16,8 +16,8 @@ export default function Home() {
   const {
     query: getUsers,
     data: users,
-    isLoading: usersLoading,
-    error: usersLoadingError,
+    isLoading: gettingUsers,
+    error: gettingUsersError,
   } = useTrpcQuery(
     useCallback(
       (opts: UserFindAllDtoType) => trpc.userRouter.findAll.query(opts),
@@ -106,9 +106,10 @@ export default function Home() {
         onClick={async () => {
           const createdUser = await createUser({
             email: email || "jn@n.com",
-            password: 'password',
+            password: "password",
             firstName: "john",
             lastName: "cena",
+            gender: "m",
           });
           console.log("createdUserr", createdUser);
 

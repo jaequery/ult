@@ -5,6 +5,7 @@ export const UserCreateDto = z.object({
   password: z.string(),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
+  gender: z.string().optional(),
 });
 export type UserCreateDtoType = z.infer<typeof UserCreateDto>;
 

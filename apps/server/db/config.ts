@@ -18,8 +18,6 @@ export const dataSourceOptions: DataSourceOptions = {
   entities: [
     './dist/src/**/*.entity{.ts,.js}',
     './dist/src/**/entities/*.entity{.ts,.js}',
-    './src/**/*.entity{.ts,.js}',
-    './src/**/entities/*.entity{.ts,.js}',
   ],
   migrations: ['./dist/db/migrations/*{.ts,.js}'],
 };

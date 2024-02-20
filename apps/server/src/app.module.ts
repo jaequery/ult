@@ -29,17 +29,7 @@ import { UserModule } from './user/user.module';
         DB_PASS: Joi.string().default('postgres'),
       }),
     }),
-    TypeOrmModule.forRoot({
-      // typeorm configuration
-      type: (process.env.TYPE as any) || 'postgres',
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT || '5432'),
-      username: process.env.DB_USER || 'postgres',
-      password: process.env.DB_PASS || 'password',
-      database: process.env.DB_NAME || 'postgres',
-      synchronize: false,
-      migrations: ['./dist/db/migrations/*{.ts,.js}'],
-    }),
+    TypeOrmModule.forRoot(dataSourceOptions),
     TrpcModule,
     UserModule,
   ],
