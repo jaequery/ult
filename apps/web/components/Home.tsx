@@ -106,6 +106,7 @@ export default function Home() {
         onClick={async () => {
           const createdUser = await createUser({
             email: email || "jn@n.com",
+            password: 'password',
             firstName: "john",
             lastName: "cena",
           });

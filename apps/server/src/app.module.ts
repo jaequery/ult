@@ -38,7 +38,6 @@ import { UserModule } from './user/user.module';
       password: process.env.DB_PASS || 'password',
       database: process.env.DB_NAME || 'postgres',
       synchronize: false,
-      entities: ['./src/user/user.entity.ts'],
       migrations: ['./dist/db/migrations/*{.ts,.js}'],
     }),
     TrpcModule,
