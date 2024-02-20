@@ -13,5 +13,14 @@ async function bootstrap() {
   const trpc = app.get(TrpcRouter);
   trpc.applyMiddleware(app);
   await app.listen(process.env.PORT || 3000);
+
+  const env = process.env.NODE_ENV || 'development';
+  if (env === 'development') {
+    console.log(
+      `apps/server dev: server started: http://localhost:${process.env.PORT || 3000}`,
+    );
+  } else {
+    console.log(`server started: ${await app.getUrl()}`);
+  }
 }
 bootstrap();

@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const UserCreateDto = z.object({
   email: z.string().email(),
+  password: z.string(),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
 });

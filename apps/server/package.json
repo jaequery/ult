@@ -22,7 +22,8 @@
     "prestart": "rimraf dist && yarn run build",
     "db:migrate:new": "pnpm prestart && NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node ./node_modules/typeorm/cli.js migration:generate -d ./db/config.ts",
     "db:migrate:up": "pnpm prestart && NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node ./node_modules/typeorm/cli.js migration:run -d ./db/config.ts",
-    "db:migrate:down": "pnpm prestart && NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node ./node_modules/typeorm/cli.js migration:revert -d ./db/config.ts"
+    "db:migrate:down": "pnpm prestart && NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node ./node_modules/typeorm/cli.js migration:revert -d ./db/config.ts",
+    "db:seed": "npx ts-node -r tsconfig-paths/register ./scripts/db-seed.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -32,22 +33,27 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/typeorm": "^10.0.2",
     "@trpc/server": "^10.45.1",
+    "bcrypt": "^5.1.1",
     "class-validator": "^0.14.1",
     "cors": "^2.8.5",
+    "date-fns": "^3.3.1",
     "joi": "^17.12.1",
     "pg": "^8.11.3",
     "reflect-metadata": "^0.2.1",
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.20",
+    "typeorm-extension": "^3.5.0",
     "typeorm-naming-strategies": "^4.1.0",
     "typeorm-transactional": "^0.5.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/swagger": "^7.3.0",
     "@nestjs/testing": "^10.0.0",
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.2",
     "@types/node": "^20.3.1",
