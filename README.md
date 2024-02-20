@@ -13,9 +13,12 @@
 	<img src="https://img.shields.io/github/languages/top/jaequery/ultima?style=flat&color=0080ff" alt="repo-top-language">
 	<img src="https://img.shields.io/github/languages/count/jaequery/ultima?style=flat&color=0080ff" alt="repo-language-count">
 <p>
-<p align="center">
-		Ultima harnesses the synergy of Nest.js, Next.js, and tRPC to offer developers an integrated, TypeScript-centric stack designed for building efficient, scalable applications. By leveraging the robust backend capabilities of Nest.js, the SSR and SSG strengths of Next.js, and the seamless type-safe API communication provided by tRPC, Ultima simplifies complex development processes. Combined with the aesthetic flexibility of Tailwind UI and the package management efficiency of pnpm, Ultima is your gateway to creating modern, engaging web applications with less effort and more fun. Whether you're building dynamic single-page applications or complex server-side rendered websites, Ultima empowers you to deliver exceptional user experiences effortlessly.
-</p>
+<p>Ultima harnesses the synergy of Nest.js, Next.js, and tRPC to offer developers an integrated, TypeScript-centric stack designed for building efficient, scalable applications. By leveraging the robust backend capabilities of Nest.js, the SSR and SSG strengths of Next.js, and the seamless type-safe API communication provided by tRPC, Ultima simplifies complex development processes.</p>
+
+<p>Combined with the aesthetic flexibility of Tailwind UI and the package management efficiency of pnpm, Ultima is your gateway to creating modern, engaging web applications with less effort and more fun. </p>
+
+<p>Whether you're building dynamic single-page applications or complex server-side rendered websites, Ultima empowers you to deliver exceptional user experiences effortlessly.</p>
+
 <hr>
 
 ##  Getting Started
