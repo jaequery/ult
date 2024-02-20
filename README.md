@@ -5,7 +5,7 @@
     <h1 align="center">ULTIMA</h1>
 </p>
 <p align="center">
-    <em>Ultima: Empowering seamless app experiences effortlessly.</em>
+    <em>Ultima: Uniting Nest.js, Next.js, and tRPC for Streamlined Development.</em>
 </p>
 <p align="center">
 	<img src="https://img.shields.io/github/license/jaequery/ultima?style=flat&color=0080ff" alt="license">
@@ -14,22 +14,7 @@
 	<img src="https://img.shields.io/github/languages/count/jaequery/ultima?style=flat&color=0080ff" alt="repo-language-count">
 <p>
 <p align="center">
-		<em>Developed with the software and tools below.</em>
-</p>
-<p align="center">
-	<img src="https://img.shields.io/badge/JavaScript-F7DF1E.svg?style=flat&logo=JavaScript&logoColor=black" alt="JavaScript">
-	<img src="https://img.shields.io/badge/Prettier-F7B93E.svg?style=flat&logo=Prettier&logoColor=black" alt="Prettier">
-	<img src="https://img.shields.io/badge/PostCSS-DD3A0A.svg?style=flat&logo=PostCSS&logoColor=white" alt="PostCSS">
-	<img src="https://img.shields.io/badge/Autoprefixer-DD3735.svg?style=flat&logo=Autoprefixer&logoColor=white" alt="Autoprefixer">
-	<img src="https://img.shields.io/badge/YAML-CB171E.svg?style=flat&logo=YAML&logoColor=white" alt="YAML">
-	<img src="https://img.shields.io/badge/Jest-C21325.svg?style=flat&logo=Jest&logoColor=white" alt="Jest">
-	<br>
-	<img src="https://img.shields.io/badge/Webpack-8DD6F9.svg?style=flat&logo=Webpack&logoColor=black" alt="Webpack">
-	<img src="https://img.shields.io/badge/React-61DAFB.svg?style=flat&logo=React&logoColor=black" alt="React">
-	<img src="https://img.shields.io/badge/ESLint-4B32C3.svg?style=flat&logo=ESLint&logoColor=white" alt="ESLint">
-	<img src="https://img.shields.io/badge/TypeScript-3178C6.svg?style=flat&logo=TypeScript&logoColor=white" alt="TypeScript">
-	<img src="https://img.shields.io/badge/tsnode-3178C6.svg?style=flat&logo=ts-node&logoColor=white" alt="tsnode">
-	<img src="https://img.shields.io/badge/JSON-000000.svg?style=flat&logo=JSON&logoColor=white" alt="JSON">
+		Ultima harnesses the synergy of Nest.js, Next.js, and tRPC to offer developers an integrated, TypeScript-centric stack designed for building efficient, scalable applications. By leveraging the robust backend capabilities of Nest.js, the SSR and SSG strengths of Next.js, and the seamless type-safe API communication provided by tRPC, Ultima simplifies complex development processes. Combined with the aesthetic flexibility of Tailwind UI and the package management efficiency of pnpm, Ultima is your gateway to creating modern, engaging web applications with less effort and more fun. Whether you're building dynamic single-page applications or complex server-side rendered websites, Ultima empowers you to deliver exceptional user experiences effortlessly.
 </p>
 <hr>
 
@@ -71,13 +56,13 @@ pnpm install
 docker-compose up -d
 ```
 
-1. Run db migration to create the database tables
+2. Run db migration to create the database tables
 
 ```sh
 pnpm db:migrate:up
 ```
 
-1. Run the db seed to populate the database with initial data
+3. Run the db seed to populate the database with initial data
 
 ```sh
 pnpm db:seed
@@ -88,10 +73,10 @@ pnpm db:seed
 Use the following command to run ultima dev server for server and web.
 
 ```sh
-npm pnpm dev
+pnpm dev
 ```
 
-The Nest.js server will run on http://localhost:3000 and Next.js will run on http://localhost:3001.
+This will start the Nest.js server on http://localhost:3000 and the Next.js on http://localhost:3001.
 
 
 ###  Tests
