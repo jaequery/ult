@@ -1,13 +1,11 @@
-import { DataSourceOptions, DataSource } from 'typeorm';
-import { SeederOptions } from 'typeorm-extension';
+import { DataSource, DataSourceOptions } from 'typeorm';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
 const env = process.env.NODE_ENV || 'development';
 dotenv.config({ path: `./.env.${env}` });
 
-export const dataSourceOptions: DataSourceOptions & SeederOptions = {
-
+export const dataSourceOptions: DataSourceOptions = {
   // typeorm configuration
   type: (process.env.TYPE as any) || 'postgres',
   host: process.env.DB_HOST || 'localhost',
@@ -24,11 +22,6 @@ export const dataSourceOptions: DataSourceOptions & SeederOptions = {
     './src/**/entities/*.entity{.ts,.js}',
   ],
   migrations: ['./dist/db/migrations/*{.ts,.js}'],
-
-  // typeorm-extension seeder configuration
-  seedTracking: true,
-  seeds: ['./db/seeds/*{.ts,.js}'],
-  factories: ['./db/factories/*{.ts,.js}'],
 };
 
 const dataSource = new DataSource(dataSourceOptions);
