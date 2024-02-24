@@ -1,6 +1,8 @@
 "use client";
 
-import { UserCreateDtoType } from "@server/user/dto/user.dto";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { UserCreateDto, UserCreateDtoType } from "@server/user/dto/user.dto";
+import { CircularProgress } from "@web/components/CircularProgress";
 import { useTrpcMutate } from "@web/hooks/useTrpcMutate";
 import { trpc } from "@web/utils/trpc/trpc";
 import Link from "next/link";
@@ -8,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 export default function Signup() {
+  const router = useRouter();
   const {
     mutateAsync: createUser,
     data: createdUser,
@@ -20,7 +23,8 @@ export default function Signup() {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm({
+  } = useForm<UserCreateDtoType>({
+    resolver: zodResolver(UserCreateDto),
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -28,7 +32,6 @@ export default function Signup() {
       password: "",
     },
   });
-  const router = useRouter();
 
   return (
     <>
@@ -45,8 +48,6 @@ export default function Signup() {
               router.push(`/`);
             })}
             className="space-y-6"
-            action="#"
-            method="POST"
           >
             <div className="flex space-between gap-4">
               <div className="flex-1">
@@ -65,6 +66,11 @@ export default function Signup() {
                     className="input"
                   />
                 </div>
+                {errors.firstName && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {errors.firstName.message}
+                  </p>
+                )}
               </div>
               <div className="flex-1">
                 <label
@@ -82,6 +88,11 @@ export default function Signup() {
                     className="input"
                   />
                 </div>
+                {errors.lastName && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {errors.lastName.message}
+                  </p>
+                )}
               </div>
             </div>
             <div>
@@ -101,6 +112,11 @@ export default function Signup() {
                   className="input"
                 />
               </div>
+              {errors.email && (
+                <p className="mt-2 text-sm text-red-600">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
             <div>
               <div className="flex items-center justify-between">
@@ -121,6 +137,11 @@ export default function Signup() {
                   className="input"
                 />
               </div>
+              {errors.password && (
+                <p className="mt-2 text-sm text-red-600">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
             <div>
               <button
@@ -129,10 +150,16 @@ export default function Signup() {
               >
                 Sign in
               </button>
+              {creatingUser && <CircularProgress />}
             </div>
           </form>
+          {creatingUserError && (
+            <p className="mt-2 text-sm text-red-600 text-center">
+              {creatingUserError.message}
+            </p>
+          )}
           <p className="mt-10 text-center text-sm text-gray-500">
-            Alerady a member?{" "}
+            Already a member?{" "}
             <Link
               href="/login"
               className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"

@@ -1,8 +1,8 @@
 "use client";
 
-import { Alert } from "@material-tailwind/react";
-import { UserLoginDtoType } from "@server/user/dto/user.dto";
-import Toast from "@web/components/Toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { UserLoginDto, UserLoginDtoType } from "@server/user/dto/user.dto";
+import { CircularProgress } from "@web/components/CircularProgress";
 import { useTrpcMutate } from "@web/hooks/useTrpcMutate";
 import { trpc } from "@web/utils/trpc/trpc";
 import Link from "next/link";
@@ -17,15 +17,15 @@ export default function Login() {
   } = useTrpcMutate(async (userData: UserLoginDtoType) =>
     trpc.userRouter.login.mutate(userData)
   );
-
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm({
+  } = useForm<UserLoginDtoType>({
+    resolver: zodResolver(UserLoginDto),
     defaultValues: {
-      email: "",
-      password: "",
+      email: undefined,
+      password: undefined,
     },
   });
 
@@ -47,8 +47,6 @@ export default function Login() {
                 console.log("WTF", e);
               }
             })}
-            action="#"
-            method="POST"
           >
             <div>
               <label
@@ -60,12 +58,17 @@ export default function Login() {
               <div className="mt-2">
                 <input
                   id="email"
-                  {...register("email", { required: true })}
                   type="email"
                   required
+                  {...register("email", { required: true })}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
+              {errors.email && (
+                <p className="mt-2 text-sm text-red-600">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
             <div>
               <label
@@ -77,12 +80,17 @@ export default function Login() {
               <div className="mt-2">
                 <input
                   id="password"
-                  {...register("password", { required: true })}
                   type="password"
                   required
+                  {...register("password", { required: true })}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
+              {errors.password && (
+                <p className="mt-2 text-sm text-red-600">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
             <div>
               <button
@@ -91,13 +99,14 @@ export default function Login() {
               >
                 Sign in
               </button>
+              {loggingInUser && <CircularProgress />}
             </div>
           </form>
-
           {loggingInUserError && (
-            <div className="text-center mt-4 text-red-400">{loggingInUserError.message}</div>
+            <p className="mt-2 text-sm text-red-600 text-center">
+              {loggingInUserError.message}
+            </p>
           )}
-
           <p className="mt-10 text-center text-sm text-gray-500">
             Not a member?{" "}
             <Link

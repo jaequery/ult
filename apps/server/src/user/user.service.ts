@@ -25,9 +25,10 @@ export class UserService {
         email: userLoginDto.email,
       },
     });
-
     if (!user || user.deleted) {
-      throw new NotFoundException();
+      throw new NotFoundException(
+        'Username and password does not match any users on our system',
+      );
     }
     return user;
   }

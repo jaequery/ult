@@ -2,13 +2,13 @@ import { z } from 'zod';
 
 export const UserLoginDto = z.object({
   email: z.string().email(),
-  password: z.string(),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
 });
 export type UserLoginDtoType = z.infer<typeof UserLoginDto>;
 
 export const UserCreateDto = z.object({
   email: z.string().email(),
-  password: z.string(),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   gender: z.string().optional(),
