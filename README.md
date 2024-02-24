@@ -1,8 +1,8 @@
 <p align="center">
-    <h1 align="center">ULTIMA</h1>
+    <h1 align="center">Ult Stack</h1>
 </p>
 <p align="center">
-    <em>Ultima: Uniting Nest.js, Next.js, and tRPC for Streamlined Development.</em>
+    <em>Ult Stack: Uniting Nest.js, Next.js, and tRPC for the ultimate streamlined web development.</em>
 </p>
 <p align="center">
 	<img src="https://img.shields.io/github/license/jaequery/ultima?style=flat&color=0080ff" alt="license">
@@ -26,16 +26,16 @@ Ensure you have the following dependencies installed on your system:
 
 ###  Installation
 
-1. Clone the ultima repository:
+1. Clone the UltStack repository:
 
 ```sh
-git clone https://github.com/jaequery/ultima
+git clone https://github.com/jaequery/ult-stack
 ```
 
 2. Change to the project directory:
 
 ```sh
-cd ultima
+cd ult-stack
 ```
 
 3. Install the dependencies:
@@ -64,9 +64,9 @@ pnpm db:migrate:up
 pnpm db:seed
 ```
 
-###  Running `ultima`
+###  Running development environment
 
-Use the following command to run ultima dev server for server and web.
+Use the following command to run both Nest and Next server.
 
 ```sh
 pnpm dev
@@ -87,9 +87,9 @@ pnpm test
 
 Contributions are welcome! Here are several ways you can contribute:
 
-- **[Submit Pull Requests](https://github.com/jaequery/ultima/blob/main/CONTRIBUTING.md)**: Review open PRs, and submit your own PRs.
-- **[Join the Discussions](https://github.com/jaequery/ultima/discussions)**: Share your insights, provide feedback, or ask questions.
-- **[Report Issues](https://github.com/jaequery/ultima/issues)**: Submit bugs found or log feature requests for the `ultima` project.
+- **[Submit Pull Requests](https://github.com/jaequery/ult-stack/blob/main/CONTRIBUTING.md)**: Review open PRs, and submit your own PRs.
+- **[Join the Discussions](https://github.com/jaequery/ult-stack/discussions)**: Share your insights, provide feedback, or ask questions.
+- **[Report Issues](https://github.com/jaequery/ult-stack/issues)**: Submit bugs found or log feature requests for the `ultima` project.
 
 <details closed>
     <summary>Contributing Guidelines</summary>
@@ -97,7 +97,7 @@ Contributions are welcome! Here are several ways you can contribute:
 1. **Fork the Repository**: Start by forking the project repository to your github account.
 2. **Clone Locally**: Clone the forked repository to your local machine using a git client.
    ```sh
-   git clone https://github.com/jaequery/ultima
+   git clone https://github.com/jaequery/ult-stack
    ```
 3. **Create a New Branch**: Always work on a new branch, giving it a descriptive name.
    ```sh
