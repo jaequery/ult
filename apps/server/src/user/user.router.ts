@@ -1,10 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseFilters } from '@nestjs/common';
+import { TrpcExceptionFilter } from '@server/trpc/trpc.exception-handler';
 import { TrpcService } from '@server/trpc/trpc.service';
 import { UserService } from '@server/user/user.service';
 import { z } from 'zod';
-import { UserCreateDto, UserFindAllDto, UserRemoveDto } from './dto/user.dto';
+import {
+  UserCreateDto,
+  UserFindAllDto,
+  UserLoginDto,
+  UserRemoveDto,
+} from './dto/user.dto';
 
 @Injectable()
+@UseFilters(new TrpcExceptionFilter())
 export class UserRouter {
   constructor(
     private readonly trpcService: TrpcService,
@@ -13,6 +20,13 @@ export class UserRouter {
   apply() {
     return {
       userRouter: this.trpcService.router({
+        // login user
+        login: this.trpcService.publicProcedure
+          .input(UserLoginDto)
+          .mutation(async ({ input }) => {
+            return this.userService.login(input);
+          }),
+
         // create user
         create: this.trpcService.publicProcedure
           .input(UserCreateDto)

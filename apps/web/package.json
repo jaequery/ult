@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.18",
+    "@heroicons/react": "^2.1.1",
+    "@material-tailwind/react": "^2.1.9",
     "@trpc/client": "^10.45.1",
     "@trpc/next": "^10.45.1",
     "@trpc/react": "^9.27.4",
@@ -16,6 +19,7 @@
     "next": "14.1.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-hook-form": "^7.50.1",
     "react-query": "3",
     "zod": "^3.22.4"
   },

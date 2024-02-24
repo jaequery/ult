@@ -8,10 +8,10 @@ import {
   UserFindAllDtoType,
   UserRemoveDtoType,
 } from "@server/user/dto/user.dto";
-import { trpc } from "@web/app/trpc";
+import { trpc } from "@web/utils/trpc/trpc";
 import { useTrpcMutate } from "@web/hooks/useTrpcMutate";
 
-export default function Home() {
+export default function Test() {
   const [email, setEmail] = useState<string>("");
   const {
     query: getUsers,
@@ -26,21 +26,6 @@ export default function Home() {
     false
   );
 
-  // const createUserMutation = trpc.userRouter.create.useMutation();
-
-  // const {
-  //   query: getUser,
-  //   data: user,
-  //   isLoading: userLoading,
-  //   error: userLoadingError,
-  // } = useTrpcQuery(
-  //   useCallback(
-  //     (userId: number) => trpc.userRouter.findOne.query({ id: userId }),
-  //     []
-  //   ),
-  //   false
-  // );
-
   const {
     // mutate: createUser,
     mutateAsync: createUser,
@@ -53,39 +38,12 @@ export default function Home() {
 
   const {
     mutate: removeUser,
-    // mutateAsync: createUser,
     data: removedUser,
     isLoading: removingUser,
     error: removingUserError,
   } = useTrpcMutate(async (userData: UserRemoveDtoType) =>
     trpc.userRouter.remove.mutate(userData)
   );
-
-  // const {
-  //   query: getUsers,
-  //   data: users,
-  //   isLoading: usersLoading,
-  //   error: usersLoadingError,
-  // } = useTrpcQuery(
-  //   useCallback(
-  //     (opts: { email: string; password?: string }) =>
-  //       trpc.userRouter.findAll.query(opts),
-  //     []
-  //   )
-  // );
-
-  // useEffect(() => {
-  //   if (createdUser) {
-  //     getUser(createdUser.id);
-  //   }
-  // }, [createdUser, getUser, getUsers]);
-
-  // if (usersLoadingError) {
-  //   return <>here was error{usersLoadingError.message}</>;
-  // }
-  // if (usersLoading) {
-  //   return <>its loading ...</>;
-  // }
 
   return (
     <>
@@ -105,7 +63,7 @@ export default function Home() {
       <button
         onClick={async () => {
           const createdUser = await createUser({
-            email: email || "jn@n.com",
+            email: email || "jn@ni.com",
             password: "password",
             firstName: "john",
             lastName: "cena",

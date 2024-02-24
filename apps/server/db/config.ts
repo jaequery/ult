@@ -1,5 +1,7 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 
+// this config is used by both Nest.js and TypeORM CLI
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
 const env = process.env.NODE_ENV || 'development';

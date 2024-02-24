@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import {
+  ConflictException,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common/exceptions';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm/repository/Repository';
-import { UserCreateDtoType } from './dto/user.dto';
+import { UserCreateDtoType, UserLoginDtoType } from './dto/user.dto';
 import { User } from './user.entity';
-import { ConflictException } from '@nestjs/common/exceptions';
 
 @Injectable()
 export class UserService {
@@ -15,19 +19,32 @@ export class UserService {
     private readonly configService: ConfigService,
   ) {}
 
-  async create(user: UserCreateDtoType) {
-    if (user.password) {
-      user.password = await this.encryptPassword(user.password);
+  async login(userLoginDto: UserLoginDtoType) {
+    const user = await this.userRepository.findOne({
+      where: {
+        email: userLoginDto.email,
+      },
+    });
+
+    if (!user || user.deleted) {
+      throw new NotFoundException();
+    }
+    return user;
+  }
+
+  async create(userCreateDto: UserCreateDtoType) {
+    if (userCreateDto.password) {
+      userCreateDto.password = await this.encryptPassword(
+        userCreateDto.password,
+      );
     }
     try {
-      return this.userRepository.save(user);
+      return this.userRepository.save(userCreateDto);
     } catch (error) {
       if (error.constraint === 'user__email__uq') {
-        throw new ConflictException(
-          'Duplicate email. Please try a different email address.',
-        );
+        throw new ConflictException(error.message);
       } else {
-        throw error;
+        throw new InternalServerErrorException(error.message);
       }
     }
   }
@@ -36,7 +53,6 @@ export class UserService {
     const users = await this.userRepository.find({
       where,
     });
-    console.log('uss', users);
     return users;
   }
 
@@ -55,9 +71,7 @@ export class UserService {
   private async encryptPassword(password: string) {
     const rounds = 10;
     let encryptedPassword;
-    // tslint:disable-next-line
     if (password.indexOf('$2a$') === 0 && password.length === 60) {
-      // assume already a hash, maybe copied from another record
       encryptedPassword = password;
     } else {
       encryptedPassword = await bcrypt.hash(password, rounds);

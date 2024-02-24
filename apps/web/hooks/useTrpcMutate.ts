@@ -1,12 +1,24 @@
 import { useCallback, useState } from "react";
 
+export interface TrpcError {
+  message: string;
+  code: string;
+  cause?: unknown;
+  data: {
+    code: string;
+    httpStatus: number;
+    path?: string;
+    stack?: string;
+  };
+}
+
 // Make the hook generic with TResult for the result type and TParams for the parameters type
 export function useTrpcMutate<TResult, TParams extends any[]>(
   mutationFn: (...params: TParams) => Promise<TResult>
 ) {
   const [data, setData] = useState<TResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<TrpcError | null>(null);
 
   // Use the generic types for parameters and result in the mutate function
   const mutate = useCallback(
@@ -15,8 +27,8 @@ export function useTrpcMutate<TResult, TParams extends any[]>(
       try {
         const result = await mutationFn(...params);
         setData(result);
-      } catch (error) {
-        setError(error as Error);
+      } catch (error: any) {
+        setError(error.meta.responseJSON[0].error as TrpcError);
       } finally {
         setIsLoading(false);
       }
@@ -31,9 +43,9 @@ export function useTrpcMutate<TResult, TParams extends any[]>(
         const result = await mutationFn(...params);
         setData(result);
         return result;
-      } catch (error) {
-        setError(error as Error);
-        throw error; // Re-throw the error to allow callers to handle it
+      } catch (error: any) {
+        setError(error.meta.responseJSON[0].error as TrpcError);
+        throw error.meta.responseJSON[0].error; // Re-throw the error to allow callers to handle it
       } finally {
         setIsLoading(false);
       }

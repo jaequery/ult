@@ -1,12 +1,12 @@
 import Footer from "@web/components/Footer";
 import Header from "@web/components/Header";
-import Home from "./home/Home";
+import Signup from "./Signup";
 
-export default function HomePage() {
+export default function SignupPage() {
   return (
     <>
       <Header />
-      <Home />
+      <Signup />
       <Footer />
     </>
   );
