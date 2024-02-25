@@ -1,11 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import * as Joi from 'joi';
-import { dataSourceOptions } from '../db/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { PrismaService } from './prisma/prisma.service';
 import { TrpcModule } from './trpc/trpc.module';
 import { UserModule } from './user/user.module';
 
@@ -24,20 +22,15 @@ import { UserModule } from './user/user.module';
         JWT_EXPIRY_DAYS: Joi.number().default(365),
 
         // database config
-        PORT: Joi.number(),
-        DB_TYPE: Joi.string().default('postgres'),
-        DB_HOST: Joi.string().default('localhost'),
-        DB_PORT: Joi.number().default(5432),
-        DB_SSL: Joi.boolean().default(false),
-        DB_USER: Joi.string().default('postgres'),
-        DB_PASS: Joi.string().default('postgres'),
+        DB_URL: Joi.string().default(
+          'postgresql://postgres:password@localhost:5432/postgres?schema=public',
+        ),
       }),
     }),
-    TypeOrmModule.forRoot(dataSourceOptions),
     TrpcModule,
     UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, PrismaService],
 })
 export class AppModule {}

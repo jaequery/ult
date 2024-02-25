@@ -18,7 +18,6 @@ export class UserRouter {
     private readonly userService: UserService,
   ) {}
   apply() {
-
     const protectedProcedure = this.trpcService.getProtectedProcedure();
 
     return {
@@ -56,11 +55,9 @@ export class UserRouter {
           }),
 
         // get all users
-        findAll: this.trpcService.publicProcedure
-          .input(UserFindAllDto)
-          .query(async ({ input }) => {
-            return this.userService.findAll(input);
-          }),
+        findAll: this.trpcService.publicProcedure.query(async ({}) => {
+          return this.userService.findAll();
+        }),
       }),
     };
   }

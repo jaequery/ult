@@ -10,6 +10,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useUserContext } from "../user/UserContext";
+import { useTrpcQuery } from "@web/hooks/useTrpcQuery";
+import { useCallback } from "react";
 
 export default function Login() {
   const router = useRouter();
@@ -21,6 +23,12 @@ export default function Login() {
   } = useTrpcMutate(async (userData: UserLoginDtoType) =>
     trpc.userRouter.login.mutate(userData)
   );
+  const {
+    query: findUsers,
+    data: users,
+    isLoading: findingUsers,
+    error: findingUsersError,
+  } = useTrpcQuery(useCallback(() => trpc.userRouter.findAll.query(), []));
   const {
     register,
     formState: { errors },
@@ -40,7 +48,7 @@ export default function Login() {
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Sign in to your account
+            Sign in to your account users: {JSON.stringify(users)}
           </h2>
         </div>
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -48,14 +56,16 @@ export default function Login() {
             className="space-y-6"
             onSubmit={handleSubmit(async (data) => {
               try {
+                console.log("logging in", data);
                 const jwtUser = await loginUser(data);
-                if (jwtUser?.user && setUser) {
-                  setUser(jwtUser.user);
-                }
-                setJwtAccessToken(
-                  jwtUser.jwt.accessToken,
-                  jwtUser.jwt.expiryDays
-                );
+                console.log("jwtUser", jwtUser);
+                // if (jwtUser?.user && setUser) {
+                //   setUser(jwtUser.user);
+                // }
+                // setJwtAccessToken(
+                //   jwtUser.jwt.accessToken,
+                //   jwtUser.jwt.expiryDays
+                // );
                 // router.push("/dashboard");
               } catch (e) {}
             })}

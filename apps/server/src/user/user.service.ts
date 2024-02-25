@@ -6,40 +6,35 @@ import {
   UnauthorizedException,
 } from '@nestjs/common/exceptions';
 import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
+
 import * as bcrypt from 'bcrypt';
-import { Repository } from 'typeorm/repository/Repository';
-import { UserCreateDtoType, UserLoginDtoType } from './dto/user.dto';
-import { User } from './user.entity';
-import { IsNull } from 'typeorm';
+
 import { ConfigService } from '@nestjs/config';
+import { PrismaService } from '@server/prisma/prisma.service';
+import { UserCreateDtoType, UserLoginDtoType } from './dto/user.dto';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User)
-    protected readonly userRepository: Repository<User>,
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
+    private readonly prismaService: PrismaService,
   ) {}
 
   async login(userLoginDto: UserLoginDtoType) {
-    const authUser = await this.userRepository.findOne({
-      select: ['id', 'password', 'deleted'],
+    const user = await this.prismaService.user.findFirst({
       where: {
-        email: userLoginDto.email.toLowerCase(),
-        deleted: IsNull(),
+        email: userLoginDto.email,
+        deletedAt: null,
       },
     });
-    if (!authUser || authUser.deleted) {
+
+    if (!user) {
       throw new NotFoundException('Invalid email address');
     }
 
     // check password
-    const isMatch = await bcrypt.compare(
-      userLoginDto.password,
-      authUser.password,
-    );
+    const isMatch = await bcrypt.compare(userLoginDto.password, user.password);
     if (!isMatch) {
       throw new UnauthorizedException('Invalid login information');
     }
@@ -47,14 +42,11 @@ export class UserService {
     // retrieve JWT
     const expiryDays = this.configService.get<number>('JWT_EXPIRY_DAYS');
     const payload = {
-      username: authUser.email,
-      sub: authUser.id,
+      username: user.email,
+      sub: user.id,
       expiresIn: expiryDays,
     };
     const accessToken = this.jwtService.sign(payload);
-
-    // get user
-    const user = await this.findById(authUser.id);
 
     // return login response
     return {
@@ -67,6 +59,7 @@ export class UserService {
   }
 
   async create(userCreateDto: UserCreateDtoType) {
+    console.log('hi', userCreateDto);
     if (userCreateDto.password) {
       userCreateDto.password = await this.encryptPassword(
         userCreateDto.password,
@@ -74,7 +67,7 @@ export class UserService {
     }
     userCreateDto.email = userCreateDto.email.toLowerCase();
     try {
-      return this.userRepository.save(userCreateDto);
+      return this.prismaService.user.create({ data: userCreateDto });
     } catch (error) {
       if (error.constraint === 'user__email__uq') {
         throw new ConflictException(error.message);
@@ -84,20 +77,18 @@ export class UserService {
     }
   }
 
-  async findAll(where?: { email?: string }) {
-    const users = await this.userRepository.find({
-      where,
-    });
-    return users;
+  async findAll() {
+    return this.prismaService.user.findMany();
   }
 
   async findById(id: number) {
-    return this.userRepository.findOne({
-      where: {
-        id,
-        deleted: IsNull(),
-      },
-    });
+    return this.prismaService.post.findUnique({ where: { id } });
+    // return this.userRepository.findOne({
+    //   where: {
+    //     id,
+    //     deleted: IsNull(),
+    //   },
+    // });
   }
 
   async remove(id: number) {
