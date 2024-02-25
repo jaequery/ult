@@ -59,7 +59,6 @@ export class UserService {
   }
 
   async create(userCreateDto: UserCreateDtoType) {
-    console.log('hi', userCreateDto);
     if (userCreateDto.password) {
       userCreateDto.password = await this.encryptPassword(
         userCreateDto.password,
@@ -82,17 +81,20 @@ export class UserService {
   }
 
   async findById(id: number) {
-    return this.prismaService.post.findUnique({ where: { id } });
-    // return this.userRepository.findOne({
-    //   where: {
-    //     id,
-    //     deleted: IsNull(),
-    //   },
-    // });
+    return this.prismaService.user.findUnique({
+      where: { id, deletedAt: null },
+    });
   }
 
-  async remove(id: number) {
-    return `This action removes a #${id} user`;
+  async delete(id: number) {
+    return this.prismaService.user.update({
+      where: {
+        id,
+      },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
   }
 
   private async encryptPassword(password: string) {

@@ -20,10 +20,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prestart": "rimraf dist && yarn run build",
-    "db:migrate:new": "pnpm prestart && NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node ./node_modules/typeorm/cli.js migration:generate -d ./db/config.ts",
-    "db:migrate:up": "pnpm prestart && NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node ./node_modules/typeorm/cli.js migration:run -d ./db/config.ts",
-    "db:migrate:down": "pnpm prestart && NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node ./node_modules/typeorm/cli.js migration:revert -d ./db/config.ts",
-    "db:seed": "npx ts-node -r tsconfig-paths/register ./scripts/db-seed.ts"
+    "db:migrate:new": "npx prisma migrate dev --name",
+    "db:migrate": "npx prisma migrate deploy",
+    "db:seed": "npx ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -34,6 +33,8 @@
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.0.0",
     "@prisma/client": "5.10.2",
+    "@swc/cli": "^0.3.9",
+    "@swc/core": "^1.4.2",
     "@trpc/server": "^10.45.1",
     "bcrypt": "^5.1.1",
     "class-validator": "^0.14.1",
