@@ -21,7 +21,6 @@ export class UserService {
   ) {}
 
   async login(userLoginDto: UserLoginDtoType) {
-    console.log('userLoginDto', userLoginDto);
     const authUser = await this.userRepository.findOne({
       select: ['id', 'password', 'deleted'],
       where: {
