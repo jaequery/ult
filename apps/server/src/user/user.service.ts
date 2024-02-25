@@ -11,6 +11,7 @@ import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm/repository/Repository';
 import { UserCreateDtoType, UserLoginDtoType } from './dto/user.dto';
 import { User } from './user.entity';
+import { IsNull } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -25,6 +26,7 @@ export class UserService {
       select: ['id', 'password', 'deleted'],
       where: {
         email: userLoginDto.email.toLowerCase(),
+        deleted: IsNull(),
       },
     });
     if (!authUser || authUser.deleted) {
