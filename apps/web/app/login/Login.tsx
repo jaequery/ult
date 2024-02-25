@@ -6,9 +6,11 @@ import { CircularProgress } from "@web/components/CircularProgress";
 import { useTrpcMutate } from "@web/hooks/useTrpcMutate";
 import { trpc } from "@web/utils/trpc/trpc";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 export default function Login() {
+  const router = useRouter();
   const {
     mutateAsync: loginUser,
     data: user,
@@ -43,6 +45,7 @@ export default function Login() {
             onSubmit={handleSubmit(async (data) => {
               try {
                 const user = await loginUser(data);
+                router.push("/dashboard");
               } catch (e) {
                 console.log("WTF", e);
               }

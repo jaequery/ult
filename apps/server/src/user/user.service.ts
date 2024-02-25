@@ -3,8 +3,9 @@ import {
   ConflictException,
   InternalServerErrorException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common/exceptions';
-import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm/repository/Repository';
@@ -16,21 +17,40 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     protected readonly userRepository: Repository<User>,
-    private readonly configService: ConfigService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async login(userLoginDto: UserLoginDtoType) {
-    const user = await this.userRepository.findOne({
+    console.log('userLoginDto', userLoginDto);
+    const authUser = await this.userRepository.findOne({
+      select: ['id', 'password', 'deleted'],
       where: {
-        email: userLoginDto.email,
+        email: userLoginDto.email.toLowerCase(),
       },
     });
-    if (!user || user.deleted) {
-      throw new NotFoundException(
-        'Username and password does not match any users on our system',
-      );
+    if (!authUser || authUser.deleted) {
+      throw new NotFoundException('Invalid email address');
     }
-    return user;
+
+    // check password
+    const isMatch = await bcrypt.compare(
+      userLoginDto.password,
+      authUser.password,
+    );
+    if (!isMatch) {
+      throw new UnauthorizedException('Invalid login information');
+    }
+
+    // retrieve JWT
+    const payload = { username: authUser.email, sub: authUser.id };
+    const jwt = { accessToken: this.jwtService.sign(payload) };
+
+    // return user
+    const user = await this.findById(authUser.id);
+    return {
+      jwt,
+      user,
+    };
   }
 
   async create(userCreateDto: UserCreateDtoType) {
@@ -39,6 +59,7 @@ export class UserService {
         userCreateDto.password,
       );
     }
+    userCreateDto.email = userCreateDto.email.toLowerCase();
     try {
       return this.userRepository.save(userCreateDto);
     } catch (error) {
