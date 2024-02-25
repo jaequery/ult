@@ -1,8 +1,8 @@
 <p align="center">
-    <h1 align="center">Ult Stack</h1>
+    <h1 align="center">Ult</h1>
 </p>
 <p align="center">
-    <em>Ult Stack: Uniting Nest.js, Next.js, and tRPC for the ultimate streamlined web development.</em>
+    <em>Ult: Uniting Nest.js, Next.js, and tRPC for the ultimate streamlined web development.</em>
 </p>
 <p align="center">
 	<img src="https://img.shields.io/github/license/jaequery/ultima?style=flat&color=0080ff" alt="license">
@@ -26,16 +26,16 @@ Ensure you have the following dependencies installed on your system:
 
 ###  Installation
 
-1. Clone the UltStack repository:
+1. Clone the Ult repository:
 
 ```sh
-git clone https://github.com/jaequery/ult-stack
+git clone https://github.com/jaequery/ult
 ```
 
 2. Change to the project directory:
 
 ```sh
-cd ult-stack
+cd ult
 ```
 
 3. Install the dependencies:
@@ -87,9 +87,9 @@ pnpm test
 
 Contributions are welcome! Here are several ways you can contribute:
 
-- **[Submit Pull Requests](https://github.com/jaequery/ult-stack/blob/main/CONTRIBUTING.md)**: Review open PRs, and submit your own PRs.
-- **[Join the Discussions](https://github.com/jaequery/ult-stack/discussions)**: Share your insights, provide feedback, or ask questions.
-- **[Report Issues](https://github.com/jaequery/ult-stack/issues)**: Submit bugs found or log feature requests for the `ultima` project.
+- **[Submit Pull Requests](https://github.com/jaequery/ult/blob/main/CONTRIBUTING.md)**: Review open PRs, and submit your own PRs.
+- **[Join the Discussions](https://github.com/jaequery/ult/discussions)**: Share your insights, provide feedback, or ask questions.
+- **[Report Issues](https://github.com/jaequery/ult/issues)**: Submit bugs found or log feature requests for the `ultima` project.
 
 <details closed>
     <summary>Contributing Guidelines</summary>
@@ -97,7 +97,7 @@ Contributions are welcome! Here are several ways you can contribute:
 1. **Fork the Repository**: Start by forking the project repository to your github account.
 2. **Clone Locally**: Clone the forked repository to your local machine using a git client.
    ```sh
-   git clone https://github.com/jaequery/ult-stack
+   git clone https://github.com/jaequery/ult
    ```
 3. **Create a New Branch**: Always work on a new branch, giving it a descriptive name.
    ```sh
