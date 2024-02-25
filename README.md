@@ -2,7 +2,7 @@
     <h1 align="center">Ult</h1>
 </p>
 <p align="center">
-    <em>Ult: Uniting Nest.js, Next.js, and tRPC for the ultimate streamlined web development.</em>
+    <em>Ult: Uniting Nest.js + Prisma + tRPC, Next.js + Tailwind for the ultimate streamlined web development.</em>
 </p>
 <p align="center">
 	<img src="https://img.shields.io/github/license/jaequery/ultima?style=flat&color=0080ff" alt="license">
@@ -10,7 +10,7 @@
 	<img src="https://img.shields.io/github/languages/top/jaequery/ultima?style=flat&color=0080ff" alt="repo-top-language">
 	<img src="https://img.shields.io/github/languages/count/jaequery/ultima?style=flat&color=0080ff" alt="repo-language-count">
 <p>
-<p>In the realm of Ultima, where digital knights and wizards dwell, Nest.js forges the backend castles, Next.js conjures the frontend landscapes, and tRPC weaves the type-safe spells. Bound by the ancient scripts of TypeScript and adorned with Tailwind UI's enchantments, plus the alchemical prowess of pnpm, this land offers a sanctuary for creators. Here, in the quest for building mesmerizing web realms, development becomes a grand adventure, blending efficiency with the magic of creation.</p>
+<p>Dive into the future of web development with Ult, the perfect blend of Nest.js, Prisma, and tRPC on the server side, paired seamlessly with Next.js and Tailwind CSS on the client side. Experience effortless back-end to front-end integration, rapid development cycles, and a modern, stylish UI with minimal code. Ult is your one-stop solution for building scalable, efficient, and visually stunning web applications. Get ready to elevate your projects to the next level with ease and sophistication.</p>
 
 <hr>
 
@@ -55,7 +55,7 @@ docker-compose up -d
 2. Run db migration to create the database tables
 
 ```sh
-pnpm db:migrate:up
+pnpm db:migrate
 ```
 
 3. Run the db seed to populate the database with initial data
