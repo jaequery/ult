@@ -18,10 +18,13 @@ export class UserRouter {
     private readonly userService: UserService,
   ) {}
   apply() {
+
+    const protectedProcedure = this.trpcService.getProtectedProcedure();
+
     return {
       userRouter: this.trpcService.router({
         // login user
-        login: this.trpcService.publicProcedure
+        login: protectedProcedure
           .input(UserLoginDto)
           .mutation(async ({ input }) => {
             return this.userService.login(input);

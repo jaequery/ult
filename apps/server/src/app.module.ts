@@ -11,7 +11,6 @@ import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
-
     ConfigModule.forRoot({
       isGlobal: true,
       expandVariables: true,
@@ -22,7 +21,7 @@ import { UserModule } from './user/user.module';
           .valid('development', 'production', 'test', 'provision')
           .default('development'),
         JWT_SECRET: Joi.string(),
-        JWT_EXPIRES_IN: Joi.string().default('365d'),
+        JWT_EXPIRY_DAYS: Joi.number().default(365),
 
         // database config
         PORT: Joi.number(),

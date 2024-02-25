@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { removeJwtAccessToken } from "@web/utils/auth";
+import { useState } from "react";
 
 const navigation = [
   { name: "Product", href: "#" },
@@ -57,7 +58,15 @@ export default function Header() {
               href="/login"
               className="text-sm font-semibold leading-6 text-gray-900"
             >
-              Log in <span aria-hidden="true">&rarr;</span>
+              Log in
+            </a>
+            <a
+              onClick={() => {
+                removeJwtAccessToken();
+              }}
+              className="text-sm font-semibold leading-6 text-gray-900"
+            >
+              Log Out
             </a>
           </div>
         </nav>

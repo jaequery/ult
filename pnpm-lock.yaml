@@ -26,6 +26,7 @@ importers:
       '@trpc/server': ^10.45.1
       '@types/bcrypt': ^5.0.2
       '@types/express': ^4.17.17
+      '@types/glob': ^8.1.0
       '@types/jest': ^29.5.2
       '@types/node': ^20.3.1
       '@types/passport-jwt': ^4.0.1
@@ -40,6 +41,7 @@ importers:
       eslint: ^8.42.0
       eslint-config-prettier: ^9.0.0
       eslint-plugin-prettier: ^5.0.0
+      glob: ^10.3.10
       jest: ^29.5.0
       joi: ^17.12.1
       passport: ^0.7.0
@@ -74,6 +76,7 @@ importers:
       class-validator: 0.14.1
       cors: 2.8.5
       date-fns: 3.3.1
+      glob: 10.3.10
       joi: 17.12.1
       passport: 0.7.0
       passport-jwt: 4.0.1
@@ -92,6 +95,7 @@ importers:
       '@nestjs/testing': 10.3.3_4fe7f0ff1e6871a3c4833e438f1213bd
       '@types/bcrypt': 5.0.2
       '@types/express': 4.17.21
+      '@types/glob': 8.1.0
       '@types/jest': 29.5.12
       '@types/node': 20.11.19
       '@types/passport-jwt': 4.0.1
@@ -123,12 +127,14 @@ importers:
       '@trpc/next': ^10.45.1
       '@trpc/react': ^9.27.4
       '@trpc/server': ^10.45.1
+      '@types/js-cookie': ^3.0.6
       '@types/node': ^20
       '@types/react': ^18
       '@types/react-dom': ^18
       autoprefixer: ^10.0.1
       eslint: ^8
       eslint-config-next: 14.1.0
+      js-cookie: ^3.0.5
       next: 14.1.0
       postcss: ^8
       react: ^18
@@ -147,6 +153,7 @@ importers:
       '@trpc/next': 10.45.1_b19e628ae2b1c385ed59d5a4b4f741fe
       '@trpc/react': 9.27.4_31b9012471278731b02ce604dca4c9ff
       '@trpc/server': 10.45.1
+      js-cookie: 3.0.5
       next: 14.1.0_react-dom@18.2.0+react@18.2.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -154,6 +161,7 @@ importers:
       react-query: 3.39.3_react-dom@18.2.0+react@18.2.0
       zod: 3.22.4
     devDependencies:
+      '@types/js-cookie': 3.0.6
       '@types/node': 20.11.19
       '@types/react': 18.2.56
       '@types/react-dom': 18.2.19
@@ -1751,6 +1759,13 @@ packages:
       '@types/serve-static': 1.15.5
     dev: true
 
+  /@types/glob/8.1.0:
+    resolution: {integrity: sha512-IO+MJPVhoqz+28h1qLAcBEH2+xHMK6MTyHJc7MTnnYb6wsoLR29POVGJ7LycmVXIqyy/4/2ShP5sUwTXuOwb/w==}
+    dependencies:
+      '@types/minimatch': 5.1.2
+      '@types/node': 20.11.19
+    dev: true
+
   /@types/graceful-fs/4.1.9:
     resolution: {integrity: sha512-olP3sd1qOEe5dXTSaFvQG+02VdRXcdytWLAZsAq1PecU8uqQAhkrnbli7DagjtXKW/Bl7YJbUsa8MPcuc8LHEQ==}
     dependencies:
@@ -1784,6 +1799,10 @@ packages:
       pretty-format: 29.7.0
     dev: true
 
+  /@types/js-cookie/3.0.6:
+    resolution: {integrity: sha512-wkw9yd1kEXOPnvEeEV1Go1MmxtBJL0RR79aOTAApecWFVu7w0NNXNqhcWgvw2YgZDYadliXkl14pa3WXw5jlCQ==}
+    dev: true
+
   /@types/json-schema/7.0.15:
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
     dev: true
@@ -1807,6 +1826,10 @@ packages:
 
   /@types/mime/3.0.4:
     resolution: {integrity: sha512-iJt33IQnVRkqeqC7PzBHPTC6fDlRNRW8vjrgqtScAhrmMwe8c4Eo7+fUGTa+XdWrpEgpyKWMYmi2dIwMAYRzPw==}
+    dev: true
+
+  /@types/minimatch/5.1.2:
+    resolution: {integrity: sha512-K0VQKziLUWkVKiRVrx4a40iPaxTUefQmjtkQofBkYRcoaaL/8rhwDWww9qWbrgicNOgnpIsMxyNIUM4+n6dUIA==}
     dev: true
 
   /@types/node/20.11.19:
@@ -5185,6 +5208,11 @@ packages:
       '@sideway/address': 4.1.5
       '@sideway/formula': 3.0.1
       '@sideway/pinpoint': 2.0.0
+    dev: false
+
+  /js-cookie/3.0.5:
+    resolution: {integrity: sha512-cEiJEAEoIbWfCZYKWhVwFuvPX1gETRYPw6LlaTKoxD3s2AkXzkCjnp6h0V77ozyqj0jakteJ4YqDJT830+lVGw==}
+    engines: {node: '>=14'}
     dev: false
 
   /js-sha3/0.8.0:

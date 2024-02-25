@@ -17,6 +17,7 @@
     "@trpc/next": "^10.45.1",
     "@trpc/react": "^9.27.4",
     "@trpc/server": "^10.45.1",
+    "js-cookie": "^3.0.5",
     "next": "14.1.0",
     "react": "^18",
     "react-dom": "^18",
@@ -25,6 +26,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

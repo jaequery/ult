@@ -12,12 +12,14 @@ import { Repository } from 'typeorm/repository/Repository';
 import { UserCreateDtoType, UserLoginDtoType } from './dto/user.dto';
 import { User } from './user.entity';
 import { IsNull } from 'typeorm';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     protected readonly userRepository: Repository<User>,
+    private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -43,13 +45,23 @@ export class UserService {
     }
 
     // retrieve JWT
-    const payload = { username: authUser.email, sub: authUser.id };
-    const jwt = { accessToken: this.jwtService.sign(payload) };
+    const expiryDays = this.configService.get<number>('JWT_EXPIRY_DAYS');
+    const payload = {
+      username: authUser.email,
+      sub: authUser.id,
+      expiresIn: expiryDays,
+    };
+    const accessToken = this.jwtService.sign(payload);
 
-    // return user
+    // get user
     const user = await this.findById(authUser.id);
+
+    // return login response
     return {
-      jwt,
+      jwt: {
+        accessToken,
+        expiryDays,
+      },
       user,
     };
   }
@@ -83,6 +95,7 @@ export class UserService {
     return this.userRepository.findOne({
       where: {
         id,
+        deleted: IsNull(),
       },
     });
   }

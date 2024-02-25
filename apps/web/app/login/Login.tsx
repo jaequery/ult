@@ -4,10 +4,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { UserLoginDto, UserLoginDtoType } from "@server/user/dto/user.dto";
 import { CircularProgress } from "@web/components/CircularProgress";
 import { useTrpcMutate } from "@web/hooks/useTrpcMutate";
+import { getJwtAccessToken, setJwtAccessToken } from "@web/utils/auth";
 import { trpc } from "@web/utils/trpc/trpc";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useUserContext } from "../user/UserContext";
 
 export default function Login() {
   const router = useRouter();
@@ -31,6 +33,8 @@ export default function Login() {
     },
   });
 
+  const { user: currentUser, setUser } = useUserContext();
+  const jwtAccessToken = getJwtAccessToken();
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -44,11 +48,16 @@ export default function Login() {
             className="space-y-6"
             onSubmit={handleSubmit(async (data) => {
               try {
-                const user = await loginUser(data);
-                router.push("/dashboard");
-              } catch (e) {
-                console.log("WTF", e);
-              }
+                const jwtUser = await loginUser(data);
+                if (jwtUser?.user && setUser) {
+                  setUser(jwtUser.user);
+                }
+                setJwtAccessToken(
+                  jwtUser.jwt.accessToken,
+                  jwtUser.jwt.expiryDays
+                );
+                // router.push("/dashboard");
+              } catch (e) {}
             })}
           >
             <div>
