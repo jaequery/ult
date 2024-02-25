@@ -4,17 +4,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { UserLoginDto, UserLoginDtoType } from "@server/user/dto/user.dto";
 import { CircularProgress } from "@web/components/CircularProgress";
 import { useTrpcMutate } from "@web/hooks/useTrpcMutate";
+import { useTrpcQuery } from "@web/hooks/useTrpcQuery";
 import { getJwtAccessToken, setJwtAccessToken } from "@web/utils/auth";
 import { trpc } from "@web/utils/trpc/trpc";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { useUserContext } from "../user/UserContext";
-import { useTrpcQuery } from "@web/hooks/useTrpcQuery";
-import { useCallback } from "react";
 
 export default function Login() {
   const router = useRouter();
+  const fun: Fun = {
+    name: "ga",
+  };
+  fun.name = "cool";
   const {
     mutateAsync: loginUser,
     data: user,
@@ -48,7 +52,7 @@ export default function Login() {
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Sign in to your account users: {JSON.stringify(users)}
+            Sign in to your account
           </h2>
         </div>
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -56,17 +60,15 @@ export default function Login() {
             className="space-y-6"
             onSubmit={handleSubmit(async (data) => {
               try {
-                console.log("logging in", data);
                 const jwtUser = await loginUser(data);
-                console.log("jwtUser", jwtUser);
-                // if (jwtUser?.user && setUser) {
-                //   setUser(jwtUser.user);
-                // }
-                // setJwtAccessToken(
-                //   jwtUser.jwt.accessToken,
-                //   jwtUser.jwt.expiryDays
-                // );
-                // router.push("/dashboard");
+                if (jwtUser?.user && setUser) {
+                  setUser(jwtUser.user);
+                }
+                setJwtAccessToken(
+                  jwtUser.jwt.accessToken,
+                  jwtUser.jwt.expiryDays
+                );
+                router.push("/dashboard");
               } catch (e) {}
             })}
           >

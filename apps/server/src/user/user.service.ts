@@ -5,12 +5,10 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common/exceptions';
-import { JwtService } from '@nestjs/jwt';
-
-import * as bcrypt from 'bcrypt';
-
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '@server/prisma/prisma.service';
+import * as bcrypt from 'bcrypt';
 import { UserCreateDtoType, UserLoginDtoType } from './dto/user.dto';
 
 @Injectable()

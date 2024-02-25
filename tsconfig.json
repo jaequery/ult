@@ -13,7 +13,9 @@
     "noFallthroughCasesInSwitch": true,
     "paths": {
       "@server/*": ["./apps/server/src/*"],
-      "@web/*": ["./apps/web/*"]
+      "@web/*": ["./apps/web/*"],
+      "@shared/*": ["./apps/shared/*"],
+      "@prisma/client": ["./apps/server/node_modules/@prisma/client"]
     }
   }
 }
