@@ -2,19 +2,21 @@
 
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { removeJwtAccessToken } from "@web/utils/auth";
+import { useUserContext } from "@web/app/user/UserContext";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const navigation = [
-  { name: "Product", href: "#" },
-  { name: "Features", href: "#" },
-  { name: "Marketplace", href: "#" },
-  { name: "Company", href: "#" },
+  { name: "Product", href: "/product" },
+  { name: "Features", href: "/features" },
+  { name: "Pricing", href: "/pricing" },
 ];
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
+  const { currentUser, logout } = useUserContext();
+  const router = useRouter();
   return (
     <div className="bg-white mb-32">
       <header className="absolute inset-x-0 top-0 z-50">
@@ -23,14 +25,14 @@ export default function Header() {
           aria-label="Global"
         >
           <div className="flex lg:flex-1">
-            <a href="/" className="-m-1.5 p-1.5">
+            <Link href="/" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
               <img
                 className="h-8 w-auto"
                 src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                 alt=""
               />
-            </a>
+            </Link>
           </div>
           <div className="flex lg:hidden">
             <button
@@ -54,20 +56,26 @@ export default function Header() {
             ))}
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <a
-              href="/login"
-              className="text-sm font-semibold leading-6 text-gray-900"
-            >
-              Log in
-            </a>
-            <a
-              onClick={() => {
-                removeJwtAccessToken();
-              }}
-              className="text-sm font-semibold leading-6 text-gray-900"
-            >
-              Log Out
-            </a>
+            {!currentUser ? (
+              <Link
+                href="/login"
+                className="text-sm font-semibold leading-6 text-gray-900"
+              >
+                Log in
+              </Link>
+            ) : (
+              <Link
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  logout();
+                  router.push("/");
+                }}
+                className="text-sm font-semibold leading-6 text-gray-900"
+              >
+                Logout
+              </Link>
+            )}
           </div>
         </nav>
         <Dialog

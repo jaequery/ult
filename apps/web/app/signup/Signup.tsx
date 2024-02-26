@@ -3,22 +3,17 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserCreateDto, UserCreateDtoType } from "@server/user/dto/user.dto";
 import { CircularProgress } from "@web/components/CircularProgress";
-import { useTrpcMutate } from "@web/hooks/useTrpcMutate";
-import { trpc } from "@web/utils/trpc/trpc";
+import { useTrpc } from "@web/contexts/TrpcContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useUserContext } from "../user/UserContext";
 
 export default function Signup() {
   const router = useRouter();
-  const {
-    mutateAsync: createUser,
-    data: createdUser,
-    isLoading: creatingUser,
-    error: creatingUserError,
-  } = useTrpcMutate(async (userData: UserCreateDtoType) =>
-    trpc.userRouter.create.mutate(userData)
-  );
+  const { trpc } = useTrpc();
+  const createUser = trpc.userRouter.create.useMutation();
+  const { setAccessToken } = useUserContext();
   const {
     register,
     formState: { errors },
@@ -44,8 +39,11 @@ export default function Signup() {
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form
             onSubmit={handleSubmit(async (data) => {
-              const user = await createUser(data);
-              router.push(`/`);
+              const { jwt } = await createUser.mutateAsync(data);
+              if (jwt) {
+                setAccessToken(jwt.accessToken, jwt.expiresIn);
+                router.push(`/dashboard`);
+              }
             })}
             className="space-y-6"
           >
@@ -149,12 +147,12 @@ export default function Signup() {
               >
                 Sign Up
               </button>
-              {creatingUser && <CircularProgress />}
+              {createUser.isLoading && <CircularProgress />}
             </div>
           </form>
-          {creatingUserError && (
+          {createUser.error && (
             <p className="mt-2 text-sm text-red-600 text-center">
-              {creatingUserError.message}
+              {createUser.error.message}
             </p>
           )}
           <p className="mt-10 text-center text-sm text-gray-500">

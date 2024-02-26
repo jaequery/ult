@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '@server/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { UserCreateDtoType, UserLoginDtoType } from './dto/user.dto';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -38,7 +39,8 @@ export class UserService {
     }
 
     // retrieve JWT
-    const expiresIn = this.configService.get<string>('JWT_EXPIRES_IN');
+    const expiresIn =
+      this.configService.get<string>('JWT_EXPIRES_IN') || '365d';
     const payload = {
       username: user.email,
       sub: user.id,
@@ -64,7 +66,12 @@ export class UserService {
     }
     userCreateDto.email = userCreateDto.email.toLowerCase();
     try {
-      return this.prismaService.user.create({ data: userCreateDto });
+      const user = await this.prismaService.user.create({
+        data: userCreateDto,
+      });
+      const accessToken = await this.generateAccessToken(user);
+      const expiresIn = this.configService.get('JWT_EXPIRES_IN');
+      return { user, jwt: { accessToken, expiresIn } };
     } catch (error: any) {
       if (error.constraint === 'user__email__uq') {
         throw new ConflictException(error.message);
@@ -106,5 +113,43 @@ export class UserService {
       encryptedPassword = await bcrypt.hash(password, rounds);
     }
     return encryptedPassword;
+  }
+
+  async findByAccessToken(accessToken: string) {
+    try {
+      // Verify the JWT token and decode its payload
+      const decoded = await this.jwtService.verifyAsync(accessToken, {
+        secret: this.configService.get<string>('JWT_SECRET'),
+      });
+
+      // Use the decoded.sub as the user's identifier to fetch the user
+      const user = await this.prismaService.user.findUnique({
+        where: {
+          id: decoded.sub,
+        },
+      });
+
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      return user;
+    } catch (error) {
+      // Handle error (e.g., token is invalid or expired)
+      // For simplicity, you might just rethrow the error or handle it based on your application's needs
+      throw error;
+    }
+  }
+
+  async generateAccessToken(user: User) {
+    const expiresIn =
+      this.configService.get<string>('JWT_EXPIRES_IN') || '365d';
+    const payload = {
+      username: user.email,
+      sub: user.id,
+      expiresIn,
+    };
+    const accessToken = this.jwtService.sign(payload);
+    return accessToken;
   }
 }

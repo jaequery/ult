@@ -50,9 +50,26 @@ export class UserRouter {
           }),
 
         // get all users
-        findAll: this.trpcService.publicProcedure.query(async ({}) => {
-          return this.userService.findAll();
-        }),
+        findAll: this.trpcService.publicProcedure
+          .input(
+            z.object({
+              id: z.number().optional(),
+            }),
+          )
+          .query(async ({}) => {
+            return this.userService.findAll();
+          }),
+
+        // get user by id
+        findByAccessToken: this.trpcService.publicProcedure
+          .input(
+            z.object({
+              accessToken: z.string(),
+            }),
+          )
+          .query(async ({ input }) => {
+            return this.userService.findByAccessToken(input.accessToken);
+          }),
       }),
     };
   }

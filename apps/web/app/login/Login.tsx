@@ -3,40 +3,32 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserLoginDto, UserLoginDtoType } from "@server/user/dto/user.dto";
 import { CircularProgress } from "@web/components/CircularProgress";
-import { useTrpcMutate } from "@web/hooks/useTrpcMutate";
-import { useTrpcQuery } from "@web/hooks/useTrpcQuery";
-import { getJwtAccessToken, setJwtAccessToken } from "@web/utils/auth";
-import { trpc } from "@web/utils/trpc/trpc";
+import { useTrpc } from "@web/contexts/TrpcContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useUserContext } from "../user/UserContext";
 
 export default function Login() {
   const router = useRouter();
-  const {
-    mutateAsync: loginUser,
-    data: user,
-    isLoading: loggingInUser,
-    error: loggingInUserError,
-  } = useTrpcMutate(async (userData: UserLoginDtoType) =>
-    trpc.userRouter.login.mutate(userData)
-  );
+  const { trpc } = useTrpc();
+
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm<UserLoginDtoType>({
     resolver: zodResolver(UserLoginDto),
-    defaultValues: {
-      email: undefined,
-      password: undefined,
-    },
   });
+  const login = trpc.userRouter.login.useMutation();
+  const { currentUser, setCurrentUser, setAccessToken } = useUserContext();
 
-  const { currentUser, setCurrentUser } = useUserContext();
-  const jwtAccessToken = getJwtAccessToken();
+  useEffect(() => {
+    if (currentUser) {
+      router.push("/dashboard");
+    }
+  }, [currentUser, router]);
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -44,21 +36,16 @@ export default function Login() {
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Sign in to your account
           </h2>
+          {currentUser && <h3>currentUser: {currentUser?.firstName}</h3>}
         </div>
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form
             className="space-y-6"
             onSubmit={handleSubmit(async (data) => {
               try {
-                const jwtUser = await loginUser(data);
-                if (jwtUser?.user && setCurrentUser) {
-                  setCurrentUser(jwtUser.user);
-                }
-                setJwtAccessToken(
-                  jwtUser.jwt.accessToken,
-                  jwtUser.jwt.expiryDays
-                );
-                router.push("/dashboard");
+                const jwtUser = await login.mutateAsync(data);
+                setAccessToken(jwtUser.jwt.accessToken, jwtUser.jwt.expiresIn);
+                setCurrentUser(jwtUser.user);
               } catch (e) {}
             })}
           >
@@ -113,12 +100,12 @@ export default function Login() {
               >
                 Sign in
               </button>
-              {loggingInUser && <CircularProgress />}
+              {login.isLoading && <CircularProgress />}
             </div>
           </form>
-          {loggingInUserError && (
+          {login.error && (
             <p className="mt-2 text-sm text-red-600 text-center">
-              {loggingInUserError.message}
+              {login.error.message}
             </p>
           )}
           <p className="mt-10 text-center text-sm text-gray-500">

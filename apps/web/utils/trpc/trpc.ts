@@ -1,8 +1,9 @@
 import { AppRouter } from "@server/trpc/trpc.router";
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
-import { getJwtAccessToken } from "../auth";
+import Cookies from "js-cookie";
 
-const jwtAccessToken = getJwtAccessToken();
+const jwtAccessToken = Cookies.get("jwtAccessToken");
+
 export const trpc = createTRPCProxyClient<AppRouter>({
   links: [
     httpBatchLink({
