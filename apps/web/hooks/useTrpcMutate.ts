@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import superjson from "superjson";
 
 export interface TrpcError {
   message: string;
@@ -26,7 +27,9 @@ export function useTrpcMutate<TResult, TParams extends any[]>(
       setIsLoading(true);
       try {
         const result = await mutationFn(...params);
-        setData(result);
+        const serialized = superjson.stringify(result);
+        const deserialized = superjson.parse(serialized) as TResult;
+        setData(deserialized);
       } catch (error: any) {
         setError(error.meta.responseJSON[0].error as TrpcError);
       } finally {
@@ -41,8 +44,10 @@ export function useTrpcMutate<TResult, TParams extends any[]>(
       setIsLoading(true);
       try {
         const result = await mutationFn(...params);
-        setData(result);
-        return result;
+        const serialized = superjson.stringify(result);
+        const deserialized = superjson.parse(serialized) as TResult;
+        setData(deserialized);
+        return deserialized;
       } catch (error: any) {
         setError(error.meta.responseJSON[0].error as TrpcError);
         throw error.meta.responseJSON[0].error; // Re-throw the error to allow callers to handle it

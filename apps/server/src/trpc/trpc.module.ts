@@ -1,7 +1,7 @@
 import { Module, forwardRef } from '@nestjs/common';
+import { UserModule } from '@server/user/user.module';
 import { TrpcRouter } from './trpc.router';
 import { TrpcService } from './trpc.service';
-import { UserModule } from '@server/user/user.module';
 
 @Module({
   imports: [forwardRef(() => UserModule)],

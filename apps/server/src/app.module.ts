@@ -18,8 +18,10 @@ import { UserModule } from './user/user.module';
         NODE_ENV: Joi.string()
           .valid('development', 'production', 'test', 'provision')
           .default('development'),
+
+        // auth config
         JWT_SECRET: Joi.string(),
-        JWT_EXPIRY_DAYS: Joi.number().default(365),
+        JWT_EXPIRES_IN: Joi.string().default('365d'),
 
         // database config
         DB_URL: Joi.string().default(

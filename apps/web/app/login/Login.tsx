@@ -15,10 +15,6 @@ import { useUserContext } from "../user/UserContext";
 
 export default function Login() {
   const router = useRouter();
-  const fun: Fun = {
-    name: "ga",
-  };
-  fun.name = "cool";
   const {
     mutateAsync: loginUser,
     data: user,
@@ -27,12 +23,6 @@ export default function Login() {
   } = useTrpcMutate(async (userData: UserLoginDtoType) =>
     trpc.userRouter.login.mutate(userData)
   );
-  const {
-    query: findUsers,
-    data: users,
-    isLoading: findingUsers,
-    error: findingUsersError,
-  } = useTrpcQuery(useCallback(() => trpc.userRouter.findAll.query(), []));
   const {
     register,
     formState: { errors },
@@ -45,7 +35,7 @@ export default function Login() {
     },
   });
 
-  const { user: currentUser, setUser } = useUserContext();
+  const { currentUser, setCurrentUser } = useUserContext();
   const jwtAccessToken = getJwtAccessToken();
   return (
     <>
@@ -61,8 +51,8 @@ export default function Login() {
             onSubmit={handleSubmit(async (data) => {
               try {
                 const jwtUser = await loginUser(data);
-                if (jwtUser?.user && setUser) {
-                  setUser(jwtUser.user);
+                if (jwtUser?.user && setCurrentUser) {
+                  setCurrentUser(jwtUser.user);
                 }
                 setJwtAccessToken(
                   jwtUser.jwt.accessToken,

@@ -1,20 +1,20 @@
 "use client";
 
+import { User } from "@prisma/client";
 import React, { ReactNode, createContext, useContext, useState } from "react";
-import { User } from "./User";
 
 interface UserProviderProps {
   children: ReactNode; // More generic type to allow any valid React child/children
 }
 
 export interface UserContextState {
-  user?: User | null; // Explicitly allow for user to be undefined or null
-  setUser?: React.Dispatch<React.SetStateAction<User | null>>; // If you plan to expose setUser
+  currentUser?: User | null; // Explicitly allow for user to be undefined or null
+  setCurrentUser?: React.Dispatch<React.SetStateAction<User | null>>; // If you plan to expose setUser
 }
 
 // Define a default context value that matches the shape of UserContextState
 const defaultContextValue: UserContextState = {
-  user: null, // Default to null, but now it's explicitly part of the context type
+  currentUser: null, // Default to null, but now it's explicitly part of the context type
 };
 
 // Context creation with a default value that matches the expected shape
@@ -25,10 +25,10 @@ export const useUserContext = () => useContext(UserContext);
 
 // Provider Component
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   // Provide both user and setUser to the context value
-  const contextValue = { user, setUser };
+  const contextValue = { currentUser, setCurrentUser };
 
   return (
     <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>

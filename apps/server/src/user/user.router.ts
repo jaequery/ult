@@ -3,12 +3,7 @@ import { TrpcExceptionFilter } from '@server/trpc/trpc.exception-handler';
 import { TrpcService } from '@server/trpc/trpc.service';
 import { UserService } from '@server/user/user.service';
 import { z } from 'zod';
-import {
-  UserCreateDto,
-  UserFindAllDto,
-  UserLoginDto,
-  UserRemoveDto,
-} from './dto/user.dto';
+import { UserCreateDto, UserLoginDto, UserRemoveDto } from './dto/user.dto';
 
 @Injectable()
 @UseFilters(new TrpcExceptionFilter())

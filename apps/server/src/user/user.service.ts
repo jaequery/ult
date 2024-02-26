@@ -38,11 +38,11 @@ export class UserService {
     }
 
     // retrieve JWT
-    const expiryDays = this.configService.get<number>('JWT_EXPIRY_DAYS');
+    const expiresIn = this.configService.get<number>('JWT_EXPIRES_IN');
     const payload = {
       username: user.email,
       sub: user.id,
-      expiresIn: expiryDays,
+      expiresIn,
     };
     const accessToken = this.jwtService.sign(payload);
 
@@ -65,7 +65,7 @@ export class UserService {
     userCreateDto.email = userCreateDto.email.toLowerCase();
     try {
       return this.prismaService.user.create({ data: userCreateDto });
-    } catch (error) {
+    } catch (error: any) {
       if (error.constraint === 'user__email__uq') {
         throw new ConflictException(error.message);
       } else {
@@ -84,7 +84,7 @@ export class UserService {
     });
   }
 
-  async delete(id: number) {
+  async remove(id: number) {
     return this.prismaService.user.update({
       where: {
         id,
@@ -98,6 +98,8 @@ export class UserService {
   private async encryptPassword(password: string) {
     const rounds = 10;
     let encryptedPassword;
+
+    // do not hash again if already hashed
     if (password.indexOf('$2a$') === 0 && password.length === 60) {
       encryptedPassword = password;
     } else {
