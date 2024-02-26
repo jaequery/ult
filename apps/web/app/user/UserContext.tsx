@@ -1,7 +1,6 @@
 "use client";
 
 import { User } from "@prisma/client";
-import { useTrpc } from "@web/contexts/TrpcContext";
 import { trpc } from "@web/utils/trpc/trpc";
 import Cookies from "js-cookie";
 import React, {
@@ -45,7 +44,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      console.log("fetch user");
       const tokenFromCookie = Cookies.get("jwtAccessToken");
       if (tokenFromCookie) {
         try {
