@@ -38,7 +38,7 @@ export class UserService {
     }
 
     // retrieve JWT
-    const expiresIn = this.configService.get<number>('JWT_EXPIRES_IN');
+    const expiresIn = this.configService.get<string>('JWT_EXPIRES_IN');
     const payload = {
       username: user.email,
       sub: user.id,
@@ -50,7 +50,7 @@ export class UserService {
     return {
       jwt: {
         accessToken,
-        expiryDays,
+        expiresIn,
       },
       user,
     };

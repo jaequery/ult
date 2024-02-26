@@ -1,14 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import 'reflect-metadata';
-import { initializeTransactionalContext } from 'typeorm-transactional';
 import { AppModule } from './app.module';
 import { TrpcExceptionFilter } from './trpc/trpc.exception-handler';
 import { TrpcRouter } from './trpc/trpc.router';
 
 async function bootstrap() {
-  // enables db transactions to TypeORM using @Transactional() decorator
-  initializeTransactionalContext();
-
   // initialize Nest app
   const app = await NestFactory.create(AppModule);
   app.enableCors();
