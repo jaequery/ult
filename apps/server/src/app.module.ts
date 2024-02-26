@@ -24,7 +24,7 @@ import { UserModule } from './user/user.module';
         JWT_EXPIRES_IN: Joi.string().default('365d'),
 
         // database config
-        DB_URL: Joi.string().default(
+        DATABASE_URL: Joi.string().default(
           'postgresql://postgres:password@localhost:5432/postgres?schema=public',
         ),
       }),
