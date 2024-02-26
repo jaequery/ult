@@ -12,11 +12,11 @@ import { UserModule } from './user/user.module';
     ConfigModule.forRoot({
       isGlobal: true,
       expandVariables: true,
-      envFilePath: `${process.cwd()}/.env.${process.env.NODE_ENV ?? 'development'}`,
+      envFilePath: `${process.cwd()}/.env`,
       validationSchema: Joi.object({
         // server config
         NODE_ENV: Joi.string()
-          .valid('development', 'production', 'test', 'provision')
+          .valid('development', 'staging', 'production', 'test')
           .default('development'),
 
         // auth config

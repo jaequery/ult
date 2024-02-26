@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const navigation = [
-  { name: "Product", href: "/product" },
   { name: "Features", href: "/features" },
   { name: "Pricing", href: "/pricing" },
 ];

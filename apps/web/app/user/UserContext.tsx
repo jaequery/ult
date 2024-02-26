@@ -1,7 +1,7 @@
 "use client";
 
 import { User } from "@prisma/client";
-import { trpc } from "@web/utils/trpc/trpc";
+import { useTrpc } from "@web/contexts/TrpcContext";
 import Cookies from "js-cookie";
 import React, {
   Dispatch,
@@ -41,7 +41,7 @@ const UserContext = createContext<UserContextState>(defaultContextValue);
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
-
+  const { trpcAsync } = useTrpc();
   useEffect(() => {
     const fetchUser = async () => {
       const tokenFromCookie = Cookies.get("jwtAccessToken");
@@ -49,7 +49,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         try {
           // Ensure you are correctly handling the async operation with await
           const userFromAccessToken =
-            await trpc.userRouter.findByAccessToken.query({
+            await trpcAsync.userRouter.findByAccessToken.query({
               accessToken: tokenFromCookie,
             });
           setCurrentUser(userFromAccessToken);
@@ -60,7 +60,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       }
     };
     fetchUser();
-  }, [token]);
+  }, [token, trpcAsync.userRouter.findByAccessToken]);
 
   // Provide both user and setUser to the context value
   const contextValue = {
