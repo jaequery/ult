@@ -27,7 +27,7 @@ const trpcClientOpts = {
   ],
 };
 const trpcReactClient = trpc.createClient(trpcClientOpts);
-export const trpcAsync = createTRPCProxyClient<AppRouter>(trpcClientOpts);
+const trpcAsync = createTRPCProxyClient<AppRouter>(trpcClientOpts);
 
 interface TrpcContextState {
   trpc: typeof trpc;
