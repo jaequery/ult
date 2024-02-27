@@ -18,7 +18,7 @@ export class TrpcRouter {
     private readonly userRouter: UserRouter,
   ) {}
 
-  appRouter = this.trpcService.router({
+  appRouter = this.trpcService.trpc.router({
     ...this.userRouter.apply(),
   });
 

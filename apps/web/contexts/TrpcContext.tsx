@@ -3,28 +3,30 @@
 import { AppRouter } from "@server/trpc/trpc.router"; // Adjust the import path as necessary
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
+  HTTPBatchLinkOptions,
   createTRPCProxyClient,
   createTRPCReact,
   httpBatchLink,
 } from "@trpc/react-query";
 import Cookies from "js-cookie";
 import React, { ReactNode, createContext, useContext, useState } from "react";
+import superjson from "superjson";
 
 const trpc = createTRPCReact<AppRouter>();
 const trpcUrl =
   process.env.NEXT_PUBLIC_TRPC_URL || "http://localhost:3001/trpc"; // Default URL as fallback
 const jwtAccessToken = Cookies.get("jwtAccessToken");
+const httpBatchLinkOptions = {
+  url: trpcUrl,
+  transformer: superjson,
+  headers: jwtAccessToken
+    ? {
+        Authorization: `Bearer ${jwtAccessToken}`,
+      }
+    : undefined,
+} as HTTPBatchLinkOptions;
 const trpcClientOpts = {
-  links: [
-    httpBatchLink({
-      url: trpcUrl,
-      headers: jwtAccessToken
-        ? {
-            Authorization: `Bearer ${jwtAccessToken}`,
-          }
-        : undefined,
-    }),
-  ],
+  links: [httpBatchLink(httpBatchLinkOptions)],
 };
 const trpcReactClient = trpc.createClient(trpcClientOpts);
 const trpcAsync = createTRPCProxyClient<AppRouter>(trpcClientOpts);

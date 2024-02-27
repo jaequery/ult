@@ -10,6 +10,7 @@ import React, {
   createContext,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
 
@@ -42,6 +43,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const { trpcAsync } = useTrpc();
+  const trpcAsyncRef = useRef(trpcAsync);
+
   useEffect(() => {
     const fetchUser = async () => {
       const tokenFromCookie = Cookies.get("jwtAccessToken");
@@ -49,7 +52,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         try {
           // Ensure you are correctly handling the async operation with await
           const userFromAccessToken =
-            await trpcAsync.userRouter.findByAccessToken.query({
+            await trpcAsyncRef.current.userRouter.findByAccessToken.query({
               accessToken: tokenFromCookie,
             });
           setCurrentUser(userFromAccessToken);
@@ -60,7 +63,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       }
     };
     fetchUser();
-  }, [token, trpcAsync.userRouter.findByAccessToken]);
+  }, [token, trpcAsyncRef]);
 
   // Provide both user and setUser to the context value
   const contextValue = {

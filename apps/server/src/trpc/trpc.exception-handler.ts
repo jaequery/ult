@@ -6,8 +6,8 @@ import { BaseExceptionFilter } from '@nestjs/core';
  */
 @Catch()
 export class TrpcExceptionFilter extends BaseExceptionFilter {
-  catch(exception: unknown, host: ArgumentsHost) {
+  catch() {
     console.log('hello error');
-    super.catch(exception, host);
+    // super.catch(exception, host);
   }
 }

@@ -68,7 +68,7 @@ export default function Header() {
                 onClick={(e) => {
                   e.preventDefault();
                   logout();
-                  router.push("/");
+                  window.location.href = "/";
                 }}
                 className="text-sm font-semibold leading-6 text-gray-900"
               >

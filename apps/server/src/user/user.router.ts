@@ -13,33 +13,31 @@ export class UserRouter {
     private readonly userService: UserService,
   ) {}
   apply() {
-    const protectedProcedure = this.trpcService.getProtectedProcedure();
-
     return {
-      userRouter: this.trpcService.router({
+      userRouter: this.trpcService.trpc.router({
         // login user
-        login: protectedProcedure
+        login: this.trpcService.trpc.procedure
           .input(UserLoginDto)
           .mutation(async ({ input }) => {
             return this.userService.login(input);
           }),
 
         // create user
-        create: this.trpcService.publicProcedure
+        create: this.trpcService.trpc.procedure
           .input(UserCreateDto)
           .mutation(async ({ input }) => {
             return this.userService.create(input);
           }),
 
         // remove user
-        remove: this.trpcService.publicProcedure
+        remove: this.trpcService.trpc.procedure
           .input(UserRemoveDto)
           .mutation(async ({ input }) => {
             return this.userService.remove(input.id);
           }),
 
         // get user by id
-        findById: this.trpcService.publicProcedure
+        findById: this.trpcService.trpc.procedure
           .input(
             z.object({
               id: z.number(),
@@ -50,7 +48,7 @@ export class UserRouter {
           }),
 
         // get all users
-        findAll: this.trpcService.publicProcedure
+        findAll: this.trpcService.trpc.procedure
           .input(
             z.object({
               id: z.number().optional(),
@@ -61,7 +59,7 @@ export class UserRouter {
           }),
 
         // get user by id
-        findByAccessToken: this.trpcService.publicProcedure
+        findByAccessToken: this.trpcService.trpc.procedure
           .input(
             z.object({
               accessToken: z.string(),
