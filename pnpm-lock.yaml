@@ -55,7 +55,6 @@ importers:
       reflect-metadata: ^0.2.1
       rxjs: ^7.8.1
       source-map-support: ^0.5.21
-      superjson: ^2.2.1
       supertest: ^6.3.4
       ts-jest: ^29.1.2
       ts-loader: ^9.5.1
@@ -88,7 +87,6 @@ importers:
       pg: 8.11.3
       reflect-metadata: 0.2.1
       rxjs: 7.8.1
-      superjson: 2.2.1
       typeorm-naming-strategies: 4.1.0
       zod: 3.22.4
     devDependencies:
@@ -153,7 +151,6 @@ importers:
       react-dom: ^18
       react-hook-form: ^7.50.1
       react-query: '3'
-      superjson: ^2.2.1
       tailwindcss: ^3.3.0
       typescript: ^5
       zod: ^3.22.4
@@ -175,7 +172,6 @@ importers:
       react-dom: 18.2.0_react@18.2.0
       react-hook-form: 7.50.1_react@18.2.0
       react-query: 3.39.3_react-dom@18.2.0+react@18.2.0
-      superjson: 2.2.1
       zod: 3.22.4
     devDependencies:
       '@types/js-cookie': 3.0.6
@@ -3601,13 +3597,6 @@ packages:
     resolution: {integrity: sha512-LDx6oHrK+PhzLKJU9j5S7/Y3jM/mUHvD/DeI1WQmJn652iPC5Y4TBzC9l+5OMOXlyTTA+SmVUPm0HQUwpD5Jqw==}
     dev: true
 
-  /copy-anything/3.0.5:
-    resolution: {integrity: sha512-yCEafptTtb4bk7GLEQoM8KVJpxAfdBJYaXyzQEgQQQgYrZiDp8SJmGKlYza6CYjEDNstAdNdKA3UuoULlEbS6w==}
-    engines: {node: '>=12.13'}
-    dependencies:
-      is-what: 4.1.16
-    dev: false
-
   /core-util-is/1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
 
@@ -5420,11 +5409,6 @@ packages:
       call-bind: 1.0.7
       get-intrinsic: 1.2.4
     dev: true
-
-  /is-what/4.1.16:
-    resolution: {integrity: sha512-ZhMwEosbFJkA0YhFnNDgTM4ZxDRsS6HqTo7qsZM08fehyRYIYa0yHu5R6mgo1n/8MgaPBXiPimPD77baVFYg+A==}
-    engines: {node: '>=12.13'}
-    dev: false
 
   /isarray/1.0.0:
     resolution: {integrity: sha512-VLghIWNM6ELQzo7zwmcg0NmTVyWKYjvIeM83yjp0wRDTmUnrM678fQbcKBo6n2CJEF0szoG//ytg+TKla89ALQ==}
@@ -7914,13 +7898,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
-
-  /superjson/2.2.1:
-    resolution: {integrity: sha512-8iGv75BYOa0xRJHK5vRLEjE2H/i4lulTjzpUXic3Eg8akftYjkmQDa8JARQ42rlczXyFR3IeRoeFCc7RxHsYZA==}
-    engines: {node: '>=16'}
-    dependencies:
-      copy-anything: 3.0.5
-    dev: false
 
   /supertest/6.3.4:
     resolution: {integrity: sha512-erY3HFDG0dPnhw4U+udPfrzXa4xhSG+n4rxfRuZWCUvjFWwKl+OxWf/7zk50s84/fAAs7vf5QAb9uRa0cCykxw==}

@@ -23,7 +23,8 @@
     "prestart": "rimraf dist && yarn run build",
     "db:migrate:new": "npx prisma migrate dev --name",
     "db:migrate": "npx prisma migrate deploy",
-    "db:seed": "npx ts-node prisma/seed.ts"
+    "db:seed": "npx ts-node prisma/seed.ts",
+    "db:reset": "npx prisma migrate reset"
   },
   "dependencies": {
     "@nestjs/common": "^10.3.3",
@@ -48,7 +49,6 @@
     "pg": "^8.11.3",
     "reflect-metadata": "^0.2.1",
     "rxjs": "^7.8.1",
-    "superjson": "^2.2.1",
     "typeorm-naming-strategies": "^4.1.0",
     "zod": "^3.22.4"
   },

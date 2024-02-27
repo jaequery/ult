@@ -44,8 +44,13 @@ export default function Login() {
             onSubmit={handleSubmit(async (data) => {
               try {
                 const jwtUser = await login.mutateAsync(data);
-                setAccessToken(jwtUser.jwt.accessToken, jwtUser.jwt.expiresIn);
-                setCurrentUser(jwtUser.user);
+                if (jwtUser.user && setCurrentUser) {
+                  setAccessToken(
+                    jwtUser.jwt.accessToken,
+                    jwtUser.jwt.expiresIn
+                  );
+                  setCurrentUser(jwtUser.user);
+                }
               } catch (e) {}
             })}
           >
