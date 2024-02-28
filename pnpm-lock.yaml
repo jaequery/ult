@@ -178,7 +178,11 @@ importers:
         specifier: ^5.90.3
         version: 5.90.3(@swc/core@1.4.2)(esbuild@0.20.1)
 
-  apps/shared: {}
+  apps/shared:
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
 
   apps/web:
     dependencies:
