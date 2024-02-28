@@ -11,6 +11,7 @@ export const UserCreateDto = z.object({
   password: z.string().min(8, 'Password must be at least 8 characters'),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
+  roles: z.array(z.string()),
 });
 export type UserCreateDtoType = z.infer<typeof UserCreateDto>;
 

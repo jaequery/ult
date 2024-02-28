@@ -1,6 +1,6 @@
 "use client";
 
-import { User } from "@prisma/client";
+import { CurrentUser } from "@shared/interfaces";
 import { useTrpc } from "@web/contexts/TrpcContext";
 import Cookies from "js-cookie";
 import React, {
@@ -19,8 +19,8 @@ interface UserProviderProps {
 }
 
 export interface UserContextState {
-  currentUser: User | null; // Explicitly allow for user to be undefined or null
-  setCurrentUser: Dispatch<SetStateAction<User | null>> | null; // Allow null here
+  currentUser: CurrentUser | null; // Explicitly allow for user to be undefined or null
+  setCurrentUser: Dispatch<SetStateAction<CurrentUser | null>> | null; // Allow null here
   accessToken: string | null;
   setAccessToken: (accessToken: string, expiresIn: string) => void;
   logout: () => void;
@@ -40,7 +40,7 @@ const UserContext = createContext<UserContextState>(defaultContextValue);
 
 // Provider Component
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const { trpcAsync } = useTrpc();
   const trpcAsyncRef = useRef(trpcAsync);
@@ -100,7 +100,6 @@ export const useUserContext = () => useContext(UserContext);
 function parseExpiresIn(expiresIn: string) {
   const unit = expiresIn.slice(-1);
   const value = parseInt(expiresIn.slice(0, -1), 10);
-
   switch (unit) {
     case "h": // hours
       return value / 24; // Convert hours to days

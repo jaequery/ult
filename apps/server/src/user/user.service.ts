@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   ConflictException,
   InternalServerErrorException,
@@ -7,10 +7,10 @@ import {
 } from '@nestjs/common/exceptions';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { User } from '@prisma/client';
 import { PrismaService } from '@server/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { UserCreateDtoType, UserLoginDtoType } from './dto/user.dto';
-import { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -25,6 +25,9 @@ export class UserService {
       where: {
         email: userLoginDto.email,
         deletedAt: null,
+      },
+      include: {
+        roles: true,
       },
     });
 
@@ -65,9 +68,30 @@ export class UserService {
       );
     }
     userCreateDto.email = userCreateDto.email.toLowerCase();
+
+    let roleConnections: { id: number }[] = [];
+    if (userCreateDto.roles && userCreateDto.roles.length > 0) {
+      // Retrieve the roles from the database
+      const roles = await this.prismaService.role.findMany({
+        where: {
+          name: { in: userCreateDto.roles }, // Use 'in' operator for filtering by multiple names
+        },
+      });
+      // Prepare role connections for Prisma create operation
+      roleConnections = roles.map((role) => ({ id: role.id }));
+    }
+
     try {
+      // Exclude roles from userCreateDto to avoid conflicts
+      const { ...userData } = userCreateDto;
+
       const user = await this.prismaService.user.create({
-        data: userCreateDto,
+        data: {
+          ...userData,
+          roles: {
+            connect: roleConnections, // Use 'connect' to associate existing roles
+          },
+        },
       });
       const accessToken = await this.generateAccessToken(user);
       const expiresIn = this.configService.get('JWT_EXPIRES_IN');
@@ -88,6 +112,9 @@ export class UserService {
   async findById(id: number) {
     return this.prismaService.user.findUnique({
       where: { id, deletedAt: null },
+      include: {
+        roles: true,
+      },
     });
   }
 
@@ -123,12 +150,7 @@ export class UserService {
       });
 
       // Use the decoded.sub as the user's identifier to fetch the user
-      const user = await this.prismaService.user.findUnique({
-        where: {
-          id: decoded.sub,
-        },
-      });
-
+      const user = await this.findById(decoded.sub);
       if (!user) {
         throw new NotFoundException('User not found');
       }

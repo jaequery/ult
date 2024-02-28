@@ -28,14 +28,16 @@ async function main() {
     firstName: 'Admin',
     lastName: 'User',
     email: 'admin@example.com',
-    password: 'password', // Ensure the password is hashed within the UserService
+    password: 'password',
+    roles: ['Admin'],
   });
   console.log(`Created new user: ${admin.user.email} (ID: ${admin.user.id})`);
   const normalUser = await userService.create({
     firstName: 'Normal',
     lastName: 'User',
     email: 'user@example.com',
-    password: 'password', // Ensure the password is hashed within the UserService
+    password: 'password',
+    roles: ['User'],
   });
   console.log(
     `Created new user: ${normalUser.user.email} (ID: ${normalUser.user.id})`,
