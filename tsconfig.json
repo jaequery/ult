@@ -14,7 +14,7 @@
     "paths": {
       "@server/*": ["./apps/server/src/*"],
       "@web/*": ["./apps/web/*"],
-      "@shared/*": ["./apps/shared/*"],
+      "@shared/*": ["./apps/shared/dist/*"],
       "@prisma/client": ["./apps/server/node_modules/@prisma/client"]
     }
   }
