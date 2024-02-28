@@ -13,7 +13,6 @@ import { useUserContext } from "../user/UserContext";
 export default function Login() {
   const router = useRouter();
   const { trpc } = useTrpc();
-
   const {
     register,
     formState: { errors },

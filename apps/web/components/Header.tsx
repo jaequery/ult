@@ -17,7 +17,7 @@ export default function Header() {
   const { currentUser, logout } = useUserContext();
   const router = useRouter();
   return (
-    <div className="bg-white mb-32">
+    <div className="bg-white mb-16">
       <header className="absolute inset-x-0 top-0 z-50">
         <nav
           className="flex items-center justify-between p-6 lg:px-8"
