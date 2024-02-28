@@ -23,7 +23,7 @@
     "prestart": "rimraf dist && yarn run build",
     "db:migrate:new": "npx prisma migrate dev --name",
     "db:migrate": "npx prisma migrate deploy",
-    "db:seed": "npx ts-node prisma/seed.ts",
+    "db:seed": "npx ts-node -r tsconfig-paths/register prisma/seed.ts",
     "db:reset": "npx prisma migrate reset"
   },
   "dependencies": {

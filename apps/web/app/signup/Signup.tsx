@@ -8,11 +8,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useUserContext } from "../user/UserContext";
+import { useEffect } from "react";
 
 export default function Signup() {
   const router = useRouter();
   const { trpc } = useTrpc();
   const createUser = trpc.userRouter.create.useMutation();
+  const { currentUser } = useUserContext();
   const { setAccessToken } = useUserContext();
   const {
     register,
@@ -27,6 +29,12 @@ export default function Signup() {
       password: "",
     },
   });
+
+  useEffect(() => {
+    if (currentUser) {
+      router.push(`/`);
+    }
+  }, [currentUser, router]);
 
   return (
     <>

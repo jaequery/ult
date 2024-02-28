@@ -1,19 +1,45 @@
+import { NestFactory } from '@nestjs/core';
 import { PrismaClient } from '@prisma/client';
+import { AppModule } from '@server/app.module';
+import { UserService } from '@server/user/user.service';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  // Example: Creating a new user
-  const newUser = await prisma.user.create({
+  const app = await NestFactory.createApplicationContext(AppModule);
+  const userService = app.get(UserService);
+
+  // setup roles
+  const adminRole = await prisma.role.create({
     data: {
-      firstName: 'Alice',
-      lastName: 'Jo',
-      email: 'alice@example.com',
-      password: 'password',
-      // Add other fields as required
+      name: 'Admin',
     },
   });
-  console.log(`Created new user: ${newUser.email} (ID: ${newUser.id})`);
+  console.log(`Created new role: ${adminRole.name} (ID: ${adminRole.id})`);
+  const userRole = await prisma.role.create({
+    data: {
+      name: 'User',
+    },
+  });
+  console.log(`Created new role: ${userRole.name} (ID: ${userRole.id})`);
+
+  // setup users
+  const admin = await userService.create({
+    firstName: 'Admin',
+    lastName: 'User',
+    email: 'admin@example.com',
+    password: 'password', // Ensure the password is hashed within the UserService
+  });
+  console.log(`Created new user: ${admin.user.email} (ID: ${admin.user.id})`);
+  const normalUser = await userService.create({
+    firstName: 'Normal',
+    lastName: 'User',
+    email: 'user@example.com',
+    password: 'password', // Ensure the password is hashed within the UserService
+  });
+  console.log(
+    `Created new user: ${normalUser.user.email} (ID: ${normalUser.user.id})`,
+  );
 
   // Add more seeding logic as needed
 }
