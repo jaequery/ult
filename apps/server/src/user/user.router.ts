@@ -3,12 +3,12 @@ import { TrpcExceptionFilter } from '@server/trpc/trpc.exception-handler';
 import { TrpcService } from '@server/trpc/trpc.service';
 import { UserService } from '@server/user/user.service';
 import {
-  UserCreateDto,
   UserFindAllDto,
   UserFindByAccessToken,
   UserFindByIdDto,
   UserLoginDto,
   UserRemoveDto,
+  UserSignupDto,
 } from './dto/user.dto';
 
 @Injectable()
@@ -28,11 +28,11 @@ export class UserRouter {
             return this.userService.login(input);
           }),
 
-        // create user
-        create: this.trpcService.trpc.procedure
-          .input(UserCreateDto)
+        // signs up a user
+        signup: this.trpcService.trpc.procedure
+          .input(UserSignupDto)
           .mutation(async ({ input }) => {
-            return this.userService.create(input);
+            return this.userService.signup(input);
           }),
 
         // remove user

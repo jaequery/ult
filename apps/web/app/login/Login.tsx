@@ -21,7 +21,7 @@ export default function Login() {
   } = useForm<UserLoginDtoType>({
     resolver: zodResolver(UserLoginDto),
   });
-  const login = trpc.userRouter.login.useMutation();
+  const loginUser = trpc.userRouter.login.useMutation();
   const { currentUser, setCurrentUser, setAccessToken } = useUserContext();
 
   useEffect(() => {
@@ -46,7 +46,8 @@ export default function Login() {
             className="space-y-6"
             onSubmit={handleSubmit(async (data) => {
               try {
-                const jwtUser = await login.mutateAsync(data);
+                const jwtUser = await loginUser.mutateAsync(data);
+
                 if (jwtUser.user && setCurrentUser) {
                   setAccessToken(
                     jwtUser.jwt.accessToken,
@@ -108,12 +109,12 @@ export default function Login() {
               >
                 Sign in
               </button>
-              {login.isLoading && <CircularProgress />}
+              {loginUser.isLoading && <CircularProgress />}
             </div>
           </form>
-          {login.error && (
+          {loginUser.error && (
             <p className="mt-2 text-sm text-red-600 text-center">
-              {login.error.message}
+              {loginUser.error.message}
             </p>
           )}
           <p className="mt-10 text-center text-sm text-gray-500">

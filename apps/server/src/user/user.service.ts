@@ -8,7 +8,12 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from '@server/auth/auth.service';
 import { PrismaService } from '@server/prisma/prisma.service';
-import { UserCreateDtoType, UserLoginDtoType } from './dto/user.dto';
+import { Roles } from '@shared/interfaces';
+import {
+  UserCreateDtoType,
+  UserLoginDtoType,
+  UserSignupDtoType,
+} from './dto/user.dto';
 
 @Injectable()
 export class UserService {
@@ -17,6 +22,15 @@ export class UserService {
     private readonly prismaService: PrismaService,
     private readonly authService: AuthService,
   ) {}
+
+  async signup(signupDto: UserSignupDtoType) {
+    const payload = {
+      ...signupDto,
+      roles: [Roles.User],
+    } as UserCreateDtoType;
+    console.log('pay', payload);
+    return this.create(payload);
+  }
 
   async login(userLoginDto: UserLoginDtoType) {
     const user = await this.prismaService.user.findFirst({

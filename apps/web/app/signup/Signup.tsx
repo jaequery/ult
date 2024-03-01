@@ -1,19 +1,18 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserCreateDto, UserCreateDtoType } from "@server/user/dto/user.dto";
+import { UserCreateDtoType, UserSignupDto } from "@server/user/dto/user.dto";
 import { CircularProgress } from "@web/components/CircularProgress";
 import { useTrpc } from "@web/contexts/TrpcContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useUserContext } from "../user/UserContext";
-import { useEffect } from "react";
 
 export default function Signup() {
   const router = useRouter();
   const { trpc } = useTrpc();
-  const createUser = trpc.userRouter.create.useMutation();
   const { currentUser } = useUserContext();
   const { setAccessToken } = useUserContext();
   const {
@@ -21,7 +20,7 @@ export default function Signup() {
     formState: { errors },
     handleSubmit,
   } = useForm<UserCreateDtoType>({
-    resolver: zodResolver(UserCreateDto),
+    resolver: zodResolver(UserSignupDto),
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -29,7 +28,7 @@ export default function Signup() {
       password: "",
     },
   });
-
+  const userSignup = trpc.userRouter.signup.useMutation();
   useEffect(() => {
     if (currentUser) {
       router.push(`/`);
@@ -47,7 +46,7 @@ export default function Signup() {
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form
             onSubmit={handleSubmit(async (data) => {
-              const { jwt } = await createUser.mutateAsync(data);
+              const { jwt } = await userSignup.mutateAsync(data);
               if (jwt) {
                 setAccessToken(jwt.accessToken, jwt.expiresIn);
                 router.push(`/dashboard`);
@@ -155,12 +154,12 @@ export default function Signup() {
               >
                 Sign Up
               </button>
-              {createUser.isLoading && <CircularProgress />}
+              {userSignup.isLoading && <CircularProgress />}
             </div>
           </form>
-          {createUser.error && (
+          {userSignup.error && (
             <p className="mt-2 text-sm text-red-600 text-center">
-              {createUser.error.message}
+              {userSignup.error.message}
             </p>
           )}
           <p className="mt-10 text-center text-sm text-gray-500">

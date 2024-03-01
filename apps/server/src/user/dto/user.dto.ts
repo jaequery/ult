@@ -1,3 +1,4 @@
+import { Roles } from '@shared/interfaces';
 import { z } from 'zod';
 
 export const UserLoginDto = z.object({
@@ -6,12 +7,20 @@ export const UserLoginDto = z.object({
 });
 export type UserLoginDtoType = z.infer<typeof UserLoginDto>;
 
+export const UserSignupDto = z.object({
+  email: z.string().email(),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+});
+export type UserSignupDtoType = z.infer<typeof UserSignupDto>;
+
 export const UserCreateDto = z.object({
   email: z.string().email(),
   password: z.string().min(8, 'Password must be at least 8 characters'),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
-  roles: z.array(z.string()),
+  roles: z.array(z.nativeEnum(Roles)),
 });
 export type UserCreateDtoType = z.infer<typeof UserCreateDto>;
 

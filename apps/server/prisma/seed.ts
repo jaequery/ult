@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { PrismaClient } from '@prisma/client';
 import { AppModule } from '@server/app.module';
 import { UserService } from '@server/user/user.service';
+import { Roles } from '@shared/interfaces';
 
 const prisma = new PrismaClient();
 
@@ -29,7 +30,7 @@ async function main() {
     lastName: 'User',
     email: 'admin@example.com',
     password: 'password',
-    roles: ['Admin'],
+    roles: [Roles.Admin],
   });
   console.log(`Created new user: ${admin.user.email} (ID: ${admin.user.id})`);
   const normalUser = await userService.create({
@@ -37,7 +38,7 @@ async function main() {
     lastName: 'User',
     email: 'user@example.com',
     password: 'password',
-    roles: ['User'],
+    roles: [Roles.User],
   });
   console.log(
     `Created new user: ${normalUser.user.email} (ID: ${normalUser.user.id})`,
