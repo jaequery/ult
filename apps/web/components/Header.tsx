@@ -2,6 +2,7 @@
 
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Roles } from "@shared/interfaces";
 import { useUserContext } from "@web/app/user/UserContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -54,7 +55,7 @@ export default function Header() {
               </Link>
             ))}
           </div>
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+          <div className="hidden lg:flex lg:flex-1 gap-4 lg:justify-end">
             {!currentUser ? (
               <Link
                 href="/login"
@@ -63,17 +64,43 @@ export default function Header() {
                 Log in
               </Link>
             ) : (
-              <Link
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  logout();
-                  window.location.href = "/";
-                }}
-                className="text-sm font-semibold leading-6 text-gray-900"
-              >
-                Logout
-              </Link>
+              <>
+                {currentUser?.roles?.some((r) => r.name === Roles.Admin) && (
+                  <Link
+                    href="/admin"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      router.push("/admin");
+                    }}
+                    className="text-sm font-semibold leading-6 text-gray-900"
+                  >
+                    To Admin
+                  </Link>
+                )}
+                {currentUser?.roles?.some((r) => r.name === Roles.User) && (
+                  <Link
+                    href="/dashboard"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      router.push("/dashboard");
+                    }}
+                    className="text-sm font-semibold leading-6 text-gray-900"
+                  >
+                    To Dashboard
+                  </Link>
+                )}
+                <Link
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    logout();
+                    window.location.href = "/";
+                  }}
+                  className="text-sm font-semibold leading-6 text-gray-900"
+                >
+                  Logout
+                </Link>
+              </>
             )}
           </div>
         </nav>

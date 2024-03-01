@@ -24,6 +24,7 @@ export interface UserContextState {
   accessToken: string | null;
   setAccessToken: (accessToken: string, expiresIn: string) => void;
   logout: () => void;
+  isAuthenticating: boolean;
 }
 
 // Define a default context value that matches the shape of UserContextState
@@ -33,6 +34,7 @@ const defaultContextValue: UserContextState = {
   accessToken: "af",
   setAccessToken: (accessToken: string, expiresIn: string) => {},
   logout: () => {},
+  isAuthenticating: true
 };
 
 // Context creation with a default value that matches the expected shape
@@ -42,6 +44,7 @@ const UserContext = createContext<UserContextState>(defaultContextValue);
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [isAuthenticating, setIsAuthenticating] = useState(true); // Initially true, assuming authentication check is in progress
   const { trpcAsync } = useTrpc();
   const trpcAsyncRef = useRef(trpcAsync);
 
@@ -49,8 +52,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const fetchUser = async () => {
       const tokenFromCookie = Cookies.get("jwtAccessToken");
       if (tokenFromCookie) {
+        setIsAuthenticating(true); // Begin authentication check only if token exists
         try {
-          // Ensure you are correctly handling the async operation with await
           const userFromAccessToken =
             await trpcAsyncRef.current.userRouter.findByAccessToken.query({
               accessToken: tokenFromCookie,
@@ -58,8 +61,12 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           setCurrentUser(userFromAccessToken);
         } catch (error) {
           console.error("Error fetching user:", error);
-          // Handle any errors, such as redirecting the user or showing a message
+          // Optionally, handle error state here
         }
+        setIsAuthenticating(false); // End authentication check
+      } else {
+        // Immediately consider authentication check complete if no token
+        setIsAuthenticating(false);
       }
     };
     fetchUser();
@@ -87,6 +94,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         sameSite: "Strict",
       });
     },
+    isAuthenticating,
   };
 
   return (

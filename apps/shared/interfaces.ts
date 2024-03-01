@@ -4,3 +4,8 @@ import { Role, User } from "@prisma/client";
 export interface CurrentUser extends User {
   roles: Role[];
 }
+
+export enum Roles {
+  Admin = "Admin",
+  User = "User",
+}
