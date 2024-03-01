@@ -6,7 +6,7 @@ import { UserRouter } from './user.router';
 import { UserService } from './user.service';
 
 @Module({
-  imports: [AuthModule, forwardRef(() => TrpcModule), PrismaModule],
+  imports: [AuthModule, forwardRef(() => TrpcModule), PrismaModule, AuthModule],
   providers: [UserService, UserRouter],
   exports: [UserService, UserRouter],
 })

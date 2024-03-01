@@ -6,18 +6,16 @@ import {
   UnauthorizedException,
 } from '@nestjs/common/exceptions';
 import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
-import { User } from '@prisma/client';
+import { AuthService } from '@server/auth/auth.service';
 import { PrismaService } from '@server/prisma/prisma.service';
-import * as bcrypt from 'bcrypt';
 import { UserCreateDtoType, UserLoginDtoType } from './dto/user.dto';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly configService: ConfigService,
-    private readonly jwtService: JwtService,
     private readonly prismaService: PrismaService,
+    private readonly authService: AuthService,
   ) {}
 
   async login(userLoginDto: UserLoginDtoType) {
@@ -30,45 +28,33 @@ export class UserService {
         roles: true,
       },
     });
-
     if (!user) {
-      throw new NotFoundException('Invalid email address');
+      throw new NotFoundException('Invalid login');
     }
-
     // check password
-    const isMatch = await bcrypt.compare(userLoginDto.password, user.password);
-    if (!isMatch) {
-      throw new UnauthorizedException('Invalid login information');
+    const verified = await this.authService.verifyPassword(
+      user,
+      userLoginDto.password,
+    );
+    if (!verified) {
+      throw new UnauthorizedException('Invalid login');
     }
-
     // retrieve JWT
-    const expiresIn =
-      this.configService.get<string>('JWT_EXPIRES_IN') || '365d';
-    const payload = {
-      username: user.email,
-      sub: user.id,
-      expiresIn,
-    };
-    const accessToken = this.jwtService.sign(payload);
-
+    const jwt = this.authService.getJwt(user);
     // return login response
     return {
-      jwt: {
-        accessToken,
-        expiresIn,
-      },
+      jwt,
       user,
     };
   }
 
   async create(userCreateDto: UserCreateDtoType) {
     if (userCreateDto.password) {
-      userCreateDto.password = await this.encryptPassword(
+      userCreateDto.password = await this.authService.encryptPassword(
         userCreateDto.password,
       );
     }
     userCreateDto.email = userCreateDto.email.toLowerCase();
-
     let roleConnections: { id: number }[] = [];
     if (userCreateDto.roles && userCreateDto.roles.length > 0) {
       // Retrieve the roles from the database
@@ -80,11 +66,9 @@ export class UserService {
       // Prepare role connections for Prisma create operation
       roleConnections = roles.map((role) => ({ id: role.id }));
     }
-
     try {
       // Exclude roles from userCreateDto to avoid conflicts
       const { ...userData } = userCreateDto;
-
       const user = await this.prismaService.user.create({
         data: {
           ...userData,
@@ -93,9 +77,8 @@ export class UserService {
           },
         },
       });
-      const accessToken = await this.generateAccessToken(user);
-      const expiresIn = this.configService.get('JWT_EXPIRES_IN');
-      return { user, jwt: { accessToken, expiresIn } };
+      const jwt = this.authService.getJwt(user);
+      return { user, jwt };
     } catch (error: any) {
       if (error.constraint === 'user__email__uq') {
         throw new ConflictException(error.message);
@@ -129,49 +112,20 @@ export class UserService {
     });
   }
 
-  private async encryptPassword(password: string) {
-    const rounds = 10;
-    let encryptedPassword;
-
-    // do not hash again if already hashed
-    if (password.indexOf('$2a$') === 0 && password.length === 60) {
-      encryptedPassword = password;
-    } else {
-      encryptedPassword = await bcrypt.hash(password, rounds);
-    }
-    return encryptedPassword;
-  }
-
   async findByAccessToken(accessToken: string) {
     try {
       // Verify the JWT token and decode its payload
-      const decoded = await this.jwtService.verifyAsync(accessToken, {
-        secret: this.configService.get<string>('JWT_SECRET'),
-      });
-
+      const decoded = await this.authService.decodeJwtToken(accessToken);
       // Use the decoded.sub as the user's identifier to fetch the user
       const user = await this.findById(decoded.sub);
       if (!user) {
         throw new NotFoundException('User not found');
       }
-
       return user;
     } catch (error) {
-      // Handle error (e.g., token is invalid or expired)
-      // For simplicity, you might just rethrow the error or handle it based on your application's needs
-      throw error;
+      throw new UnauthorizedException(
+        'Access token is invalid or expired. Please login again.',
+      );
     }
-  }
-
-  async generateAccessToken(user: User) {
-    const expiresIn =
-      this.configService.get<string>('JWT_EXPIRES_IN') || '365d';
-    const payload = {
-      username: user.email,
-      sub: user.id,
-      expiresIn,
-    };
-    const accessToken = this.jwtService.sign(payload);
-    return accessToken;
   }
 }
