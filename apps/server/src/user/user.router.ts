@@ -2,8 +2,14 @@ import { Injectable, UseFilters } from '@nestjs/common';
 import { TrpcExceptionFilter } from '@server/trpc/trpc.exception-handler';
 import { TrpcService } from '@server/trpc/trpc.service';
 import { UserService } from '@server/user/user.service';
-import { z } from 'zod';
-import { UserCreateDto, UserLoginDto, UserRemoveDto } from './dto/user.dto';
+import {
+  UserCreateDto,
+  UserFindAllDto,
+  UserFindByAccessToken,
+  UserFindByIdDto,
+  UserLoginDto,
+  UserRemoveDto,
+} from './dto/user.dto';
 
 @Injectable()
 @UseFilters(new TrpcExceptionFilter())
@@ -38,33 +44,21 @@ export class UserRouter {
 
         // get user by id
         findById: this.trpcService.trpc.procedure
-          .input(
-            z.object({
-              id: z.number(),
-            }),
-          )
+          .input(UserFindByIdDto)
           .query(async ({ input }) => {
             return this.userService.findById(input.id);
           }),
 
         // get all users
         findAll: this.trpcService.trpc.procedure
-          .input(
-            z.object({
-              id: z.number().optional(),
-            }),
-          )
+          .input(UserFindAllDto)
           .query(async ({}) => {
             return this.userService.findAll();
           }),
 
         // get user by id
         findByAccessToken: this.trpcService.trpc.procedure
-          .input(
-            z.object({
-              accessToken: z.string(),
-            }),
-          )
+          .input(UserFindByAccessToken)
           .query(async ({ input }) => {
             return this.userService.findByAccessToken(input.accessToken);
           }),

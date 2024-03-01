@@ -26,3 +26,13 @@ export const UserFindAllDto = z.object({
   lastName: z.string().optional(),
 });
 export type UserFindAllDtoType = z.infer<typeof UserFindAllDto>;
+
+export const UserFindByIdDto = z.object({
+  id: z.number(),
+});
+export type UserFindByIdDtoType = z.infer<typeof UserFindByIdDto>;
+
+export const UserFindByAccessToken = z.object({
+  accessToken: z.string(),
+});
+export type UserFindByAccessTokenType = z.infer<typeof UserFindByAccessToken>;
