@@ -52,13 +52,25 @@ pnpm install
 docker-compose up -d
 ```
 
-2. Run db migration to create the database tables
+2. Create ./apps/server/.env.development
+
+```
+cd ./apps/server
+cp .env.example .env.development
+```
+
+The database is already configured by default to use the database credentials created with Docker in previous step.
+
+But you will want to configure the Email SMTP username and password with your own credentials.
+I suggest you sign up for brevo.com to get yourself an account. You will get SMTP credentials to send up to 300 free emails per day.
+
+3. Run db migration to create the database tables
 
 ```sh
 pnpm db:migrate
 ```
 
-3. Run the db seed to populate the database with initial data
+4. Run the db seed to populate the database with initial data
 
 ```sh
 pnpm db:seed
