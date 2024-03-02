@@ -34,6 +34,11 @@ export default function Signup() {
       router.push(`/verify-email`);
     }
   }, [userSignup, router]);
+  useEffect(() => {
+    if (currentUser) {
+      router.push(`/dashboard`);
+    }
+  }, [currentUser, router]);
 
   return (
     <>

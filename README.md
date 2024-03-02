@@ -59,12 +59,10 @@ cd ./apps/server
 cp .env.example .env.development
 ```
 
-The database is already configured by default to use the database credentials created with Docker in previous step.
+Database should work out of the box with the default credentials for local development.
+But for email, you will need a valid SMTP account. You can get it free at brevo.com.
 
-But you will want to configure the Email SMTP username and password with your own credentials.
-I suggest you sign up for brevo.com to get yourself an account. You will get SMTP credentials to send up to 300 free emails per day.
-
-3. Run db migration to create the database tables
+1. Run db migration to create the database tables
 
 ```sh
 pnpm db:migrate
@@ -84,7 +82,7 @@ Use the following command to run both Nest and Next server.
 pnpm dev
 ```
 
-This will start the Nest.js server on http://localhost:3000 and the Next.js on http://localhost:3001.
+This will start the Next.js server on http://localhost:3000 and the Nest.js on http://localhost:3001.
 
 
 ###  Tests
