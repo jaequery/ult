@@ -5,7 +5,6 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common/exceptions';
-import { ConfigService } from '@nestjs/config';
 import { AuthService } from '@server/auth/auth.service';
 import { EmailService } from '@server/email/email.service';
 import { PrismaService } from '@server/prisma/prisma.service';
@@ -19,20 +18,16 @@ import {
 @Injectable()
 export class UserService {
   constructor(
-    private readonly configService: ConfigService,
     private readonly prismaService: PrismaService,
     private readonly authService: AuthService,
     private readonly emailService: EmailService,
   ) {}
 
   async signup(signupDto: UserSignupDtoType) {
-    const a = this.configService.get('JWT_SECRET');
-    console.log('a', a);
     const payload = {
       ...signupDto,
       roles: [Roles.User],
     } as UserCreateDtoType;
-
     const jwtUser = await this.create(payload);
     await this.emailService.sendUserWelcome(
       jwtUser.user,
@@ -72,6 +67,16 @@ export class UserService {
   }
 
   async create(userCreateDto: UserCreateDtoType) {
+    const existingUser = await this.prismaService.user.findFirst({
+      where: {
+        email: userCreateDto.email,
+        deletedAt: null,
+      },
+    });
+    if (existingUser) {
+      throw new ConflictException('Email is already taken, please try again.');
+    }
+
     if (userCreateDto.password) {
       userCreateDto.password = await this.authService.encryptPassword(
         userCreateDto.password,
@@ -141,11 +146,28 @@ export class UserService {
       if (!user) {
         throw new NotFoundException('User not found');
       }
-      return user;
+      const jwt = this.authService.getJwt(user);
+      return { user, jwt };
     } catch (error) {
       throw new UnauthorizedException(
         'Access token is invalid or expired. Please login again.',
       );
     }
+  }
+
+  async verifyAccessToken(accessToken: string) {
+    const jwtUser = await this.findByAccessToken(accessToken);
+    if (jwtUser) {
+      await this.prismaService.user.update({
+        where: {
+          id: jwtUser.user.id,
+        },
+        data: {
+          verifiedAt: new Date(),
+        },
+      });
+      return jwtUser;
+    }
+    throw new UnauthorizedException('invalid access token');
   }
 }

@@ -34,7 +34,7 @@ const defaultContextValue: UserContextState = {
   accessToken: "af",
   setAccessToken: (accessToken: string, expiresIn: string) => {},
   logout: () => {},
-  isAuthenticating: true
+  isAuthenticating: true,
 };
 
 // Context creation with a default value that matches the expected shape
@@ -54,11 +54,13 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       if (tokenFromCookie) {
         setIsAuthenticating(true); // Begin authentication check only if token exists
         try {
-          const userFromAccessToken =
-            await trpcAsyncRef.current.userRouter.findByAccessToken.query({
+          const jwtUser =
+            await trpcAsyncRef.current.userRouter.verifyAccessToken.query({
               accessToken: tokenFromCookie,
             });
-          setCurrentUser(userFromAccessToken);
+          if (jwtUser.user.verifiedAt) {
+            setCurrentUser(jwtUser.user);
+          }
         } catch (error) {
           console.error("Error fetching user:", error);
           // Optionally, handle error state here

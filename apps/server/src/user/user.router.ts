@@ -4,11 +4,11 @@ import { TrpcService } from '@server/trpc/trpc.service';
 import { UserService } from '@server/user/user.service';
 import {
   UserFindAllDto,
-  UserFindByAccessToken,
   UserFindByIdDto,
   UserLoginDto,
   UserRemoveDto,
   UserSignupDto,
+  UserVerifyAccessToken,
 } from './dto/user.dto';
 
 @Injectable()
@@ -57,10 +57,10 @@ export class UserRouter {
           }),
 
         // get user by id
-        findByAccessToken: this.trpcService.trpc.procedure
-          .input(UserFindByAccessToken)
+        verifyAccessToken: this.trpcService.trpc.procedure
+          .input(UserVerifyAccessToken)
           .query(async ({ input }) => {
-            return this.userService.findByAccessToken(input.accessToken);
+            return this.userService.verifyAccessToken(input.accessToken);
           }),
       }),
     };

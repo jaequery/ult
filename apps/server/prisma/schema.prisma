@@ -14,15 +14,16 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  firstName String?
-  lastName  String?
-  email     String    @unique
-  password  String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
-  roles     Role[]    @relation("UserRoles") // No references argument needed
+  id         Int       @id @default(autoincrement())
+  firstName  String?
+  lastName   String?
+  email      String    @unique
+  password   String
+  createdAt  DateTime  @default(now())
+  verifiedAt DateTime?
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+  roles      Role[]    @relation("UserRoles") // No references argument needed
 }
 
 model Role {

@@ -30,10 +30,10 @@ export default function Signup() {
   });
   const userSignup = trpc.userRouter.signup.useMutation();
   useEffect(() => {
-    if (currentUser) {
-      router.push(`/`);
+    if (userSignup?.data?.user) {
+      router.push(`/verify-email`);
     }
-  }, [currentUser, router]);
+  }, [userSignup, router]);
 
   return (
     <>
@@ -49,7 +49,6 @@ export default function Signup() {
               const { jwt } = await userSignup.mutateAsync(data);
               if (jwt) {
                 setAccessToken(jwt.accessToken, jwt.expiresIn);
-                router.push(`/dashboard`);
               }
             })}
             className="space-y-6"

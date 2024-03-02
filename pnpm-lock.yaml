@@ -128,7 +128,10 @@ importers:
       webpack: 5.90.3_@swc+core@1.4.2+esbuild@0.20.1
 
   apps/shared:
-    specifiers: {}
+    specifiers:
+      typescript: ^5.3.3
+    devDependencies:
+      typescript: 5.3.3
 
   apps/web:
     specifiers:

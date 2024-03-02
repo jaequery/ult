@@ -22,7 +22,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prestart": "rimraf dist && yarn run build",
     "db:migrate:new": "npx prisma migrate dev --name",
-    "db:migrate": "npx prisma migrate dev",
+    "db:migrate": "npx prisma migrate dev && npx prisma generate",
     "db:seed": "npx ts-node -r tsconfig-paths/register prisma/seed.ts",
     "db:reset": "npx prisma migrate reset"
   },

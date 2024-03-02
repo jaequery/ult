@@ -1,0 +1,20 @@
+{
+  "0 debug pnpm:scope": {
+    "selected": 1,
+    "workspacePrefix": "/Users/jae/Sites/ult"
+  },
+  "1 error pnpm": {
+    "errno": 1,
+    "code": "ELIFECYCLE",
+    "pkgid": "server@0.0.1",
+    "stage": "start:dev",
+    "script": "cp .env.development .env && nest start --watch",
+    "pkgname": "server",
+    "err": {
+      "name": "Error",
+      "message": "server@0.0.1 start:dev: `cp .env.development .env && nest start --watch`\nExit status 1",
+      "code": "ELIFECYCLE",
+      "stack": "Error: server@0.0.1 start:dev: `cp .env.development .env && nest start --watch`\nExit status 1\n    at EventEmitter.<anonymous> (/Users/jae/.node/corepack/pnpm/6.11.0/dist/pnpm.cjs:104774:20)\n    at EventEmitter.emit (node:events:514:28)\n    at ChildProcess.<anonymous> (/Users/jae/.node/corepack/pnpm/6.11.0/dist/pnpm.cjs:93080:18)\n    at ChildProcess.emit (node:events:514:28)\n    at maybeClose (node:internal/child_process:1091:16)\n    at ChildProcess._handle.onexit (node:internal/child_process:302:5)"
+    }
+  }
+}

@@ -30,7 +30,7 @@ export const UserRemoveDto = z.object({
 export type UserRemoveDtoType = z.infer<typeof UserRemoveDto>;
 
 export const UserFindAllDto = z.object({
-  email: z.string().email(),
+  email: z.string().email().optional(),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
 });
@@ -41,7 +41,7 @@ export const UserFindByIdDto = z.object({
 });
 export type UserFindByIdDtoType = z.infer<typeof UserFindByIdDto>;
 
-export const UserFindByAccessToken = z.object({
+export const UserVerifyAccessToken = z.object({
   accessToken: z.string(),
 });
-export type UserFindByAccessTokenType = z.infer<typeof UserFindByAccessToken>;
+export type UserVerifyAccessTokenType = z.infer<typeof UserVerifyAccessToken>;

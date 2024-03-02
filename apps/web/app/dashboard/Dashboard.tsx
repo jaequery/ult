@@ -3,14 +3,19 @@
 import { Roles } from "@shared/interfaces";
 import WithAuth from "@web/components/WithAuth";
 import { useUserContext } from "../user/UserContext";
+import { useTrpc } from "@web/contexts/TrpcContext";
 
 const Dashboard = () => {
   const { currentUser } = useUserContext();
+  const { trpc } = useTrpc();
+  const users = trpc.userRouter.findAll.useQuery({});
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col text-center justify-center px-6 py-12 lg:px-8">
         Welcome to dashboard, {currentUser?.firstName}!
       </div>
+      All users:
+      {JSON.stringify(users.data)}
     </>
   );
 };

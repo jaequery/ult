@@ -1,5 +1,3 @@
-// email.service.ts
-
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
@@ -13,15 +11,12 @@ export class EmailService {
   ) {}
 
   async sendUserWelcome(user: User, token: string) {
-    const confirmationUrl = `${this.configService.get('APP_HOST')}/auth/confirm?token=${token}`;
-
+    const confirmationUrl = `${this.configService.get('WEB_HOST')}/verify-email?token=${token}`;
     await this.mailerService.sendMail({
       to: user.email,
-      // from: '"Support Team" <support@example.com>', // override default from
       subject: 'Welcome to Ult! Confirm your Email',
-      template: './welcome', // `.ejs` extension is appended automatically
+      template: './welcome',
       context: {
-        // filling <%= %> brackets with content
         firstName: user.firstName,
         confirmationUrl,
       },
