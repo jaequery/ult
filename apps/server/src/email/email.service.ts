@@ -22,4 +22,18 @@ export class EmailService {
       },
     });
   }
+
+  async sendResetPassword(user: User, password: string) {
+    const confirmationUrl = `${this.configService.get('WEB_HOST')}/login`;
+    await this.mailerService.sendMail({
+      to: user.email,
+      subject: 'Password has been reset',
+      template: './reset-password',
+      context: {
+        firstName: user.firstName,
+        confirmationUrl,
+        password,
+      },
+    });
+  }
 }

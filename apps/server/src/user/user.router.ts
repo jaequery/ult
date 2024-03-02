@@ -7,8 +7,9 @@ import {
   UserFindByIdDto,
   UserLoginDto,
   UserRemoveDto,
+  UserResetPasswordDto,
   UserSignupDto,
-  UserVerifyAccessToken,
+  UserVerifyAccessTokenDto,
 } from './dto/user.dto';
 
 @Injectable()
@@ -58,9 +59,16 @@ export class UserRouter {
 
         // get user by id
         verifyAccessToken: this.trpcService.trpc.procedure
-          .input(UserVerifyAccessToken)
+          .input(UserVerifyAccessTokenDto)
           .query(async ({ input }) => {
             return this.userService.verifyAccessToken(input.accessToken);
+          }),
+
+        // reset user password
+        resetPassword: this.trpcService.trpc.procedure
+          .input(UserResetPasswordDto)
+          .mutation(async ({ input }) => {
+            return this.userService.resetPassword({ email: input.email });
           }),
       }),
     };

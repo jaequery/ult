@@ -126,6 +126,15 @@ export default function Login() {
               Start a 14 day free trial
             </Link>
           </p>
+
+          <p className="mt-10 text-center text-sm text-gray-500">
+            <Link
+              href="/forgot-password"
+              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+            >
+              Forgot password?
+            </Link>
+          </p>
         </div>
       </div>
     </>

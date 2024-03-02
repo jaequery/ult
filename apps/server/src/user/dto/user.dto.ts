@@ -41,7 +41,14 @@ export const UserFindByIdDto = z.object({
 });
 export type UserFindByIdDtoType = z.infer<typeof UserFindByIdDto>;
 
-export const UserVerifyAccessToken = z.object({
+export const UserVerifyAccessTokenDto = z.object({
   accessToken: z.string(),
 });
-export type UserVerifyAccessTokenType = z.infer<typeof UserVerifyAccessToken>;
+export type UserVerifyAccessTokenType = z.infer<
+  typeof UserVerifyAccessTokenDto
+>;
+
+export const UserResetPasswordDto = z.object({
+  email: z.string().email(),
+});
+export type UserResetPasswordType = z.infer<typeof UserResetPasswordDto>;

@@ -9,9 +9,11 @@ import { AuthService } from '@server/auth/auth.service';
 import { EmailService } from '@server/email/email.service';
 import { PrismaService } from '@server/prisma/prisma.service';
 import { Roles } from '@shared/interfaces';
+import generator from 'generate-password-ts';
 import {
   UserCreateDtoType,
   UserLoginDtoType,
+  UserResetPasswordType,
   UserSignupDtoType,
 } from './dto/user.dto';
 
@@ -169,5 +171,40 @@ export class UserService {
       return jwtUser;
     }
     throw new UnauthorizedException('invalid access token');
+  }
+
+  async resetPassword(resetPasswordDto: UserResetPasswordType) {
+    // if email matches, set a random password
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        email: resetPasswordDto.email,
+        deletedAt: null,
+      },
+    });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // generate random password
+    const randomPassword = generator.generate({
+      length: 10,
+      numbers: true,
+    });
+
+    // update user with random password
+    await this.prismaService.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        password: await this.authService.encryptPassword(randomPassword),
+      },
+    });
+
+    // send email with random password
+    await this.emailService.sendResetPassword(user, randomPassword);
+    console.log('Password reset for', user.email, 'to', randomPassword);
+
+    return 'hello';
   }
 }

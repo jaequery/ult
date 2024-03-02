@@ -47,6 +47,7 @@ importers:
       eslint: ^8.57.0
       eslint-config-prettier: ^9.1.0
       eslint-plugin-prettier: ^5.1.3
+      generate-password-ts: ^1.6.5
       glob: ^10.3.10
       jest: ^29.7.0
       joi: ^17.12.2
@@ -85,6 +86,7 @@ importers:
       cors: 2.8.5
       date-fns: 3.3.1
       ejs: 3.1.9
+      generate-password-ts: 1.6.5
       glob: 10.3.10
       joi: 17.12.2
       passport: 0.7.0
@@ -5266,6 +5268,12 @@ packages:
       wide-align: 1.1.5
     dev: false
 
+  /generate-password-ts/1.6.5:
+    resolution: {integrity: sha512-MTvcuBZWQChMlqRVK3PGBmF/QdYkSL3YuTfoxbLy8GExa+VDkB0vybQhXBiT0TsBLvDvTC+7OIT1ptsYFpXpGA==}
+    dependencies:
+      js-crypto-random: 1.0.4
+    dev: false
+
   /gensync/1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
@@ -6499,6 +6507,16 @@ packages:
   /js-cookie/3.0.5:
     resolution: {integrity: sha512-cEiJEAEoIbWfCZYKWhVwFuvPX1gETRYPw6LlaTKoxD3s2AkXzkCjnp6h0V77ozyqj0jakteJ4YqDJT830+lVGw==}
     engines: {node: '>=14'}
+    dev: false
+
+  /js-crypto-env/1.0.5:
+    resolution: {integrity: sha512-8/UNN3sG8J+yMzqwSNVaobaWhIz4MqZFoOg5OB0DFXqS8eFjj2YvdmLJqIWXPl57Yw10SvYx0DQOtkfsWIV9Aw==}
+    dev: false
+
+  /js-crypto-random/1.0.4:
+    resolution: {integrity: sha512-ldTK4y+ymaXWFL13EUh+Kvl3/UQ2GdfqDbI4ScNYS0/T2knijM9duOXO8qd9e6RYwdrOupyiAu4o538VQnktuw==}
+    dependencies:
+      js-crypto-env: 1.0.5
     dev: false
 
   /js-sha3/0.8.0:
