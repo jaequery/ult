@@ -42,6 +42,7 @@ importers:
       cors: ^2.8.5
       date-fns: ^3.3.1
       dotenv: ^16.4.5
+      ejs: ^3.1.9
       esbuild: ^0.20.1
       eslint: ^8.57.0
       eslint-config-prettier: ^9.1.0
@@ -83,6 +84,7 @@ importers:
       class-validator: 0.14.1
       cors: 2.8.5
       date-fns: 3.3.1
+      ejs: 3.1.9
       glob: 10.3.10
       joi: 17.12.2
       passport: 0.7.0
@@ -3146,7 +3148,6 @@ packages:
   /async/3.2.5:
     resolution: {integrity: sha512-baNZyqaaLhyLVKm/DlvdW051MSgO6b8eVfIezl9E5PqWxFgzLm/wQntEW4zOytVburDEr0JlALEpdOFwvErLsg==}
     dev: false
-    optional: true
 
   /asynciterator.prototype/1.0.0:
     resolution: {integrity: sha512-wwHYEIS0Q80f5mosx3L/dfG5t5rjEa9Ft51GTaNt862EnpyGHpgz2RkZvLPp1oF5TnAiTohkEKVEu8pQPJI7Vg==}
@@ -4230,7 +4231,6 @@ packages:
     dependencies:
       jake: 10.8.7
     dev: false
-    optional: true
 
   /electron-to-chromium/1.4.681:
     resolution: {integrity: sha512-1PpuqJUFWoXZ1E54m8bsLPVYwIVCRzvaL+n5cjigGga4z854abDnFRc+cTa2th4S79kyGqya/1xoR7h+Y5G5lg==}
@@ -5028,7 +5028,6 @@ packages:
     dependencies:
       minimatch: 5.1.6
     dev: false
-    optional: true
 
   /filename-reserved-regex/3.0.0:
     resolution: {integrity: sha512-hn4cQfU6GOT/7cFHXBqeBg2TbrMBgdD0kcjLhvSQYYwm3s4B6cjvBfb7nBALJLAXqmU5xajSa7X2NnUud/VCdw==}
@@ -6046,7 +6045,6 @@ packages:
       filelist: 1.0.4
       minimatch: 3.1.2
     dev: false
-    optional: true
 
   /jest-changed-files/29.7.0:
     resolution: {integrity: sha512-fEArFiwf1BpQ+4bXSprcDc3/x4HSzL4al2tozwVpDFpsxALjLYdyiIK4e5Vz66GQJIbXJ82+35PtysofptNX2w==}
@@ -7000,7 +6998,6 @@ packages:
     dependencies:
       brace-expansion: 2.0.1
     dev: false
-    optional: true
 
   /minimatch/8.0.4:
     resolution: {integrity: sha512-W0Wvr9HyFXZRGIDgCicunpQ299OKXs9RgZfaukz4qAW/pJhcpUfupc9c+OObPOFueNy8VSrZgEmDtk6Kh4WzDA==}

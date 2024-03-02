@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common/exceptions';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from '@server/auth/auth.service';
+import { EmailService } from '@server/email/email.service';
 import { PrismaService } from '@server/prisma/prisma.service';
 import { Roles } from '@shared/interfaces';
 import {
@@ -21,15 +22,23 @@ export class UserService {
     private readonly configService: ConfigService,
     private readonly prismaService: PrismaService,
     private readonly authService: AuthService,
+    private readonly emailService: EmailService,
   ) {}
 
   async signup(signupDto: UserSignupDtoType) {
+    const a = this.configService.get('JWT_SECRET');
+    console.log('a', a);
     const payload = {
       ...signupDto,
       roles: [Roles.User],
     } as UserCreateDtoType;
-    console.log('pay', payload);
-    return this.create(payload);
+
+    const jwtUser = await this.create(payload);
+    await this.emailService.sendUserWelcome(
+      jwtUser.user,
+      jwtUser.jwt.accessToken,
+    );
+    return jwtUser;
   }
 
   async login(userLoginDto: UserLoginDtoType) {
