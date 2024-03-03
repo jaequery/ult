@@ -32,14 +32,12 @@ export class TrpcService {
         allowedRoles.includes(r.name),
       );
       let isOwner = false;
-      if (
-        ownerIdentifier &&
-        typeof opts.ctx.req.body === 'object' &&
-        opts.ctx.req.body !== null
-      ) {
-        // Use type assertion to inform TypeScript about the expected structure
-        const requestBody = opts.ctx.req.body as Record<string, unknown>;
-        isOwner = requestBody[ownerIdentifier] === jwtUser.user.id;
+
+      // if ownerIdentifier is passed, allow the request user who matches that of the ownerIdentifier
+      // this allows a procedure that expects eg; an Admin, but also the user who owns that record
+      const input = opts.rawInput as any;
+      if (ownerIdentifier && input[ownerIdentifier]) {
+        isOwner = input[ownerIdentifier] === jwtUser.user.id;
       }
 
       if (!hasRole && ownerIdentifier && !isOwner) {
