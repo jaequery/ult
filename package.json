@@ -2,8 +2,8 @@
   "dependencies": {
     "@nestjs/mapped-types": "*"
   },
-  "name": "ult-stack",
-  "version": "0.0.1",
+  "name": "ult",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
