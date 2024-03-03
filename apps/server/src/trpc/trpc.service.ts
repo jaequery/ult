@@ -13,7 +13,7 @@ export class TrpcService {
     });
   }
 
-  procedure(allowedRoles?: string[]) {
+  procedure(allowedRoles?: string[], ownerIdentifier?: string) {
     const userService = this.userService;
     const procedure = this.trpc.procedure.use(async function isProtected(opts) {
       if (!allowedRoles || allowedRoles.length === 0) {
@@ -28,7 +28,21 @@ export class TrpcService {
 
       // check if user has role privilege
       const jwtUser = await userService.verifyAccessToken(accessToken);
-      if (!jwtUser.user.roles.some((r) => allowedRoles.includes(r.name))) {
+      const hasRole = jwtUser.user.roles.some((r) =>
+        allowedRoles.includes(r.name),
+      );
+      let isOwner = false;
+      if (
+        ownerIdentifier &&
+        typeof opts.ctx.req.body === 'object' &&
+        opts.ctx.req.body !== null
+      ) {
+        // Use type assertion to inform TypeScript about the expected structure
+        const requestBody = opts.ctx.req.body as Record<string, unknown>;
+        isOwner = requestBody[ownerIdentifier] === jwtUser.user.id;
+      }
+
+      if (!hasRole && ownerIdentifier && !isOwner) {
         throw new TRPCError({ code: 'UNAUTHORIZED' });
       }
 

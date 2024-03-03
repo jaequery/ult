@@ -2,6 +2,7 @@ import { Injectable, UseFilters } from '@nestjs/common';
 import { TrpcExceptionFilter } from '@server/trpc/trpc.exception-handler';
 import { TrpcService } from '@server/trpc/trpc.service';
 import { UserService } from '@server/user/user.service';
+import { Roles } from '@shared/interfaces';
 import {
   UserFindAllDto,
   UserFindByIdDto,
@@ -11,7 +12,6 @@ import {
   UserSignupDto,
   UserVerifyAccessTokenDto,
 } from './dto/user.dto';
-import { Roles } from '@shared/interfaces';
 
 @Injectable()
 @UseFilters(new TrpcExceptionFilter())
@@ -41,7 +41,7 @@ export class UserRouter {
 
         // remove user
         remove: this.trpcService
-          .procedure([Roles.Admin])
+          .procedure([Roles.Admin], 'id')
           .input(UserRemoveDto)
           .mutation(async ({ input }) => {
             return this.userService.remove(input.id);
@@ -49,7 +49,7 @@ export class UserRouter {
 
         // get user by id
         findById: this.trpcService
-          .procedure([Roles.Admin])
+          .procedure([Roles.Admin], 'id')
           .input(UserFindByIdDto)
           .query(async ({ input }) => {
             return this.userService.findById(input.id);
