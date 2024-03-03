@@ -65,19 +65,7 @@ export default function Header() {
               </Link>
             ) : (
               <>
-                {currentUser?.roles?.some((r) => r.name === Roles.Admin) && (
-                  <Link
-                    href="/admin"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      router.push("/admin");
-                    }}
-                    className="text-sm font-semibold leading-6 text-gray-900"
-                  >
-                    To Admin
-                  </Link>
-                )}
-                {currentUser?.roles?.some((r) => r.name === Roles.User) && (
+                {currentUser && (
                   <Link
                     href="/dashboard"
                     onClick={(e) => {
@@ -86,7 +74,7 @@ export default function Header() {
                     }}
                     className="text-sm font-semibold leading-6 text-gray-900"
                   >
-                    To Dashboard
+                    Dashboard
                   </Link>
                 )}
                 <Link

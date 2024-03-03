@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserLoginDto, UserLoginDtoType } from "@server/user/dto/user.dto";
-import { Roles } from "@shared/interfaces";
 import { CircularProgress } from "@web/components/CircularProgress";
 import { useTrpc } from "@web/contexts/TrpcContext";
 import Link from "next/link";
@@ -26,11 +25,7 @@ export default function Login() {
 
   useEffect(() => {
     if (currentUser) {
-      if (currentUser?.roles.some((r) => r.name === Roles.Admin)) {
-        router.push("/admin");
-      } else {
-        router.push("/dashboard");
-      }
+      router.push("/dashboard");
     }
   }, [currentUser, router]);
   return (

@@ -28,7 +28,7 @@ function WithAuth<P extends {}>(
 
     // Render a loading state or null until authentication is determined.
     if (isAuthenticating || !currentUser) {
-      return <div>Loading...</div>;
+      return <></>;
     }
 
     // Spread the props to the component when rendering.
