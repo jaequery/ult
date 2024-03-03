@@ -13,6 +13,31 @@ export class TrpcService {
     });
   }
 
+  // provides access control via user roles
+  // example 1; a route that is accessible to the public
+  //   signup: this.trpcService
+  //     .procedure()
+  //     .input(UserSignupDto)
+  //     .mutation(async ({ input }) => {
+  //       return this.userService.signup(input);
+  //     }),
+  // example 2; a route that is only accessible by the Admin
+  //   remove: this.trpcService
+  //     .procedure([Roles.Admin])
+  //     .input(UserRemoveDto)
+  //     .mutation(async ({ input }) => {
+  //       return this.userService.remove(input);
+  //     }),
+  // example 3; a route where its only accessible by the Admin role
+  // as well as the user accessing their own profile through
+  // the ownerIdentifier (the input field that is the request user's id)
+  //   update: this.trpcService
+  //     .procedure([Roles.Admin], 'id')
+  //     .input(UserUpdateDto)
+  //     .mutation(async ({ input }) => {
+  //       return this.userService.update(input);
+  //     }),
+
   procedure(allowedRoles?: string[], ownerIdentifier?: string) {
     const userService = this.userService;
     const procedure = this.trpc.procedure.use(async function isProtected(opts) {
