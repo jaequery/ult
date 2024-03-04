@@ -32,7 +32,7 @@ export default function DashboardUserView() {
         email: user.data.email,
         firstName: user.data.firstName || "",
         lastName: user.data.lastName || "",
-        password: user.data.password || "",
+        password: "",
         phone: user.data.phone || "",
         gender: user.data.gender || "",
         bio: user.data.bio || "",
