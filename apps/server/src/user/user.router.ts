@@ -59,8 +59,8 @@ export class UserRouter {
         findAll: this.trpcService
           .procedure([Roles.Admin])
           .input(UserFindAllDto)
-          .query(async ({}) => {
-            return this.userService.findAll();
+          .query(async ({ input }) => {
+            return this.userService.findAll(input);
           }),
 
         // get user by id

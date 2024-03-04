@@ -30,9 +30,9 @@ export const UserRemoveDto = z.object({
 export type UserRemoveDtoType = z.infer<typeof UserRemoveDto>;
 
 export const UserFindAllDto = z.object({
-  email: z.string().email().optional(),
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
+  page: z.number().default(1),
+  perPage: z.number().default(10),
+  search: z.string().optional(),
 });
 export type UserFindAllDtoType = z.infer<typeof UserFindAllDto>;
 

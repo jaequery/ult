@@ -12,6 +12,7 @@ import { Roles } from '@shared/interfaces';
 import generator from 'generate-password-ts';
 import {
   UserCreateDtoType,
+  UserFindAllDtoType,
   UserLoginDtoType,
   UserResetPasswordType,
   UserSignupDtoType,
@@ -115,8 +116,23 @@ export class UserService {
     }
   }
 
-  async findAll() {
-    return this.prismaService.user.findMany();
+  async findAll(opts: UserFindAllDtoType) {
+    const records = await this.prismaService.user.findMany({
+      skip: (opts.page - 1) * opts.perPage,
+      take: opts.perPage,
+      include: {
+        roles: true,
+      },
+    });
+    const total = await this.prismaService.user.count();
+    const lastPage = Math.ceil(total / opts.perPage);
+    return {
+      records,
+      total,
+      currentPage: opts.page,
+      lastPage,
+      perPage: opts.perPage,
+    };
   }
 
   async findById(id: number) {

@@ -2,18 +2,13 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  UserLoginDto,
   UserLoginDtoType,
   UserResetPasswordDto,
 } from "@server/user/dto/user.dto";
-import { Roles } from "@shared/interfaces";
 import { CircularProgress } from "@web/components/CircularProgress";
 import { useTrpc } from "@web/contexts/TrpcContext";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useUserContext } from "../user/UserContext";
 
 export default function ForgotPassword() {
   const router = useRouter();

@@ -18,4 +18,13 @@ body {
   .input {
     @apply block px-3 w-full rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6;
   }
+
+  .dashboard-layout {
+    .nav-menu {
+      @apply w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-900 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600;
+    }
+    .nav-menu-active {
+      @apply flex items-center gap-x-3.5 py-2 px-2.5 bg-gray-100 text-sm rounded-lg hover:bg-gray-100 dark:bg-gray-900 dark:text-white dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600;
+    }
+  }
 }
