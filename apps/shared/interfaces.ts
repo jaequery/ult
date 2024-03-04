@@ -6,6 +6,11 @@ export interface CurrentUser extends User {
   roles: Role[];
 }
 
+export enum UserStatus {
+  active,
+  inactive,
+}
+
 export enum Roles {
   Admin = "Admin",
   User = "User",

@@ -25,7 +25,7 @@ export default function Login() {
 
   useEffect(() => {
     if (currentUser) {
-      router.push("/dashboard");
+      window.location.href = "/dashboard";
     }
   }, [currentUser, router]);
   return (

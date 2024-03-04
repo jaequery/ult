@@ -6,12 +6,13 @@ const config: Config = {
   content: [
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/preline/dist/*.js",
   ],
   theme: {
     extend: {
       backgroundImage: {},
     },
   },
-  plugins: [require("@tailwindcss/forms")],
+  plugins: [require("@tailwindcss/forms"), require("preline/plugin")],
 };
 export default withMT(config);

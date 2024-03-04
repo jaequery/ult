@@ -23,11 +23,12 @@ model User {
   verifiedAt DateTime?
   updatedAt  DateTime  @updatedAt
   deletedAt  DateTime?
-  roles      Role[]    @relation("UserRoles") // No references argument needed
+  status     String    @default("active")
+  roles      Role[]    @relation("UserRoles")
 }
 
 model Role {
   id    Int    @id @default(autoincrement())
   name  String @unique
-  users User[] @relation("UserRoles") // Connect back to User, specifying the same relation name
+  users User[] @relation("UserRoles")
 }
