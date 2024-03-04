@@ -4,10 +4,12 @@ import { useTrpc } from "@web/contexts/TrpcContext";
 import { format } from "date-fns";
 import Link from "next/link";
 import { useState } from "react";
+import DashboardUserCreateModal from "./[id]/DashboardUserCreateModal";
 
 export default function DashboardUserList() {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
+  const [showUserCreate, setShowUserCreate] = useState(false);
   const { trpc } = useTrpc();
   const userList = trpc.userRouter.findAll.useQuery({
     page,
@@ -43,9 +45,10 @@ export default function DashboardUserList() {
                       <Link
                         href="#"
                         onClick={() => {
-                          alert("ho");
+                          setShowUserCreate(true);
                         }}
                         className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                        data-hs-overlay="#hs-static-backdrop-modal"
                       >
                         <svg
                           className="flex-shrink-0 size-3"
@@ -301,6 +304,7 @@ export default function DashboardUserList() {
         {/* End Card */}
       </div>
       {/* End Table Section */}
+      {<DashboardUserCreateModal />}
     </>
   );
 }
