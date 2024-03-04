@@ -6,6 +6,8 @@ import {
   UnauthorizedException,
 } from '@nestjs/common/exceptions';
 import { AuthService } from '@server/auth/auth.service';
+import { AvatarGenerator } from 'random-avatar-generator';
+
 import { EmailService } from '@server/email/email.service';
 import { PrismaService } from '@server/prisma/prisma.service';
 import { Roles } from '@shared/interfaces';
@@ -16,6 +18,7 @@ import {
   UserLoginDtoType,
   UserResetPasswordType,
   UserSignupDtoType,
+  UserUpdateDtoType,
 } from './dto/user.dto';
 
 @Injectable()
@@ -95,6 +98,16 @@ export class UserService {
       });
       roleConnections = roles.map((role) => ({ id: role.id }));
     }
+
+    // assign a random profile avatar picture if profile pic is not provided
+    const generator = new AvatarGenerator();
+    if (!userCreateDto.profilePicUrl) {
+      userCreateDto.profilePicUrl = await generator.generateRandomAvatar(
+        userCreateDto.firstName,
+      );
+    }
+
+    // create
     try {
       const { ...userData } = userCreateDto;
       const user = await this.prismaService.user.create({
@@ -107,6 +120,41 @@ export class UserService {
       });
       const jwt = this.authService.getJwt(user);
       return { user, jwt };
+    } catch (error: any) {
+      if (error.constraint === 'user__email__uq') {
+        throw new ConflictException(error.message);
+      } else {
+        throw new InternalServerErrorException(error.message);
+      }
+    }
+  }
+
+  async update(userUpdateDto: UserUpdateDtoType) {
+    const user = await this.prismaService.user.findFirstOrThrow({
+      where: {
+        id: userUpdateDto.id,
+        deletedAt: null,
+      },
+    });
+
+    if (userUpdateDto.password) {
+      userUpdateDto.password = await this.authService.encryptPassword(
+        userUpdateDto.password,
+      );
+    }
+
+    if (userUpdateDto.email) {
+      userUpdateDto.email = userUpdateDto.email.toLowerCase();
+    }
+
+    try {
+      const updatedUser = await this.prismaService.user.update({
+        where: {
+          id: userUpdateDto.id,
+        },
+        data: userUpdateDto,
+      });
+      return updatedUser;
     } catch (error: any) {
       if (error.constraint === 'user__email__uq') {
         throw new ConflictException(error.message);

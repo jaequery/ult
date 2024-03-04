@@ -18,11 +18,31 @@ export type UserSignupDtoType = z.infer<typeof UserSignupDto>;
 export const UserCreateDto = z.object({
   email: z.string().email(),
   password: z.string().min(8, 'Password must be at least 8 characters'),
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
-  roles: z.array(z.nativeEnum(Roles)),
+  firstName: z.string(),
+  lastName: z.string(),
+  roles: z.array(z.nativeEnum(Roles)).optional(),
+  phone: z.string().optional(),
+  gender: z.string().optional(),
+  bio: z.string().optional(),
+  profilePicUrl: z.string().optional(),
 });
 export type UserCreateDtoType = z.infer<typeof UserCreateDto>;
+
+export const UserUpdateDto = z.object({
+  id: z.number(),
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().min(1, 'Last name is required'),
+  email: z.string().email(),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters')
+    .optional(),
+  phone: z.string().optional(),
+  gender: z.string().optional(),
+  bio: z.string().optional(),
+  profilePicUrl: z.string().optional(),
+});
+export type UserUpdateDtoType = z.infer<typeof UserUpdateDto>;
 
 export const UserRemoveDto = z.object({
   id: z.number(),

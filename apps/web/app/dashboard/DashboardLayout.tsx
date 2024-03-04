@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useUserContext } from "../user/UserContext";
+import DashboardUserCreateModal from "./users/[id]/DashboardUserCreateModal";
 
 type DashboardLayoutProps = {
   children: React.ReactNode; // Use React.ReactNode for children prop
@@ -129,7 +132,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                   >
                     <img
                       className="inline-block size-[38px] rounded-full ring-2 ring-white dark:ring-gray-800"
-                      src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=320&h=320&q=80"
+                      src={currentUser?.profilePicUrl || ""}
                       alt="Image Description"
                     />
                   </button>
@@ -146,9 +149,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                       </p>
                     </div>
                     <div className="mt-2 py-2 first:pt-0 last:pb-0">
-                      <a
+                      <Link
                         className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300"
-                        href="#"
+                        href={`/dashboard/users/${currentUser?.id}`}
                       >
                         <svg
                           className="flex-shrink-0 size-4"
@@ -168,8 +171,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                           <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                         </svg>
                         My Profile
-                      </a>
-                      <div className="mb-4" />
+                      </Link>
+                      <hr />
                       <Link
                         className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300"
                         onClick={(e) => {
@@ -359,6 +362,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
         {/* End Content */}
         {/* ========== END MAIN CONTENT ========== */}
       </div>
+
+      {/*
+      here's how to customize the toaster:
+      https://fkhadra.github.io/react-toastify/introduction/
+      */}
+      <ToastContainer position="bottom-right" />
     </>
   );
 };

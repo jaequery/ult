@@ -14,17 +14,21 @@ datasource db {
 }
 
 model User {
-  id         Int       @id @default(autoincrement())
-  firstName  String?
-  lastName   String?
-  email      String    @unique
-  password   String
-  createdAt  DateTime  @default(now())
-  verifiedAt DateTime?
-  updatedAt  DateTime  @updatedAt
-  deletedAt  DateTime?
-  status     String    @default("active")
-  roles      Role[]    @relation("UserRoles")
+  id            Int       @id @default(autoincrement())
+  firstName     String?
+  lastName      String?
+  email         String    @unique
+  password      String
+  status        String    @default("active")
+  phone         String?
+  gender        String?
+  bio           String?
+  profilePicUrl String?
+  createdAt     DateTime  @default(now())
+  verifiedAt    DateTime?
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+  roles         Role[]    @relation("UserRoles")
 }
 
 model Role {

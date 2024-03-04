@@ -4,12 +4,14 @@ import { TrpcService } from '@server/trpc/trpc.service';
 import { UserService } from '@server/user/user.service';
 import { Roles } from '@shared/interfaces';
 import {
+  UserCreateDto,
   UserFindAllDto,
   UserFindByIdDto,
   UserLoginDto,
   UserRemoveDto,
   UserResetPasswordDto,
   UserSignupDto,
+  UserUpdateDto,
   UserVerifyAccessTokenDto,
 } from './dto/user.dto';
 
@@ -37,6 +39,22 @@ export class UserRouter {
           .input(UserSignupDto)
           .mutation(async ({ input }) => {
             return this.userService.signup(input);
+          }),
+
+        // creates a user from dashboard
+        create: this.trpcService
+          .procedure([Roles.Admin])
+          .input(UserCreateDto)
+          .mutation(async ({ input }) => {
+            return this.userService.create(input);
+          }),
+
+        // update user
+        update: this.trpcService
+          .procedure()
+          .input(UserUpdateDto)
+          .mutation(async ({ input }) => {
+            return this.userService.update(input);
           }),
 
         // remove user

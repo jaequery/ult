@@ -30,6 +30,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.50.1",
     "react-query": "3",
+    "react-toastify": "^10.0.4",
     "zod": "^3.22.4"
   },
   "devDependencies": {

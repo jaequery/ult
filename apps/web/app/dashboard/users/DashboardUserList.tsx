@@ -40,9 +40,12 @@ export default function DashboardUserList() {
                       >
                         Filter
                       </a>
-                      <a
-                        className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                      <Link
                         href="#"
+                        onClick={() => {
+                          alert("ho");
+                        }}
+                        className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                       >
                         <svg
                           className="flex-shrink-0 size-3"
@@ -60,7 +63,7 @@ export default function DashboardUserList() {
                           />
                         </svg>
                         Add user
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -139,7 +142,7 @@ export default function DashboardUserList() {
                             <div className="flex items-center gap-x-3">
                               <img
                                 className="inline-block size-[38px] rounded-full"
-                                src="https://images.unsplash.com/photo-1531927557220-a9e23c1e4794?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80"
+                                src={user?.profilePicUrl || ""}
                                 alt="Image Description"
                               />
                               <div className="grow">

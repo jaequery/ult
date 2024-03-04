@@ -41,6 +41,7 @@ export class TrpcService {
   procedure(allowedRoles?: string[], ownerIdentifier?: string) {
     const userService = this.userService;
     const procedure = this.trpc.procedure.use(async function isProtected(opts) {
+      const input = opts.rawInput as any;
       if (!allowedRoles || allowedRoles.length === 0) {
         return opts.next();
       }
@@ -56,16 +57,15 @@ export class TrpcService {
       const hasRole = jwtUser.user.roles.some((r) =>
         allowedRoles.includes(r.name),
       );
-      let isOwner = false;
 
       // if ownerIdentifier is passed, allow the request user who matches that of the ownerIdentifier
       // this allows a procedure that expects eg; an Admin, but also the user who owns that record
-      const input = opts.rawInput as any;
+      let isOwner = false;
       if (ownerIdentifier && input[ownerIdentifier]) {
         isOwner = input[ownerIdentifier] === jwtUser.user.id;
       }
 
-      if (!hasRole && ownerIdentifier && !isOwner) {
+      if (!hasRole && !isOwner) {
         throw new TRPCError({ code: 'UNAUTHORIZED' });
       }
 
