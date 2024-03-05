@@ -178,7 +178,11 @@ export class UserService {
     // assign roles appropriately (TODO: simplify this mess)
     let roleConnections: { id: number }[] = [];
     let roleDisconnections: { id: number }[] = [];
-    if (userUpdateDto.roles && userUpdateDto.roles.length > 0) {
+    if (
+      user.roles.some((r) => r.name === Roles.Admin) &&
+      userUpdateDto.roles &&
+      userUpdateDto.roles.length > 0
+    ) {
       const allRoles = await this.prismaService.role.findMany();
       const rolesToConnect = userUpdateDto.roles.filter(
         (roleName) => !user.roles.some((role) => role.name === roleName),

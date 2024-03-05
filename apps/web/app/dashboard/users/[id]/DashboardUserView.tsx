@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserUpdateDto, UserUpdateDtoType } from "@server/user/dto/user.dto";
 import { Roles } from "@shared/interfaces";
+import { useUserContext } from "@web/app/user/UserContext";
 import { Uploader } from "@web/components/Uploader";
 import { useTrpc } from "@web/contexts/TrpcContext";
 import _ from "lodash";
@@ -13,6 +14,7 @@ import { toast } from "react-toastify";
 
 export default function DashboardUserView() {
   const { trpc } = useTrpc();
+  const { currentUser } = useUserContext();
   const params = useParams();
   const [showProfilePicUrlUploader, setShowProfilePicUrlUploader] =
     useState(false);
@@ -46,7 +48,6 @@ export default function DashboardUserView() {
         email: user.data.email,
         firstName: user.data.firstName || "",
         lastName: user.data.lastName || "",
-        password: "",
         phone: user.data.phone || "",
         gender: user.data.gender || "",
         bio: user.data.bio || "",
@@ -267,48 +268,52 @@ export default function DashboardUserView() {
               </div>
             </div>
             {/* Start Col */}
-            <div className="sm:col-span-3">
-              <label
-                htmlFor="af-account-roles"
-                className="inline-block text-sm text-gray-800 mt-2.5 dark:text-gray-200"
-              >
-                Roles
-              </label>
-            </div>
-            {/* End Col */}
-            <div className="sm:col-span-9">
-              <div className="space-y-2">
-                <div className="checkbox-container">
-                  <input
-                    type="checkbox"
-                    id="adminRole"
-                    value={Roles.Admin}
-                    onChange={() => handleCheckboxChange(Roles.Admin)}
-                    checked={isRoleChecked(Roles.Admin)}
-                  />
-                  <label htmlFor="adminRole" className="text-sm ms-2">
-                    Admin
+            {currentUser?.roles?.some((r) => r.name === Roles.Admin) && (
+              <>
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="af-account-roles"
+                    className="inline-block text-sm text-gray-800 mt-2.5 dark:text-gray-200"
+                  >
+                    Roles
                   </label>
                 </div>
-                <div className="checkbox-container">
-                  <input
-                    type="checkbox"
-                    id="userRole"
-                    value={Roles.User}
-                    onChange={() => handleCheckboxChange(Roles.User)}
-                    checked={isRoleChecked(Roles.User)}
-                  />
-                  <label htmlFor="userRole" className="text-sm ms-2">
-                    User
-                  </label>
+                {/* End Col */}
+                <div className="sm:col-span-9">
+                  <div className="space-y-2">
+                    <div className="checkbox-container">
+                      <input
+                        type="checkbox"
+                        id="adminRole"
+                        value={Roles.Admin}
+                        onChange={() => handleCheckboxChange(Roles.Admin)}
+                        checked={isRoleChecked(Roles.Admin)}
+                      />
+                      <label htmlFor="adminRole" className="text-sm ms-2">
+                        Admin
+                      </label>
+                    </div>
+                    <div className="checkbox-container">
+                      <input
+                        type="checkbox"
+                        id="userRole"
+                        value={Roles.User}
+                        onChange={() => handleCheckboxChange(Roles.User)}
+                        checked={isRoleChecked(Roles.User)}
+                      />
+                      <label htmlFor="userRole" className="text-sm ms-2">
+                        User
+                      </label>
+                    </div>
+                    {errors.roles && (
+                      <p className="mt-2 pl-2 text-sm text-red-600">
+                        {errors.roles.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
-                {errors.roles && (
-                  <p className="mt-2 pl-2 text-sm text-red-600">
-                    {errors.roles.message}
-                  </p>
-                )}
-              </div>
-            </div>
+              </>
+            )}
             {/* End Col */}
             <div className="sm:col-span-3">
               <div className="inline-block">
