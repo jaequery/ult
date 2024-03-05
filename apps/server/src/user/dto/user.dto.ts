@@ -32,6 +32,7 @@ export const UserUpdateDto = z.object({
   id: z.number(),
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
+  roles: z.array(z.nativeEnum(Roles)).optional(),
   email: z.string().email(),
   password: z
     .string()

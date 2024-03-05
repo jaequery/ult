@@ -6,6 +6,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common/exceptions';
 import { AuthService } from '@server/auth/auth.service';
+import _ from 'lodash';
 import { AvatarGenerator } from 'random-avatar-generator';
 
 import { EmailService } from '@server/email/email.service';
@@ -83,15 +84,23 @@ export class UserService {
       throw new ConflictException('Email is already taken, please try again.');
     }
 
+    if (userCreateDto.firstName) {
+      userCreateDto.firstName = _.capitalize(userCreateDto.firstName);
+    }
+
+    if (userCreateDto.lastName) {
+      userCreateDto.lastName = _.capitalize(userCreateDto.lastName);
+    }
+
     if (userCreateDto.password) {
       userCreateDto.password = await this.authService.encryptPassword(
         userCreateDto.password,
       );
     }
     userCreateDto.email = userCreateDto.email.toLowerCase();
-    let roleConnections: { id: number }[] = [];
 
     // if roles was passed, assign them appropriately
+    let roleConnections: { id: number }[] = [];
     if (userCreateDto.roles && userCreateDto.roles.length > 0) {
       const roles = await this.prismaService.role.findMany({
         where: {
@@ -147,7 +156,17 @@ export class UserService {
         id: userUpdateDto.id,
         deletedAt: null,
       },
+      include: {
+        roles: true,
+      },
     });
+    // normalize form values appropriately
+    if (userUpdateDto.firstName) {
+      userUpdateDto.firstName = _.capitalize(userUpdateDto.firstName);
+    }
+    if (userUpdateDto.lastName) {
+      userUpdateDto.lastName = _.capitalize(userUpdateDto.lastName);
+    }
     if (userUpdateDto.password) {
       userUpdateDto.password = await this.authService.encryptPassword(
         userUpdateDto.password,
@@ -156,12 +175,44 @@ export class UserService {
     if (userUpdateDto.email) {
       userUpdateDto.email = userUpdateDto.email.toLowerCase();
     }
+    // assign roles appropriately (TODO: simplify this mess)
+    let roleConnections: { id: number }[] = [];
+    let roleDisconnections: { id: number }[] = [];
+    if (userUpdateDto.roles && userUpdateDto.roles.length > 0) {
+      const allRoles = await this.prismaService.role.findMany();
+      const rolesToConnect = userUpdateDto.roles.filter(
+        (roleName) => !user.roles.some((role) => role.name === roleName),
+      );
+      roleConnections = allRoles
+        .filter((role) => rolesToConnect.includes(role.name as Roles))
+        .map((role) => ({ id: role.id }));
+      const rolesToDisconnect = user.roles
+        .filter(
+          (role) => !(userUpdateDto.roles || []).includes(role.name as Roles),
+        )
+        .map((role) => ({ id: role.id }));
+      roleDisconnections = allRoles
+        .filter((role) => rolesToDisconnect.map((r) => r.id).includes(role.id))
+        .map((role) => ({ id: role.id }));
+      const roles = await this.prismaService.role.findMany({
+        where: {
+          name: { in: userUpdateDto.roles },
+        },
+      });
+      roleConnections = roles.map((role) => ({ id: role.id }));
+    }
     try {
       const updatedUser = await this.prismaService.user.update({
         where: {
           id: userUpdateDto.id,
         },
-        data: userUpdateDto,
+        data: {
+          ...userUpdateDto,
+          roles: {
+            connect: roleConnections,
+            disconnect: roleDisconnections,
+          },
+        },
       });
       return updatedUser;
     } catch (error: any) {
