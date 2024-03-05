@@ -25,7 +25,7 @@ export const Uploader = (props: UploaderProps) => {
     ...props,
   })
     .use(Tus, {
-      endpoint: "https://tusd.tusdemo.net/files/", // for prod, change this to your TUS server
+      endpoint: "https://tusd.tusdemo.net/files/", // TODO: for prod, change this to your TUS server
     })
     .on("upload-success", (e: any) => {
       console.log("upload-success", e);
