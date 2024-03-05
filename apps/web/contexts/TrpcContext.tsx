@@ -10,7 +10,7 @@ import {
 } from "@trpc/react-query";
 import Cookies from "js-cookie";
 import React, { ReactNode, createContext, useContext, useState } from "react";
-import { transformer } from '@shared/transformer';
+import { transformer } from "@shared/transformer";
 
 const trpc = createTRPCReact<AppRouter>();
 const trpcUrl =
@@ -27,7 +27,7 @@ const httpBatchLinkOptions = {
 };
 const trpcClientOpts: CreateTRPCClientOptions<AppRouter> = {
   links: [httpBatchLink(httpBatchLinkOptions)],
-  transformer
+  transformer,
 };
 
 const trpcReactClient = trpc.createClient(trpcClientOpts);

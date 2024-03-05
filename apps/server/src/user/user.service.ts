@@ -90,6 +90,8 @@ export class UserService {
     }
     userCreateDto.email = userCreateDto.email.toLowerCase();
     let roleConnections: { id: number }[] = [];
+
+    // if roles was passed, assign them appropriately
     if (userCreateDto.roles && userCreateDto.roles.length > 0) {
       const roles = await this.prismaService.role.findMany({
         where: {
@@ -97,6 +99,16 @@ export class UserService {
         },
       });
       roleConnections = roles.map((role) => ({ id: role.id }));
+    } else {
+      // otherwise, assign a default User role
+      const role = await this.prismaService.role.findFirst({
+        where: {
+          name: 'User',
+        },
+      });
+      if (role) {
+        roleConnections = [{ id: role.id }];
+      }
     }
 
     // assign a random profile avatar picture if profile pic is not provided
@@ -136,17 +148,14 @@ export class UserService {
         deletedAt: null,
       },
     });
-
     if (userUpdateDto.password) {
       userUpdateDto.password = await this.authService.encryptPassword(
         userUpdateDto.password,
       );
     }
-
     if (userUpdateDto.email) {
       userUpdateDto.email = userUpdateDto.email.toLowerCase();
     }
-
     try {
       const updatedUser = await this.prismaService.user.update({
         where: {
@@ -170,6 +179,9 @@ export class UserService {
       take: opts.perPage,
       include: {
         roles: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
     const total = await this.prismaService.user.count();

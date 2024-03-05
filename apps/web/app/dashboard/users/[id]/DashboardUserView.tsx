@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserUpdateDto, UserUpdateDtoType } from "@server/user/dto/user.dto";
+import { Uploader } from "@web/components/Uploader";
 import { useTrpc } from "@web/contexts/TrpcContext";
 import _ from "lodash";
 import { useParams } from "next/navigation";
@@ -12,17 +13,30 @@ import { toast } from "react-toastify";
 export default function DashboardUserView() {
   const { trpc } = useTrpc();
   const params = useParams();
+  const [showProfilePicUrlUploader, setShowProfilePicUrlUploader] =
+    useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
-  const user = trpc.userRouter.findById.useQuery({ id: +params.id });
+  const user = trpc.userRouter.findById.useQuery(
+    { id: +params.id },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
   const updateUser = trpc.userRouter.update.useMutation();
   const {
     register,
     formState: { errors },
     handleSubmit,
     reset,
+    setValue,
+    getValues,
+    watch,
   } = useForm<UserUpdateDtoType>({
     resolver: zodResolver(UserUpdateDto),
   });
+
+  const data = getValues(); // Gets all current form values
+  console.log("cv", data);
 
   // set default form values
   useEffect(() => {
@@ -42,6 +56,8 @@ export default function DashboardUserView() {
     }
   }, [user.data, reset]);
 
+  const profilePicUrl = watch("profilePicUrl");
+
   return (
     <div className="">
       {/* Card Section */}
@@ -50,8 +66,8 @@ export default function DashboardUserView() {
       <div className="bg-white rounded-xl  sm:p-7 dark:bg-slate-900">
         <div className="mb-8">
           <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200">
-            {_.capitalize(user?.data?.firstName || "")}{" "}
-            {_.capitalize(user?.data?.lastName || "")}'s Profile
+            {_.capitalize(data?.firstName || "")}{" "}
+            {_.capitalize(data?.lastName || "")}'s Profile
           </h2>
           <p className="text-sm text-gray-600 dark:text-gray-400">
             * means required
@@ -73,18 +89,23 @@ export default function DashboardUserView() {
             {/* End Col */}
             <div className="sm:col-span-9">
               <div className="flex items-center gap-5">
-                <img
-                  className="inline-block size-16 rounded-full ring-2 ring-white dark:ring-gray-800"
-                  src={
-                    user?.data?.profilePicUrl ||
-                    "https://avataaars.io/?accessoriesType=Prescription01&avatarStyle=Circle&clotheColor=PastelRed&clotheType=BlazerShirt&eyeType=Surprised&eyebrowType=FlatNatural&facialHairColor=Blonde&facialHairType=BeardMagestic&hairColor=Auburn&hatColor=PastelGreen&mouthType=Serious&skinColor=Light&topType=ShortHairFrizzle"
-                  }
-                  alt="Image Description"
-                />
+                {data?.profilePicUrl && (
+                  <img
+                    className="inline-block size-16 rounded-full ring-2 ring-white dark:ring-gray-800"
+                    src={data?.profilePicUrl}
+                    alt="Image Description"
+                  />
+                )}
                 <div className="flex gap-x-2">
                   <div>
                     <button
+                      id="profilePicUrl"
                       type="button"
+                      onClick={() => {
+                        setShowProfilePicUrlUploader(
+                          !showProfilePicUrlUploader
+                        );
+                      }}
                       className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-white dark:hover:bg-gray-800 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                     >
                       <svg
@@ -105,6 +126,18 @@ export default function DashboardUserView() {
                       </svg>
                       Upload photo
                     </button>
+                    {showProfilePicUrlUploader && (
+                      <Uploader
+                        onClose={() => {
+                          setShowProfilePicUrlUploader(false);
+                        }}
+                        onUpload={(file) => {
+                          console.log("file uploaded", file);
+                          setValue("profilePicUrl", file.url);
+                          setShowProfilePicUrlUploader(false);
+                        }}
+                      />
+                    )}
                   </div>
                 </div>
               </div>
@@ -188,8 +221,9 @@ export default function DashboardUserView() {
               <div className="space-y-2">
                 {showChangePassword ? (
                   <input
-                    type="text"
+                    type="password"
                     {...register("password")}
+                    required={showChangePassword}
                     className="py-2 px-3 pe-11 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
                     placeholder="Enter new password"
                   />
@@ -201,8 +235,8 @@ export default function DashboardUserView() {
                       setShowChangePassword(true);
                     }}
                   >
-                    <small className="text-underline px-2 text-orange-600">
-                      Click here to change password
+                    <small className="text-underline px-2 text-gray-600">
+                      Set a new password
                     </small>
                   </a>
                 )}
@@ -287,9 +321,10 @@ export default function DashboardUserView() {
           <div className="mt-5 flex justify-center gap-x-2">
             <button
               type="submit"
+              disabled={updateUser.isLoading}
               className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
             >
-              Save changes
+              {updateUser.isLoading ? "Saving ..." : "Save changes"}
             </button>
           </div>
         </form>

@@ -304,7 +304,14 @@ export default function DashboardUserList() {
         {/* End Card */}
       </div>
       {/* End Table Section */}
-      {<DashboardUserCreateModal />}
+      {showUserCreate && (
+        <DashboardUserCreateModal
+          onClose={() => {
+            setShowUserCreate(false);
+            userList.refetch();
+          }}
+        />
+      )}
     </>
   );
 }
