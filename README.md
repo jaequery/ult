@@ -7,7 +7,7 @@
 
 <p align="center>
 	
-![Ult logo](https://github.com/jaequery/Ult/assets/794507/61f068f3-53a6-4a18-be5d-f7746ecbdd3e))
+![Ult logo](https://github.com/jaequery/Ult/assets/794507/61f068f3-53a6-4a18-be5d-f7746ecbdd3e)
 
 </p>
 
