@@ -6,7 +6,7 @@
 </p>
 
 <p>
-[image](https://github.com/jaequery/Ult/assets/794507/61f068f3-53a6-4a18-be5d-f7746ecbdd3e)
+![Ult logo]([https://raw.githubusercontent.com/Descent098/ezcv/master/.github/logo.png](https://github.com/jaequery/Ult/assets/794507/61f068f3-53a6-4a18-be5d-f7746ecbdd3e))
 </p>
 <p align="center">
 	<img src="https://img.shields.io/github/license/jaequery/ultima?style=flat&color=0080ff" alt="license">
