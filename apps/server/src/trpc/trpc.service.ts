@@ -53,7 +53,7 @@ export class TrpcService {
   //       return this.userService.update(input);
   //     }),
 
-  procedure(allowedRoles?: string[], ownerIdentifier?: string) {
+  protectedProcedure(allowedRoles?: string[], ownerIdentifier?: string) {
     const procedure = this.trpc.procedure.use(async (opts) => {
       const input = opts.rawInput as any;
       if (!allowedRoles || allowedRoles.length === 0) {

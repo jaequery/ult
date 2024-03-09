@@ -28,7 +28,7 @@ export class PostService {
     }
   }
 
-  async update(postUpdateDto: PostUpdateDtoType) {
+  async update(postUpdateDto: PostUpdateDtoType, requestUser: User) {
     const post = await this.prismaService.post.findFirstOrThrow({
       where: {
         id: postUpdateDto.id,
@@ -40,7 +40,7 @@ export class PostService {
         where: {
           id: post.id,
         },
-        data: postUpdateDto,
+        data: { ...postUpdateDto, userId: requestUser.id },
       });
       return updatedPost;
     } catch (error: any) {

@@ -124,7 +124,7 @@ export default function DashboardPostList() {
                   </thead>
                   <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                     {postList?.data?.records?.map((post) => (
-                      <tr>
+                      <tr key={post.id}>
                         <td className="size-px whitespace-nowrap">
                           <div className="ps-6 py-3">
                             <label
