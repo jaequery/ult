@@ -1,14 +1,29 @@
 import { Injectable } from '@nestjs/common';
+import { Role, User } from '@prisma/client';
 import { UserService } from '@server/user/user.service';
 import { transformer } from '@shared/transformer';
 import { TRPCError, initTRPC } from '@trpc/server';
-import { createContext } from './trpc.router';
+import { CreateExpressContextOptions } from '@trpc/server/adapters/express';
+import * as trpcExpress from '@trpc/server/adapters/express';
+
+export interface TrpcContext extends CreateExpressContextOptions {
+  user?: User;
+}
+
+export const createContext = async (
+  opts: trpcExpress.CreateExpressContextOptions,
+) => {
+  return {
+    req: opts.req,
+    res: opts.res,
+  };
+};
 
 @Injectable()
 export class TrpcService {
   trpc;
   constructor(private readonly userService: UserService) {
-    this.trpc = initTRPC.context<typeof createContext>().create({
+    this.trpc = initTRPC.context<TrpcContext>().create({
       transformer,
     });
   }
@@ -39,22 +54,16 @@ export class TrpcService {
   //     }),
 
   procedure(allowedRoles?: string[], ownerIdentifier?: string) {
-    const userService = this.userService;
-    const procedure = this.trpc.procedure.use(async function isProtected(opts) {
+    const procedure = this.trpc.procedure.use(async (opts) => {
       const input = opts.rawInput as any;
       if (!allowedRoles || allowedRoles.length === 0) {
         return opts.next();
       }
       // get bearer from headers
-      const accessToken =
-        opts.ctx.req.headers.authorization?.replace('Bearer ', '') || '';
-      if (!accessToken) {
-        throw new TRPCError({ code: 'UNAUTHORIZED' });
-      }
+      const jwtUser = await this.getJwtUserFromHeader(opts.ctx);
 
       // check if user has role privilege
-      const jwtUser = await userService.verifyAccessToken(accessToken);
-      const hasRole = jwtUser.user.roles.some((r) =>
+      const hasRole = jwtUser.user.roles.some((r: Role) =>
         allowedRoles.includes(r.name),
       );
 
@@ -70,8 +79,25 @@ export class TrpcService {
       }
 
       // return
-      return opts.next();
+      return opts.next({
+        ctx: {
+          ...opts.ctx,
+          user: jwtUser.user,
+        },
+      });
     });
     return procedure;
+  }
+
+  async getJwtUserFromHeader(ctx: TrpcContext) {
+    // get bearer from headers
+    const accessToken =
+      ctx.req.headers.authorization?.replace('Bearer ', '') || '';
+    if (!accessToken) {
+      throw new TRPCError({ code: 'UNAUTHORIZED' });
+    }
+
+    // check if user has role privilege
+    return this.userService.verifyAccessToken(accessToken);
   }
 }

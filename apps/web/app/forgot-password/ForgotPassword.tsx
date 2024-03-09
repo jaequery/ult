@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   UserLoginDtoType,
   UserResetPasswordDto,
-} from "@server/user/dto/user.dto";
+} from "@server/user/user.dto";
 import { CircularProgress } from "@web/components/CircularProgress";
 import { useTrpc } from "@web/contexts/TrpcContext";
 import { useRouter } from "next/navigation";

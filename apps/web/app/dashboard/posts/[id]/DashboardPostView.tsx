@@ -3,10 +3,10 @@
 export default function DashboardPostView() {
   return (
     <>
-      <div className="flex min-h-full flex-1 flex-col text-center justify-center px-6 py-12 lg:px-8">
+      <div className="flex min-h-full flex-1 flex-col text-center justify-center px-6  lg:px-8">
         <div>
           {/* Blog Article */}
-          <div className="max-w-6xl px-4 pt-6 lg:pt-10 pb-12 sm:px-6 lg:px-8 mx-auto">
+          <div className="max-w-6xl px-4 lg:pt-10 pb-12 sm:px-6 lg:px-8 mx-auto">
             <div className="max-w-full">
               {/* Avatar Media */}
               <div className="flex justify-between items-center mb-6">

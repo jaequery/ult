@@ -29,6 +29,19 @@ model User {
   updatedAt     DateTime  @updatedAt
   deletedAt     DateTime?
   roles         Role[]    @relation("UserRoles")
+  posts         Post[]    @relation("UserPosts")
+}
+
+model Post {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  title       String
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  status      String?   @default("draft")
+  user        User      @relation("UserPosts", fields: [userId], references: [id])
 }
 
 model Role {

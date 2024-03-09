@@ -20,7 +20,7 @@ import {
   UserResetPasswordType,
   UserSignupDtoType,
   UserUpdateDtoType,
-} from './dto/user.dto';
+} from './user.dto';
 
 @Injectable()
 export class UserService {

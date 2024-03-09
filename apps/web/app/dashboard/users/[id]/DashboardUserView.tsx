@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserUpdateDto, UserUpdateDtoType } from "@server/user/dto/user.dto";
+import { UserUpdateDto, UserUpdateDtoType } from "@server/user/user.dto";
 import { Roles } from "@shared/interfaces";
 import { useUserContext } from "@web/app/user/UserContext";
 import { Uploader } from "@web/components/Uploader";

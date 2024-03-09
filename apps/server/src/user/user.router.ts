@@ -13,7 +13,7 @@ import {
   UserSignupDto,
   UserUpdateDto,
   UserVerifyAccessTokenDto,
-} from './dto/user.dto';
+} from './user.dto';
 
 @Injectable()
 @UseFilters(new TrpcExceptionFilter())
