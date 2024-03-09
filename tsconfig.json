@@ -16,6 +16,9 @@
       "@web/*": ["./apps/web/*"],
       "@shared/*": ["./apps/shared/dist/*"],
       "@prisma/client": ["./apps/server/node_modules/@prisma/client"]
-    }
+    },
+    "plugins": [
+      { "transform" : "ts-auto-mock/transformer", "cacheBetweenTests": false }
+    ]
   }
 }

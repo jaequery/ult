@@ -21,10 +21,12 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prestart": "rimraf dist && yarn run build",
+    "prisma:generate": "npx prisma generate",
     "db:migrate:new": "npx prisma migrate dev --name",
     "db:migrate": "npx prisma migrate dev && npx prisma generate",
     "db:seed": "npx ts-node -r tsconfig-paths/register prisma/seed.ts",
-    "db:reset": "npx prisma migrate reset; pnpm db:seed"
+    "db:reset": "npx prisma migrate reset; pnpm db:seed",
+    "prepare": "ts-patch install -s"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^1.11.2",
@@ -89,22 +91,5 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.3.3",
     "webpack": "^5.90.3"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
   }
 }

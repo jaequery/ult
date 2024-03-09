@@ -8,9 +8,9 @@ import {
 import { AuthService } from '@server/auth/auth.service';
 import _ from 'lodash';
 import { AvatarGenerator } from 'random-avatar-generator';
-
 import { EmailService } from '@server/email/email.service';
 import { PrismaService } from '@server/prisma/prisma.service';
+import { UserLoginResponse } from '@server/user/user.types';
 import { Roles } from '@shared/interfaces';
 import generator from 'generate-password-ts';
 import {
@@ -43,7 +43,7 @@ export class UserService {
     return jwtUser;
   }
 
-  async login(userLoginDto: UserLoginDtoType) {
+  async login(userLoginDto: UserLoginDtoType): Promise<UserLoginResponse> {
     const user = await this.prismaService.user.findFirst({
       where: {
         email: userLoginDto.email,
