@@ -56,8 +56,12 @@ export default function DashboardPostView() {
         </div>
         <form
           onSubmit={handleSubmit(async (data) => {
-            await updatePost.mutateAsync(data);
-            toast("Saved");
+            try {
+              await updatePost.mutateAsync(data);
+              toast("Saved");
+            } catch (e) {
+              toast("There was an error saving", { type: "error" });
+            }
           })}
         >
           {/* Grid */}

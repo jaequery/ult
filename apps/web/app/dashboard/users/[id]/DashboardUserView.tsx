@@ -88,8 +88,12 @@ export default function DashboardUserView() {
         </div>
         <form
           onSubmit={handleSubmit(async (data) => {
-            await updateUser.mutateAsync(data);
-            toast("Saved", {});
+            try {
+              await updateUser.mutateAsync(data);
+              toast("Saved");
+            } catch (e) {
+              toast("There was an error saving", { type: "error" });
+            }
           })}
         >
           {/* Grid */}
