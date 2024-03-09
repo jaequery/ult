@@ -1,4 +1,4 @@
-import { Catch, ArgumentsHost } from '@nestjs/common';
+import { Catch } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
 
 /**
@@ -6,8 +6,8 @@ import { BaseExceptionFilter } from '@nestjs/core';
  */
 @Catch()
 export class TrpcExceptionFilter extends BaseExceptionFilter {
-  catch() {
-    console.log('hello error');
+  catch(e: any) {
+    console.log('TRPC error', e.message);
     // super.catch(exception, host);
   }
 }

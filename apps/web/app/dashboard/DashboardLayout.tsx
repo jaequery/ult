@@ -337,7 +337,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
       here's how to customize the toaster:
       https://fkhadra.github.io/react-toastify/introduction/
       */}
-      <ToastContainer position="bottom-right" />
+      <ToastContainer position="bottom-center" />
     </>
   );
 };

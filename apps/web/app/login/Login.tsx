@@ -1,13 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserLoginDto, UserLoginDtoType } from "@server/user/dto/user.dto";
+import { UserLoginDto, UserLoginDtoType } from "@server/user/user.dto";
 import { CircularProgress } from "@web/components/CircularProgress";
 import { useTrpc } from "@web/contexts/TrpcContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { useUserContext } from "../user/UserContext";
 
 export default function Login() {
@@ -41,16 +42,17 @@ export default function Login() {
             className="space-y-6"
             onSubmit={handleSubmit(async (data) => {
               try {
-                const jwtUser = await loginUser.mutateAsync(data);
-
-                if (jwtUser.user && setCurrentUser) {
+                const userJwt = await loginUser.mutateAsync(data);
+                if (userJwt.user && setCurrentUser) {
                   setAccessToken(
-                    jwtUser.jwt.accessToken,
-                    jwtUser.jwt.expiresIn
+                    userJwt.jwt.accessToken,
+                    userJwt.jwt.expiresIn
                   );
-                  setCurrentUser(jwtUser.user);
+                  setCurrentUser(userJwt.user);
                 }
-              } catch (e) {}
+              } catch (e) {
+                toast("There was a problem during login", { type: "error" });
+              }
             })}
           >
             <div>

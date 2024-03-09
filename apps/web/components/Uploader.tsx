@@ -28,7 +28,7 @@ export const Uploader = (props: UploaderProps) => {
       endpoint: "https://tusd.tusdemo.net/files/", // TODO: for prod, change this to your TUS server
     })
     .on("upload-success", (e: any) => {
-      console.log("upload-success", e);
+      console.info("upload-success", e);
       if (props.onUpload && e.size) {
         const file = {
           name: e.name,
@@ -41,7 +41,7 @@ export const Uploader = (props: UploaderProps) => {
       }
     })
     .on("complete", (e) => {
-      console.log("completed");
+      console.info("completed");
       if (props.onComplete) {
         props.onComplete(e);
       }

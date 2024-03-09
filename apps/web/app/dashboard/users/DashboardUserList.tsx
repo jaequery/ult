@@ -124,7 +124,7 @@ export default function DashboardUserList() {
                   </thead>
                   <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                     {userList?.data?.records?.map((user) => (
-                      <tr>
+                      <tr key={user.id}>
                         <td className="size-px whitespace-nowrap">
                           <div className="ps-6 py-3">
                             <label
@@ -149,9 +149,11 @@ export default function DashboardUserList() {
                                 alt="Image Description"
                               />
                               <div className="grow">
-                                <span className="block text-sm font-semibold text-gray-800 dark:text-gray-200">
-                                  {user.firstName} {user.lastName}
-                                </span>
+                                <Link href={`/dashboard/users/${user.id}`}>
+                                  <span className="block text-sm font-semibold text-gray-800 dark:text-gray-200 hover:underline">
+                                    {user.firstName} {user.lastName}
+                                  </span>
+                                </Link>
                                 <span className="block text-sm text-gray-500">
                                   {user.roles
                                     .map((role) => role.name)
@@ -199,7 +201,7 @@ export default function DashboardUserList() {
                               className="inline-flex items-center gap-x-1 text-sm text-blue-600 decoration-2 hover:underline font-medium dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                               href={`/dashboard/users/${user.id}`}
                             >
-                              Edit
+                              View
                             </Link>
                           </div>
                         </td>
@@ -229,13 +231,17 @@ export default function DashboardUserList() {
                   </div>
                   <div className="flex items-center justify-center">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Showing{" "}
                       <span className="font-semibold text-gray-800 dark:text-gray-200">
-                        Showing {(page - 1) * perPage + 1} ~{" "}
+                        {(page - 1) * perPage + 1} ~{" "}
                         {(page - 1) * perPage +
                           1 +
                           (userList?.data?.records?.length || 0) -
                           1}{" "}
-                        out of {userList?.data?.total}
+                      </span>
+                      out of{" "}
+                      <span className="font-semibold text-gray-800 dark:text-gray-200">
+                        {userList?.data?.total}
                       </span>{" "}
                       results
                     </p>

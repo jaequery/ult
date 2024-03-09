@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserCreateDtoType, UserSignupDto } from "@server/user/dto/user.dto";
+import { UserCreateDtoType, UserSignupDto } from "@server/user/user.dto";
 import { CircularProgress } from "@web/components/CircularProgress";
 import { useTrpc } from "@web/contexts/TrpcContext";
 import Link from "next/link";

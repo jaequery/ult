@@ -8,9 +8,9 @@ import {
 import { AuthService } from '@server/auth/auth.service';
 import _ from 'lodash';
 import { AvatarGenerator } from 'random-avatar-generator';
-
 import { EmailService } from '@server/email/email.service';
 import { PrismaService } from '@server/prisma/prisma.service';
+import { UserLoginResponse } from '@server/user/user.types';
 import { Roles } from '@shared/interfaces';
 import generator from 'generate-password-ts';
 import {
@@ -20,8 +20,7 @@ import {
   UserResetPasswordType,
   UserSignupDtoType,
   UserUpdateDtoType,
-} from './dto/user.dto';
-import { UserLoginResponse } from '@server/user/user.types';
+} from './user.dto';
 
 @Injectable()
 export class UserService {
@@ -36,12 +35,12 @@ export class UserService {
       ...signupDto,
       roles: [Roles.User],
     } as UserCreateDtoType;
-    const jwtUser = await this.create(payload);
+    const userJwt = await this.create(payload);
     await this.emailService.sendUserWelcome(
-      jwtUser.user,
-      jwtUser.jwt.accessToken,
+      userJwt.user,
+      userJwt.jwt.accessToken,
     );
-    return jwtUser;
+    return userJwt;
   }
 
   async login(userLoginDto: UserLoginDtoType): Promise<UserLoginResponse> {
@@ -290,17 +289,17 @@ export class UserService {
   }
 
   async verifyAccessToken(accessToken: string) {
-    const jwtUser = await this.findByAccessToken(accessToken);
-    if (jwtUser) {
+    const userJwt = await this.findByAccessToken(accessToken);
+    if (userJwt) {
       await this.prismaService.user.update({
         where: {
-          id: jwtUser.user.id,
+          id: userJwt.user.id,
         },
         data: {
           verifiedAt: new Date(),
         },
       });
-      return jwtUser;
+      return userJwt;
     }
     throw new UnauthorizedException('invalid access token');
   }

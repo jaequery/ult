@@ -13,7 +13,7 @@ import {
   UserSignupDto,
   UserUpdateDto,
   UserVerifyAccessTokenDto,
-} from './dto/user.dto';
+} from './user.dto';
 
 @Injectable()
 @UseFilters(new TrpcExceptionFilter())
@@ -27,7 +27,7 @@ export class UserRouter {
       userRouter: this.trpcService.trpc.router({
         // login user
         login: this.trpcService
-          .procedure()
+          .publicProcedure()
           .input(UserLoginDto)
           .mutation(async ({ input }) => {
             return this.userService.login(input);
@@ -35,7 +35,7 @@ export class UserRouter {
 
         // signs up a user
         signup: this.trpcService
-          .procedure()
+          .publicProcedure()
           .input(UserSignupDto)
           .mutation(async ({ input }) => {
             return this.userService.signup(input);
@@ -43,7 +43,7 @@ export class UserRouter {
 
         // creates a user from dashboard
         create: this.trpcService
-          .procedure([Roles.Admin])
+          .protectedProcedure([Roles.Admin])
           .input(UserCreateDto)
           .mutation(async ({ input }) => {
             return this.userService.create(input);
@@ -51,7 +51,7 @@ export class UserRouter {
 
         // update user
         update: this.trpcService
-          .procedure()
+          .protectedProcedure()
           .input(UserUpdateDto)
           .mutation(async ({ input }) => {
             return this.userService.update(input);
@@ -59,7 +59,7 @@ export class UserRouter {
 
         // remove user
         remove: this.trpcService
-          .procedure([Roles.Admin], 'id')
+          .protectedProcedure([Roles.Admin])
           .input(UserRemoveDto)
           .mutation(async ({ input }) => {
             return this.userService.remove(input.id);
@@ -67,7 +67,7 @@ export class UserRouter {
 
         // get user by id
         findById: this.trpcService
-          .procedure([Roles.Admin], 'id')
+          .protectedProcedure()
           .input(UserFindByIdDto)
           .query(async ({ input }) => {
             return this.userService.findById(input.id);
@@ -75,7 +75,7 @@ export class UserRouter {
 
         // get all users
         findAll: this.trpcService
-          .procedure([Roles.Admin])
+          .protectedProcedure([Roles.Admin])
           .input(UserFindAllDto)
           .query(async ({ input }) => {
             return this.userService.findAll(input);
@@ -83,7 +83,7 @@ export class UserRouter {
 
         // get user by id
         verifyAccessToken: this.trpcService
-          .procedure()
+          .protectedProcedure()
           .input(UserVerifyAccessTokenDto)
           .query(async ({ input }) => {
             return this.userService.verifyAccessToken(input.accessToken);
@@ -91,7 +91,7 @@ export class UserRouter {
 
         // reset user password
         resetPassword: this.trpcService
-          .procedure()
+          .protectedProcedure()
           .input(UserResetPasswordDto)
           .mutation(async ({ input }) => {
             return this.userService.resetPassword({ email: input.email });

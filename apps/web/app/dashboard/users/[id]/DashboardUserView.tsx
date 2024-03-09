@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserUpdateDto, UserUpdateDtoType } from "@server/user/dto/user.dto";
+import { UserUpdateDto, UserUpdateDtoType } from "@server/user/user.dto";
 import { Roles } from "@shared/interfaces";
 import { useUserContext } from "@web/app/user/UserContext";
 import { Uploader } from "@web/components/Uploader";
@@ -19,12 +19,7 @@ export default function DashboardUserView() {
   const [showProfilePicUrlUploader, setShowProfilePicUrlUploader] =
     useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
-  const user = trpc.userRouter.findById.useQuery(
-    { id: +params.id },
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
+  const user = trpc.userRouter.findById.useQuery({ id: Number(params.id) });
   const updateUser = trpc.userRouter.update.useMutation();
   const {
     register,
@@ -79,9 +74,7 @@ export default function DashboardUserView() {
   };
 
   return (
-    <div className="">
-      {/* Card Section */}
-
+    <div>
       {/* Card */}
       <div className="bg-white rounded-xl  sm:p-7 dark:bg-slate-900">
         <div className="mb-8">
@@ -95,8 +88,12 @@ export default function DashboardUserView() {
         </div>
         <form
           onSubmit={handleSubmit(async (data) => {
-            await updateUser.mutateAsync(data);
-            toast("Saved");
+            try {
+              await updateUser.mutateAsync(data);
+              toast("Saved");
+            } catch (e: any) {
+              toast(e.message, { type: "error" });
+            }
           })}
         >
           {/* Grid */}
@@ -152,7 +149,6 @@ export default function DashboardUserView() {
                           setShowProfilePicUrlUploader(false);
                         }}
                         onUpload={(file) => {
-                          console.log("file uploaded", file);
                           setValue("profilePicUrl", file.url);
                           setShowProfilePicUrlUploader(false);
                         }}
@@ -372,7 +368,7 @@ export default function DashboardUserView() {
                 htmlFor="af-account-bio"
                 className="inline-block text-sm text-gray-800 mt-2.5 dark:text-gray-200"
               >
-                BIO
+                Bio
               </label>
             </div>
             {/* End Col */}
@@ -388,7 +384,7 @@ export default function DashboardUserView() {
             {/* End Col */}
           </div>
           {/* End Grid */}
-          <div className="mt-5 flex justify-center gap-x-2">
+          <div className="mt-5 flex justify-end gap-x-2">
             <button
               type="submit"
               disabled={updateUser.isLoading}
