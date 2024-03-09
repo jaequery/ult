@@ -1,6 +1,6 @@
 "use client";
 
-import { CurrentUser } from "@shared/interfaces";
+import { UserById } from "@shared/interfaces";
 import { useTrpc } from "@web/contexts/TrpcContext";
 import Cookies from "js-cookie";
 import React, {
@@ -19,8 +19,8 @@ interface UserProviderProps {
 }
 
 export interface UserContextState {
-  currentUser: CurrentUser | null; // Explicitly allow for user to be undefined or null
-  setCurrentUser: Dispatch<SetStateAction<CurrentUser | null>> | null; // Allow null here
+  currentUser: UserById | null; // Explicitly allow for user to be undefined or null
+  setCurrentUser: Dispatch<SetStateAction<UserById | null>> | null; // Allow null here
   accessToken: string | null;
   setAccessToken: (accessToken: string, expiresIn: string) => void;
   logout: () => void;
@@ -42,7 +42,7 @@ const UserContext = createContext<UserContextState>(defaultContextValue);
 
 // Provider Component
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
+  const [currentUser, setCurrentUser] = useState<UserById | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isAuthenticating, setIsAuthenticating] = useState(true); // Initially true, assuming authentication check is in progress
   const { trpcAsync } = useTrpc();
@@ -54,12 +54,12 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       if (tokenFromCookie) {
         setIsAuthenticating(true); // Begin authentication check only if token exists
         try {
-          const jwtUser =
+          const userJwt =
             await trpcAsyncRef.current.userRouter.verifyAccessToken.query({
               accessToken: tokenFromCookie,
             });
-          if (jwtUser.user.verifiedAt) {
-            setCurrentUser(jwtUser.user);
+          if (userJwt.user.verifiedAt) {
+            setCurrentUser(userJwt.user);
           }
         } catch (error) {
           console.error("Error fetching user:", error);

@@ -35,12 +35,12 @@ export class UserService {
       ...signupDto,
       roles: [Roles.User],
     } as UserCreateDtoType;
-    const jwtUser = await this.create(payload);
+    const userJwt = await this.create(payload);
     await this.emailService.sendUserWelcome(
-      jwtUser.user,
-      jwtUser.jwt.accessToken,
+      userJwt.user,
+      userJwt.jwt.accessToken,
     );
-    return jwtUser;
+    return userJwt;
   }
 
   async login(userLoginDto: UserLoginDtoType): Promise<UserLoginResponse> {
@@ -289,17 +289,17 @@ export class UserService {
   }
 
   async verifyAccessToken(accessToken: string) {
-    const jwtUser = await this.findByAccessToken(accessToken);
-    if (jwtUser) {
+    const userJwt = await this.findByAccessToken(accessToken);
+    if (userJwt) {
       await this.prismaService.user.update({
         where: {
-          id: jwtUser.user.id,
+          id: userJwt.user.id,
         },
         data: {
           verifiedAt: new Date(),
         },
       });
-      return jwtUser;
+      return userJwt;
     }
     throw new UnauthorizedException('invalid access token');
   }

@@ -222,13 +222,17 @@ export default function DashboardPostList() {
                   </div>
                   <div className="flex items-center justify-center">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Showing{" "}
                       <span className="font-semibold text-gray-800 dark:text-gray-200">
-                        Showing {(page - 1) * perPage + 1} ~{" "}
+                        {(page - 1) * perPage + 1} ~{" "}
                         {(page - 1) * perPage +
                           1 +
                           (postList?.data?.records?.length || 0) -
                           1}{" "}
-                        out of {postList?.data?.total}
+                      </span>
+                      out of{" "}
+                      <span className="font-semibold text-gray-800 dark:text-gray-200">
+                        {postList?.data?.total}
                       </span>{" "}
                       results
                     </p>

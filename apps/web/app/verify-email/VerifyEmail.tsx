@@ -11,15 +11,15 @@ export default function VerifyEmail() {
   const { setAccessToken, currentUser } = useUserContext();
   const searchParams = useSearchParams();
   const accessToken = searchParams.get("token") || "";
-  const jwtUser = trpc.userRouter.verifyAccessToken.useQuery({
+  const userJwt = trpc.userRouter.verifyAccessToken.useQuery({
     accessToken,
   });
 
   useEffect(() => {
-    if (jwtUser.data) {
-      setAccessToken(accessToken, jwtUser.data.jwt.expiresIn);
+    if (userJwt.data) {
+      setAccessToken(accessToken, userJwt.data.jwt.expiresIn);
     }
-  }, [jwtUser, setAccessToken, accessToken]);
+  }, [userJwt, setAccessToken, accessToken]);
 
   useEffect(() => {
     if (currentUser) {

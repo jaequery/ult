@@ -23,7 +23,7 @@ export class PostRouter {
       postRouter: this.trpcService.trpc.router({
         // creates a post from dashboard
         create: this.trpcService
-          .protectedProcedure([Roles.Admin])
+          .protectedProcedure()
           .input(PostCreateDto)
           .mutation(async ({ input, ctx }) => {
             if (ctx.user) {
@@ -33,7 +33,7 @@ export class PostRouter {
 
         // update post
         update: this.trpcService
-          .protectedProcedure([Roles.Admin], 'userId')
+          .protectedProcedure()
           .input(PostUpdateDto)
           .mutation(async ({ input, ctx }) => {
             if (ctx.user) {
@@ -43,15 +43,17 @@ export class PostRouter {
 
         // remove post
         remove: this.trpcService
-          .protectedProcedure([Roles.Admin], 'userId')
+          .protectedProcedure([Roles.Admin])
           .input(PostRemoveDto)
-          .mutation(async ({ input }) => {
-            return this.postService.remove(input.id);
+          .mutation(async ({ input, ctx }) => {
+            if (ctx.user) {
+              return this.postService.remove(input.id, ctx.user);
+            }
           }),
 
         // get post by id
         findById: this.trpcService
-          .protectedProcedure([Roles.Admin], 'id')
+          .publicProcedure()
           .input(PostFindByIdDto)
           .query(async ({ input }) => {
             return this.postService.findById(input.id);
@@ -59,7 +61,7 @@ export class PostRouter {
 
         // get all posts
         findAll: this.trpcService
-          .protectedProcedure([Roles.Admin])
+          .publicProcedure()
           .input(PostFindAllDto)
           .query(async ({ input }) => {
             return this.postService.findAll(input);

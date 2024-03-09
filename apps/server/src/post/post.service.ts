@@ -1,19 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { InternalServerErrorException } from '@nestjs/common/exceptions';
-
+import {
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common/exceptions';
 import { PrismaService } from '@server/prisma/prisma.service';
+import { UserById } from '@shared/interfaces';
 import {
   PostCreateDtoType,
   PostFindAllDtoType,
   PostUpdateDtoType,
 } from './post.dto';
-import { User } from '@prisma/client';
 
 @Injectable()
 export class PostService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(postCreateDto: PostCreateDtoType, requestUser: User) {
+  async create(postCreateDto: PostCreateDtoType, requestUser: UserById) {
     // create
     try {
       const post = await this.prismaService.post.create({
@@ -28,19 +30,20 @@ export class PostService {
     }
   }
 
-  async update(postUpdateDto: PostUpdateDtoType, requestUser: User) {
-    const post = await this.prismaService.post.findFirstOrThrow({
-      where: {
-        id: postUpdateDto.id,
-        deletedAt: null,
-      },
-    });
+  async update(postUpdateDto: PostUpdateDtoType, requestUser: UserById) {
+    const post = await this.findById(postUpdateDto.id);
+    if (
+      !requestUser.roles?.some((r) => r.name === 'Admin') &&
+      post.userId !== requestUser.id
+    ) {
+      throw new UnauthorizedException('You cannot update other users post');
+    }
     try {
       const updatedPost = await this.prismaService.post.update({
         where: {
           id: post.id,
         },
-        data: { ...postUpdateDto, userId: requestUser.id },
+        data: { ...postUpdateDto },
       });
       return updatedPost;
     } catch (error: any) {
@@ -71,12 +74,26 @@ export class PostService {
   }
 
   async findById(id: number) {
-    return this.prismaService.post.findUnique({
+    return this.prismaService.post.findFirstOrThrow({
       where: { id, deletedAt: null },
+      include: {
+        user: {
+          include: {
+            roles: true,
+          },
+        },
+      },
     });
   }
 
-  async remove(id: number) {
+  async remove(id: number, requestUser: UserById) {
+    const post = await this.findById(id);
+    if (
+      !requestUser.roles?.some((r) => r.name === 'Admin') &&
+      post.userId !== requestUser.id
+    ) {
+      throw new UnauthorizedException('You cannot update other users post');
+    }
     return this.prismaService.post.update({
       where: {
         id,

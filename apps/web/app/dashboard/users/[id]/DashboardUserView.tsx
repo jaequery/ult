@@ -149,7 +149,6 @@ export default function DashboardUserView() {
                           setShowProfilePicUrlUploader(false);
                         }}
                         onUpload={(file) => {
-                          console.log("file uploaded", file);
                           setValue("profilePicUrl", file.url);
                           setShowProfilePicUrlUploader(false);
                         }}
