@@ -5,7 +5,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common/exceptions';
-import { AuthService, JWT } from '@server/auth/auth.service';
+import { AuthService } from '@server/auth/auth.service';
 import _ from 'lodash';
 import { AvatarGenerator } from 'random-avatar-generator';
 
@@ -21,12 +21,7 @@ import {
   UserSignupDtoType,
   UserUpdateDtoType,
 } from './dto/user.dto';
-import { User } from '@prisma/client';
-
-export interface LoginResponse {
-  jwt: JWT;
-  user: User;
-}
+import { UserLoginResponse } from '@server/user/user.types';
 
 @Injectable()
 export class UserService {
@@ -49,7 +44,7 @@ export class UserService {
     return jwtUser;
   }
 
-  async login(userLoginDto: UserLoginDtoType): Promise<LoginResponse> {
+  async login(userLoginDto: UserLoginDtoType): Promise<UserLoginResponse> {
     const user = await this.prismaService.user.findFirst({
       where: {
         email: userLoginDto.email,
