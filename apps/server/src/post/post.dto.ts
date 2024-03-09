@@ -21,7 +21,6 @@ export type PostRemoveDtoType = z.infer<typeof PostRemoveDto>;
 export const PostFindAllDto = z.object({
   page: z.number().default(1),
   perPage: z.number().default(10),
-  search: z.string().optional(),
 });
 export type PostFindAllDtoType = z.infer<typeof PostFindAllDto>;
 
