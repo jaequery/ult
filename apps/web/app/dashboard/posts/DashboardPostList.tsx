@@ -4,11 +4,18 @@ import { useTrpc } from "@web/contexts/TrpcContext";
 import { format } from "date-fns";
 import Link from "next/link";
 import { useState } from "react";
+import { NumberParam, useQueryParam, withDefault } from "use-query-params";
 import DashboardPostCreateModal from "./[id]/DashboardPostCreateModal";
 
 export default function DashboardPostList() {
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
+  const [page, setPage] = useQueryParam(
+    "page",
+    withDefault(NumberParam, 1)
+  );
+  const [perPage, setPerPage] = useQueryParam(
+    "perPage",
+    withDefault(NumberParam, 10)
+  );
   const [showPostCreate, setShowPostCreate] = useState(false);
   const { trpc } = useTrpc();
   const postList = trpc.postRouter.findAll.useQuery({
@@ -237,7 +244,6 @@ export default function DashboardPostList() {
                       results
                     </p>
                   </div>
-
                   <div>
                     <div className="inline-flex gap-x-2">
                       <button

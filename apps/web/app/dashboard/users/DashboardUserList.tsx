@@ -4,11 +4,15 @@ import { useTrpc } from "@web/contexts/TrpcContext";
 import { format } from "date-fns";
 import Link from "next/link";
 import { useState } from "react";
+import { NumberParam, useQueryParam, withDefault } from "use-query-params";
 import DashboardUserCreateModal from "./[id]/DashboardUserCreateModal";
 
 export default function DashboardUserList() {
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
+  const [page, setPage] = useQueryParam("page", withDefault(NumberParam, 1));
+  const [perPage, setPerPage] = useQueryParam(
+    "perPage",
+    withDefault(NumberParam, 10)
+  );
   const [showUserCreate, setShowUserCreate] = useState(false);
   const { trpc } = useTrpc();
   const userList = trpc.userRouter.findAll.useQuery({

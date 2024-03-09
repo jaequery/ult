@@ -1,11 +1,9 @@
+import AppLayout from "@web/components/AppLayout";
 import PrelineScript from "@web/components/PrelineScript";
 import { TrpcProvider } from "@web/contexts/TrpcContext";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { UserProvider } from "./user/UserContext";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Ult",
@@ -20,8 +18,8 @@ export default function RootLayout({
   return (
     <TrpcProvider>
       <UserProvider>
-        <html lang="en">
-          <body className={inter.className}>{children}</body>
+        <html>
+          <body>{children}</body>
         </html>
         <PrelineScript />
       </UserProvider>

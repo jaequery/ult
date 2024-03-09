@@ -1,13 +1,10 @@
-import Footer from "@web/components/Footer";
-import Header from "@web/components/Header";
+import AppLayout from "@web/components/AppLayout";
 import BlogView from "./BlogView";
 
 export default function BlogViewPage() {
   return (
-    <>
-      <Header />
+    <AppLayout>
       <BlogView />
-      <Footer />
-    </>
+    </AppLayout>
   );
 }

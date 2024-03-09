@@ -1,25 +1,26 @@
 "use client";
 
 import { useTrpc } from "@web/contexts/TrpcContext";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { StringParam, useQueryParam, withDefault } from "use-query-params";
 import { useUserContext } from "../user/UserContext";
 
 export default function VerifyEmail() {
   const { trpc } = useTrpc();
   const router = useRouter();
   const { setAccessToken, currentUser } = useUserContext();
-  const searchParams = useSearchParams();
-  const accessToken = searchParams.get("token") || "";
+  const [token] = useQueryParam("token", withDefault(StringParam, ""));
+
   const userJwt = trpc.userRouter.verifyAccessToken.useQuery({
-    accessToken,
+    accessToken: token,
   });
 
   useEffect(() => {
     if (userJwt.data) {
-      setAccessToken(accessToken, userJwt.data.jwt.expiresIn);
+      setAccessToken(token, userJwt.data.jwt.expiresIn);
     }
-  }, [userJwt, setAccessToken, accessToken]);
+  }, [userJwt, setAccessToken, token]);
 
   useEffect(() => {
     if (currentUser) {
@@ -100,8 +101,7 @@ export default function VerifyEmail() {
           </div>
         </footer>
       </div>
-
-      {accessToken
+      {token
         ? "Verifying..."
         : "Please check your email to verify your account"}
     </div>

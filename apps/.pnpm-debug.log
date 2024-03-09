@@ -1,0 +1,15 @@
+{
+  "0 debug pnpm:scope": {
+    "selected": 1,
+    "workspacePrefix": "/Users/jae/Sites/ult"
+  },
+  "1 error pnpm": {
+    "code": "ERR_PNPM_ADDING_TO_ROOT",
+    "err": {
+      "name": "Error",
+      "message": "Running this command will add the dependency to the workspace root, which might not be what you want - if you really meant it, make it explicit by running this command again with the -w flag (or --workspace-root). If you don't want to see this warning anymore, you may set the ignore-workspace-root-check setting to true.",
+      "code": "ERR_PNPM_ADDING_TO_ROOT",
+      "stack": "Error: Running this command will add the dependency to the workspace root, which might not be what you want - if you really meant it, make it explicit by running this command again with the -w flag (or --workspace-root). If you don't want to see this warning anymore, you may set the ignore-workspace-root-check setting to true.\n    at Object.handler [as add] (/Users/jae/.node/corepack/pnpm/6.11.0/dist/pnpm.cjs:116366:15)\n    at /Users/jae/.node/corepack/pnpm/6.11.0/dist/pnpm.cjs:125612:82\n    at async run (/Users/jae/.node/corepack/pnpm/6.11.0/dist/pnpm.cjs:125589:34)\n    at async runPnpm (/Users/jae/.node/corepack/pnpm/6.11.0/dist/pnpm.cjs:125799:5)\n    at async /Users/jae/.node/corepack/pnpm/6.11.0/dist/pnpm.cjs:125791:7"
+    }
+  }
+}

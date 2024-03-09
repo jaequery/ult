@@ -1,13 +1,10 @@
-import Footer from "@web/components/Footer";
-import Header from "@web/components/Header";
+import AppLayout from "@web/components/AppLayout";
 import ForgotPassword from "./ForgotPassword";
 
 export default function ForgotPasswordPage() {
   return (
-    <>
-      <Header />
+    <AppLayout>
       <ForgotPassword />
-      <Footer />
-    </>
+    </AppLayout>
   );
 }

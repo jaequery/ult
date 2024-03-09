@@ -25,6 +25,7 @@ export default function BlogList() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {postList?.data?.records?.map((post) => (
               <a
+                key={post.id}
                 className="group flex flex-col h-full border border-gray-200 hover:border-transparent hover:shadow-lg transition-all duration-300 rounded-xl p-5 dark:border-gray-700 dark:hover:border-transparent dark:hover:shadow-black/[.4] dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                 href={`/blog/${post.id}`}
               >

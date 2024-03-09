@@ -1,13 +1,10 @@
-import Footer from "@web/components/Footer";
-import Header from "@web/components/Header";
+import AppLayout from "@web/components/AppLayout";
 import Features from "./Features";
 
 export default function FeaturesPage() {
   return (
-    <>
-      <Header />
+    <AppLayout>
       <Features />
-      <Footer />
-    </>
+    </AppLayout>
   );
 }

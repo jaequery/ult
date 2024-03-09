@@ -1,13 +1,12 @@
-import Footer from "@web/components/Footer";
-import Header from "@web/components/Header";
+import AppLayout from "@web/components/AppLayout";
 import Pricing from "./Pricing";
 
 export default function PricingPage() {
   return (
     <>
-      <Header />
-      <Pricing />
-      <Footer />
+      <AppLayout>
+        <Pricing />
+      </AppLayout>
     </>
   );
 }
