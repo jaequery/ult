@@ -41,18 +41,15 @@ export class TrpcService {
     const procedure = this.trpc.procedure.use(async (opts) => {
       // get bearer from headers
       const userJwt = await this.getJwtUserFromHeader(opts.ctx);
-
-      // check if user has role privilege
-      if (allowedRoles && allowedRoles.length > 0) {
-        const hasRole = userJwt.user.roles.some((r: Role) =>
-          allowedRoles.includes(r.name),
-        );
-        if (!hasRole || !userJwt) {
-          throw new TRPCError({ code: 'UNAUTHORIZED' });
-        }
+      // throw error if user is unauthorized
+      if (
+        !userJwt ||
+        (allowedRoles?.length &&
+          !userJwt.user.roles?.some((role) => allowedRoles.includes(role.name)))
+      ) {
+        throw new TRPCError({ code: 'UNAUTHORIZED' });
       }
-
-      // return
+      // user is authorized
       return opts.next({
         ctx: {
           ...opts.ctx,

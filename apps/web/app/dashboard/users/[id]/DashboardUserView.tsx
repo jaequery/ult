@@ -91,8 +91,8 @@ export default function DashboardUserView() {
             try {
               await updateUser.mutateAsync(data);
               toast("Saved");
-            } catch (e) {
-              toast("There was an error saving", { type: "error" });
+            } catch (e: any) {
+              toast(e.message, { type: "error" });
             }
           })}
         >

@@ -56,8 +56,8 @@ export default function DashboardPostView() {
             try {
               await updatePost.mutateAsync(data);
               toast("Saved");
-            } catch (e) {
-              toast("There was an error saving", { type: "error" });
+            } catch (e: any) {
+              toast(e.message, { type: "error" });
             }
           })}
         >
