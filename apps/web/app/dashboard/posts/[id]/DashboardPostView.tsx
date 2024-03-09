@@ -2,26 +2,23 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PostUpdateDto, PostUpdateDtoType } from "@server/post/post.dto";
-import { useUserContext } from "@web/app/user/UserContext";
 import { useTrpc } from "@web/contexts/TrpcContext";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 export default function DashboardPostView() {
   const { trpc } = useTrpc();
   const params = useParams();
-  const post = trpc.postRouter.findById.useQuery({ id: +params.id });
+  const post = trpc.postRouter.findById.useQuery({ id: Number(params.id) });
   const updatePost = trpc.postRouter.update.useMutation();
   const {
     register,
     formState: { errors },
     handleSubmit,
     reset,
-    setValue,
     getValues,
-    watch,
   } = useForm<PostUpdateDtoType>({
     resolver: zodResolver(PostUpdateDto),
   });
@@ -38,7 +35,7 @@ export default function DashboardPostView() {
       };
       reset(formData);
     }
-  }, [post.data, reset]);
+  }, [post.data]);
 
   return (
     <div className="">

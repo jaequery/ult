@@ -19,7 +19,7 @@ export default function DashboardUserView() {
   const [showProfilePicUrlUploader, setShowProfilePicUrlUploader] =
     useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
-  const user = trpc.userRouter.findById.useQuery({ id: +params.id });
+  const user = trpc.userRouter.findById.useQuery({ id: Number(params.id) });
   const updateUser = trpc.userRouter.update.useMutation();
   const {
     register,

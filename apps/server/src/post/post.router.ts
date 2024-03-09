@@ -36,12 +36,9 @@ export class PostRouter {
           .protectedProcedure([Roles.Admin], 'userId')
           .input(PostUpdateDto)
           .mutation(async ({ input, ctx }) => {
-            console.log('ctx', ctx);
             if (ctx.user) {
-              console.log('am i here');
               return this.postService.update(input, ctx.user);
             }
-            console.log('or here');
           }),
 
         // remove post

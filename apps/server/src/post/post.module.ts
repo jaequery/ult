@@ -11,7 +11,6 @@ import { PostService } from './post.service';
     AuthModule,
     forwardRef(() => TrpcModule),
     PrismaModule,
-    AuthModule,
     EmailModule,
   ],
   providers: [PostService, PostRouter],
