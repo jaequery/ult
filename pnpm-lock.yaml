@@ -5,8 +5,17 @@ importers:
   .:
     specifiers:
       '@nestjs/mapped-types': '*'
+      jest-mock-extended: ^3.0.5
+      jest-ts-auto-mock: ^2.1.0
+      ts-auto-mock: ^3.7.2
+      ts-patch: ^3.1.2
     dependencies:
       '@nestjs/mapped-types': 2.0.5
+    devDependencies:
+      jest-mock-extended: 3.0.5
+      jest-ts-auto-mock: 2.1.0_ts-auto-mock@3.7.2
+      ts-auto-mock: 3.7.2
+      ts-patch: 3.1.2
 
   apps/server:
     specifiers:
@@ -31,6 +40,7 @@ importers:
       '@types/express': ^4.17.21
       '@types/glob': ^8.1.0
       '@types/jest': ^29.5.12
+      '@types/lodash': ^4.14.202
       '@types/node': ^20.11.20
       '@types/nodemailer': ^6.4.14
       '@types/passport-jwt': ^4.0.1
@@ -110,6 +120,7 @@ importers:
       '@types/express': 4.17.21
       '@types/glob': 8.1.0
       '@types/jest': 29.5.12
+      '@types/lodash': 4.14.202
       '@types/node': 20.11.20
       '@types/nodemailer': 6.4.14
       '@types/passport-jwt': 4.0.1
@@ -5687,6 +5698,15 @@ packages:
       path-scurry: 1.10.1
     dev: true
 
+  /global-prefix/3.0.0:
+    resolution: {integrity: sha512-awConJSVCHVGND6x3tmMaKcQvwXLhjdkmomy2W+Goaui8YPgYgXJZewhg3fWC+DlfqqQuWg8AwqjGTD2nAPVWg==}
+    engines: {node: '>=6'}
+    dependencies:
+      ini: 1.3.8
+      kind-of: 6.0.3
+      which: 1.3.1
+    dev: true
+
   /globals/11.12.0:
     resolution: {integrity: sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA==}
     engines: {node: '>=4'}
@@ -5969,7 +5989,6 @@ packages:
 
   /ini/1.3.8:
     resolution: {integrity: sha512-JV/yugV2uzW5iMRSiZAyDtQd+nxtUnjeLt0acNdw98kKLrvuRVyB80tsREOE7yvGVgalhZ6RNXCmEHkUKBKxew==}
-    dev: false
 
   /inquirer/8.2.6:
     resolution: {integrity: sha512-M1WuAmb7pn9zdFRtQYk26ZBoY043Sse0wVDdk4Bppr+JOXyQYybdtvK+l9wUibhtjdjvtoiNy8tk+EgsYIUqKg==}
@@ -6570,6 +6589,15 @@ packages:
       stack-utils: 2.0.6
     dev: true
 
+  /jest-mock-extended/3.0.5:
+    resolution: {integrity: sha512-/eHdaNPUAXe7f65gHH5urc8SbRVWjYxBqmCgax2uqOBJy8UUcCBMN1upj1eZ8y/i+IqpyEm4Kq0VKss/GCCTdw==}
+    peerDependencies:
+      jest: ^24.0.0 || ^25.0.0 || ^26.0.0 || ^27.0.0 || ^28.0.0 || ^29.0.0
+      typescript: ^3.0.0 || ^4.0.0 || ^5.0.0
+    dependencies:
+      ts-essentials: 7.0.3
+    dev: true
+
   /jest-mock/29.7.0:
     resolution: {integrity: sha512-ITOMZn+UkYS4ZFh83xYAOzWStloNzJFO2s8DWrE4lhtGD+AorgnbkiKERe4wQVBydIGPx059g6riW5Btp6Llnw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -6706,6 +6734,14 @@ packages:
       semver: 7.6.0
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /jest-ts-auto-mock/2.1.0_ts-auto-mock@3.7.2:
+    resolution: {integrity: sha512-ubL0pweKUHQNY2xCgwXjYllEQMgpKDojcEODpraQVevHqBFBsFDJZkpZp/2JsmujMu4TNJPzmSugXOLfKndmlQ==}
+    peerDependencies:
+      ts-auto-mock: ^3.5.0
+    dependencies:
+      ts-auto-mock: 3.7.2
     dev: true
 
   /jest-util/29.7.0:
@@ -6979,6 +7015,11 @@ packages:
     dependencies:
       json-buffer: 3.0.1
 
+  /kind-of/6.0.3:
+    resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
+    engines: {node: '>=0.10.0'}
+    dev: true
+
   /kleur/3.0.3:
     resolution: {integrity: sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==}
     engines: {node: '>=6'}
@@ -7087,6 +7128,10 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       p-locate: 5.0.0
+    dev: true
+
+  /lodash-es/4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
     dev: true
 
   /lodash._baseiteratee/4.7.0:
@@ -9931,6 +9976,22 @@ packages:
       typescript: 5.3.3
     dev: true
 
+  /ts-auto-mock/3.7.2:
+    resolution: {integrity: sha512-gDHeEeAd6NXjJZqaI2NBeD8CR0LfoeVsPRbN47+t5QmLCW0pMyBmrMTb18jq5XzM39LE88BdVNiClPZ11K38tw==}
+    engines: {node: '>=14.x.x', npm: '>=6.x.x'}
+    peerDependencies:
+      typescript: ^5.0.4
+    dependencies:
+      lodash-es: 4.17.21
+      micromatch: 4.0.5
+    dev: true
+
+  /ts-essentials/7.0.3:
+    resolution: {integrity: sha512-8+gr5+lqO3G84KdiTSMRLtuyJ+nTBVRKuCrK4lidMPdVeEp0uqC875uE5NMcaA7YYMN7XsNiFQuMvasF8HT/xQ==}
+    peerDependencies:
+      typescript: '>=3.7.0'
+    dev: true
+
   /ts-interface-checker/0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
     dev: true
@@ -10015,6 +10076,18 @@ packages:
       typescript: 5.3.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
+    dev: true
+
+  /ts-patch/3.1.2:
+    resolution: {integrity: sha512-n58F5AqjUMdp9RAKq+E1YBkmONltPVbt1nN+wrmZXoYZek6QcvaTuqvKMhYhr5BxtC53kD/exxIPA1cP1RQxsA==}
+    hasBin: true
+    dependencies:
+      chalk: 4.1.2
+      global-prefix: 3.0.0
+      minimist: 1.2.8
+      resolve: 1.22.8
+      semver: 7.6.0
+      strip-ansi: 6.0.1
     dev: true
 
   /tsconfig-paths-webpack-plugin/4.1.0:
@@ -10477,7 +10550,6 @@ packages:
     hasBin: true
     dependencies:
       isexe: 2.0.0
-    dev: false
 
   /which/2.0.2:
     resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}
