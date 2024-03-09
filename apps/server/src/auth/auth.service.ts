@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { AuthJwt } from '@server/auth/auth.types';
 
 @Injectable()
 export class AuthService {
@@ -27,7 +28,7 @@ export class AuthService {
     return encryptedPassword;
   }
 
-  getJwt(user: User) {
+  getJwt(user: User): AuthJwt {
     const expiresIn =
       this.configService.get<string>('JWT_EXPIRES_IN') || '365d';
     const payload = {

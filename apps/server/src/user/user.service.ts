@@ -21,6 +21,7 @@ import {
   UserSignupDtoType,
   UserUpdateDtoType,
 } from './dto/user.dto';
+import { UserLoginResponse } from '@server/user/user.types';
 
 @Injectable()
 export class UserService {
@@ -43,7 +44,7 @@ export class UserService {
     return jwtUser;
   }
 
-  async login(userLoginDto: UserLoginDtoType) {
+  async login(userLoginDto: UserLoginDtoType): Promise<UserLoginResponse> {
     const user = await this.prismaService.user.findFirst({
       where: {
         email: userLoginDto.email,
