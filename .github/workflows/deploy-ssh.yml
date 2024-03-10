@@ -1,0 +1,42 @@
+name: Deploy to Production via SSH
+
+on:
+  push:
+    branches: [ main ]  # Replace with your desired branch to trigger on push
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install SSH key
+        uses: actions/upload-artifact@v3
+        with:
+          name: ssh-key
+          path: ${{ secrets.SSH_KEY }}  # Replace with your secret name
+
+      - name: Decode SSH key
+        run: |
+          echo ${{ secrets.SSH_KEY }} | base64 -d > deploy_key
+          chmod 600 deploy_key
+
+      - name: Add SSH key to agent
+        run: |
+          ssh-add deploy_key
+          rm deploy_key
+
+      - name: SSH into server and deploy
+        uses: appleboy/ssh-action@v2
+        with:
+          host: ${{ secrets.SERVER_HOST }}  # Replace with your server hostname
+          username: ${{ secrets.SERVER_USERNAME }}  # Replace with your server username
+          port: ${{ secrets.SERVER_PORT }}  # Replace with your server port (default 22)
+          script: |
+            cd ~/sites/Ult
+            git pull
+            pnpm build
+            pnpm start
+
+env:
+  CI: true  # Set CI environment variable for potential script adjustments
