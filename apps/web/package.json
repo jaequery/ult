@@ -39,6 +39,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.50.1",
+    "react-phone-input-2": "^2.15.1",
     "react-query": "3",
     "react-toastify": "^10.0.4",
     "use-query-params": "^2.2.1",
