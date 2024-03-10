@@ -5,7 +5,8 @@
     <em>Ult: Uniting Nest.js + Prisma + tRPC, Next.js + Tailwind for the ultimate streamlined web development.</em>
 </p>
 
-![Ult logo](https://github.com/jaequery/Ult/assets/794507/61f068f3-53a6-4a18-be5d-f7746ecbdd3e)
+![image](https://github.com/jaequery/ult/assets/794507/280b360d-0b75-4a0a-9325-c7c87358a6cb)
+
 
 <p align="center">
 	<img src="https://img.shields.io/github/license/jaequery/ultima?style=flat&color=0080ff" alt="license">
