@@ -26,21 +26,8 @@ jobs:
           SSH_KEY: ${{ secrets.SSH_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
 
-      - uses: appleboy/ssh-action@v2
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          script: |
-            chmod +x setup_env.sh
-            ./setup_env.sh
-            w
-            # Your other commands here
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-
       - name: Check out the source
-        run: ssh prod 'cd ~/sites/Ult && git fetch && git merge origin/main'
+        run: ssh prod './setup_env.sh && cd ~/sites/Ult && git fetch && git merge origin/main'
 
       - name: Start the server
         if: ${{ always() }}
