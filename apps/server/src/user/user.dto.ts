@@ -46,7 +46,7 @@ export const UserUpdateDto = z.object({
 export type UserUpdateDtoType = z.infer<typeof UserUpdateDto>;
 
 export const UserRemoveDto = z.object({
-  id: z.number(),
+  id: z.array(z.number()),
 });
 export type UserRemoveDtoType = z.infer<typeof UserRemoveDto>;
 

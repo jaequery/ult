@@ -11,7 +11,7 @@ import { AvatarGenerator } from 'random-avatar-generator';
 import { EmailService } from '@server/email/email.service';
 import { PrismaService } from '@server/prisma/prisma.service';
 import { UserLoginResponse } from '@server/user/user.types';
-import { Roles } from '@shared/interfaces';
+import { Roles, UserById } from '@shared/interfaces';
 import generator from 'generate-password-ts';
 import {
   UserCreateDtoType,
@@ -21,6 +21,7 @@ import {
   UserSignupDtoType,
   UserUpdateDtoType,
 } from './user.dto';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -235,6 +236,7 @@ export class UserService {
       include: {
         roles: true,
       },
+      where: { deletedAt: null },
       orderBy: {
         createdAt: 'desc',
       },
@@ -259,15 +261,34 @@ export class UserService {
     });
   }
 
-  async remove(id: number) {
-    return this.prismaService.user.update({
-      where: {
-        id,
-      },
-      data: {
-        deletedAt: new Date(),
-      },
-    });
+  async remove(id: number | number[], requestUser: UserById) {
+    let ids: number[] = [];
+    if (id instanceof Array) {
+      ids = id;
+    } else if (typeof id === 'number') {
+      ids = [id];
+    }
+    const output = [];
+    for (const id of ids) {
+      const user = await this.findById(id);
+      if (
+        !requestUser.roles?.some((r) => r.name === 'Admin') &&
+        user?.id !== requestUser.id
+      ) {
+        throw new UnauthorizedException('You cannot update other users post');
+      }
+      output.push(
+        await this.prismaService.user.update({
+          where: {
+            id,
+          },
+          data: {
+            deletedAt: new Date(),
+          },
+        }),
+      );
+    }
+    return output;
   }
 
   async findByAccessToken(accessToken: string) {

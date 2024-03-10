@@ -4,21 +4,36 @@ import { useTrpc } from "@web/contexts/TrpcContext";
 import { format } from "date-fns";
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "react-toastify";
 import { NumberParam, useQueryParam, withDefault } from "use-query-params";
 import DashboardUserCreateModal from "./[id]/DashboardUserCreateModal";
 
 export default function DashboardUserList() {
+  const { trpc } = useTrpc();
+  // pagination
   const [page, setPage] = useQueryParam("page", withDefault(NumberParam, 1));
   const [perPage, setPerPage] = useQueryParam(
     "perPage",
     withDefault(NumberParam, 10)
   );
+  // create user
   const [showUserCreate, setShowUserCreate] = useState(false);
-  const { trpc } = useTrpc();
+  // get users
   const userList = trpc.userRouter.findAll.useQuery({
     page,
     perPage,
   });
+  // remove post
+  const userRemove = trpc.userRouter.remove.useMutation();
+  // bulk delete functionality
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const togglePostSelection = (postId: number) => {
+    setSelectedIds((prevSelectedIds: number[]) =>
+      prevSelectedIds.includes(postId)
+        ? prevSelectedIds.filter((id: number) => id !== postId)
+        : [...prevSelectedIds, postId]
+    );
+  };
   return (
     <>
       {/* Table Section */}
@@ -40,6 +55,27 @@ export default function DashboardUserList() {
                   </div>
                   <div>
                     <div className="inline-flex gap-x-2">
+                      {selectedIds?.length > 0 && (
+                        <a
+                          className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-white dark:hover:bg-gray-800 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                          href="#"
+                          onClick={async () => {
+                            const c = confirm(
+                              "Are you sure you want to remove them?"
+                            );
+                            if (c && selectedIds) {
+                              await userRemove.mutateAsync({
+                                id: selectedIds,
+                              });
+                              setSelectedIds([]);
+                              toast("Removed");
+                              userList.refetch();
+                            }
+                          }}
+                        >
+                          Remove
+                        </a>
+                      )}
                       <a
                         className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-white dark:hover:bg-gray-800 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                         href="#"
@@ -86,6 +122,25 @@ export default function DashboardUserList() {
                         >
                           <input
                             type="checkbox"
+                            checked={
+                              selectedIds.length ===
+                              userList?.data?.records?.length
+                            }
+                            onChange={(event: any) => {
+                              if (userList?.data) {
+                                if (event.target.checked) {
+                                  // Select all post IDs
+                                  setSelectedIds(
+                                    userList?.data?.records?.map(
+                                      (user) => user.id
+                                    )
+                                  );
+                                } else {
+                                  // Clear selection
+                                  setSelectedIds([]);
+                                }
+                              }
+                            }}
                             className="shrink-0 border-gray-300 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-600 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
                             id="hs-at-with-checkboxes-main"
                           />
@@ -137,6 +192,8 @@ export default function DashboardUserList() {
                             >
                               <input
                                 type="checkbox"
+                                checked={selectedIds.includes(user.id)}
+                                onChange={() => togglePostSelection(user.id)}
                                 className="shrink-0 border-gray-300 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-600 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
                                 id="hs-at-with-checkboxes-1"
                               />

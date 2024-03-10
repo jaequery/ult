@@ -61,8 +61,8 @@ export class UserRouter {
         remove: this.trpcService
           .protectedProcedure([Roles.Admin])
           .input(UserRemoveDto)
-          .mutation(async ({ input }) => {
-            return this.userService.remove(input.id);
+          .mutation(async ({ input, ctx }) => {
+            return this.userService.remove(input.id, ctx.user);
           }),
 
         // get user by id

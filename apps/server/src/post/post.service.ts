@@ -96,16 +96,12 @@ export class PostService {
     } else if (typeof id === 'number') {
       ids = [id];
     }
-
     const output = [];
-    console.log('idss', ids);
     for (const id of ids) {
-      console.log('et post', id);
       const post = await this.findById(id);
-      console.log('post', post);
       if (
         !requestUser.roles?.some((r) => r.name === 'Admin') &&
-        post.userId !== requestUser.id
+        post?.userId !== requestUser.id
       ) {
         throw new UnauthorizedException('You cannot update other users post');
       }
