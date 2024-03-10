@@ -39,7 +39,7 @@ export default function DashboardPostView() {
       };
       reset(formData);
     }
-  }, [post.data]);
+  }, [post.data, reset]);
 
   // loading Quill this way due to SSR issues
   // https://stackoverflow.com/questions/73047747/error-referenceerror-document-is-not-defined-nextjs
