@@ -21,11 +21,20 @@ jobs:
             StrictHostKeyChecking no
           END
           cat ~/.ssh/config
-          ./setup_env.sh
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_KEY: ${{ secrets.SSH_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
+
+      - uses: appleboy/ssh-action@v2
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          script: |
+            chmod +x setup_env.sh
+            ./setup_env.sh
+            w
+            # Your other commands here
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
