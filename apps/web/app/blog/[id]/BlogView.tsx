@@ -27,7 +27,7 @@ export default function Blog() {
                   </div>
                   <div className="grow">
                     <div className="flex justify-between items-center gap-x-2">
-                          <div>
+                      <div>
                         <div className="hs-tooltip inline-block [--trigger:hover] [--placement:bottom]">
                           <div className="hs-tooltip-toggle sm:mb-1 block text-start cursor-pointer">
                             <span className="font-semibold text-gray-800 dark:text-gray-200">
@@ -153,9 +153,12 @@ export default function Blog() {
                   <h2 className="text-2xl font-bold md:text-3xl dark:text-white">
                     {post?.data?.title}
                   </h2>
-                  <p className="text-lg text-gray-800 dark:text-gray-200 whitespace-pre-line">
-                    {post?.data?.description}
-                  </p>
+                  <p
+                    className="text-lg text-gray-800 dark:text-gray-200 whitespace-pre-line"
+                    dangerouslySetInnerHTML={{
+                      __html: post?.data?.description || '',
+                    }}
+                  />
                 </div>
               </div>
               {/* End Content */}

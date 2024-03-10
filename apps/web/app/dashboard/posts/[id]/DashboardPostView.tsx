@@ -3,9 +3,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PostUpdateDto, PostUpdateDtoType } from "@server/post/post.dto";
 import { useTrpc } from "@web/contexts/TrpcContext";
+import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
+import "react-quill/dist/quill.snow.css";
 import { toast } from "react-toastify";
 
 export default function DashboardPostView() {
@@ -19,6 +21,7 @@ export default function DashboardPostView() {
     handleSubmit,
     reset,
     getValues,
+    setValue,
   } = useForm<PostUpdateDtoType>({
     resolver: zodResolver(PostUpdateDto),
   });
@@ -31,11 +34,19 @@ export default function DashboardPostView() {
       const formData = {
         id: post.data.id,
         title: post.data.title,
+        teaser: post.data.teaser || "",
         description: post.data.description || "",
       };
       reset(formData);
     }
   }, [post.data]);
+
+  // loading Quill this way due to SSR issues
+  // https://stackoverflow.com/questions/73047747/error-referenceerror-document-is-not-defined-nextjs
+  const ReactQuill = useMemo(
+    () => dynamic(() => import("react-quill"), { ssr: false }),
+    []
+  );
 
   return (
     <div className="">
@@ -90,13 +101,50 @@ export default function DashboardPostView() {
                 </p>
               )}
             </div>
+            <div className="sm:col-span-3">
+              <label
+                htmlFor="title"
+                className="inline-block text-sm text-gray-800 mt-2.5 dark:text-gray-200"
+              >
+                Teaser
+              </label>{" "}
+              <span className="text-sm text-gray-800 dark:text-gray-600">
+                (a short teaser of your blog post)
+              </span>
+            </div>
             <div className="sm:col-span-12">
-              <textarea
-                {...register("description")}
-                className="py-2 px-3 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
-                rows={6}
-                placeholder="Type your post..."
-                defaultValue={""}
+              <div className="sm:flex">
+                <textarea
+                  {...register("teaser")}
+                  className="py-2 px-3 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
+                  rows={2}
+                  placeholder="A short teaser of your blog post..."
+                  defaultValue={""}
+                />
+              </div>
+              {errors.teaser && (
+                <p className="mt-2 pl-2 text-sm text-red-600">
+                  {errors.teaser.message}
+                </p>
+              )}
+            </div>
+            <div className="sm:col-span-3">
+              <label
+                htmlFor="title"
+                className="inline-block text-sm text-gray-800 mt-2.5 dark:text-gray-200"
+              >
+                Content
+              </label>{" "}
+              <span className="text-sm text-gray-800 dark:text-gray-600">
+                (full content of the blog post)
+              </span>
+            </div>
+            <div className="sm:col-span-12">
+              <ReactQuill
+                value={data.description}
+                onChange={(value: string) => {
+                  setValue("description", value);
+                }}
               />
             </div>
             {/* End Col */}

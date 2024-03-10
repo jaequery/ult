@@ -9,6 +9,7 @@ export type PostCreateDtoType = z.infer<typeof PostCreateDto>;
 export const PostUpdateDto = z.object({
   id: z.number(),
   title: z.string().optional(),
+  teaser: z.string().optional(),
   description: z.string().optional(),
 });
 export type PostUpdateDtoType = z.infer<typeof PostUpdateDto>;
