@@ -11,13 +11,13 @@ jobs:
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh/
-          echo "$SSH_KEY" > ~/.ssh/prod.key
-          chmod 600 ~/.ssh/prod.key
+          echo "$SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
           cat >>~/.ssh/config <<END
           Host prod
             HostName $SSH_HOST
             User $SSH_USER
-            IdentityFile ~/.ssh/prod.key
+            IdentityFile ~/.ssh/id_rsa
             StrictHostKeyChecking no
           END
           cat ~/.ssh/config
