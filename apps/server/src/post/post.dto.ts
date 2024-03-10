@@ -11,6 +11,7 @@ export const PostUpdateDto = z.object({
   title: z.string().optional(),
   teaser: z.string().optional(),
   description: z.string().optional(),
+  imageUrl: z.string().optional(),
 });
 export type PostUpdateDtoType = z.infer<typeof PostUpdateDto>;
 

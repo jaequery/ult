@@ -21,7 +21,7 @@ export default function Blog() {
                   <div className="flex-shrink-0">
                     <img
                       className="size-12 rounded-full"
-                      src="https://images.unsplash.com/photo-1669837401587-f9a4cfe3126e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=320&h=320&q=80"
+                      src={post?.data?.user?.profilePicUrl || ""}
                       alt="Image Description"
                     />
                   </div>
@@ -45,7 +45,9 @@ export default function Blog() {
                                   <div className="flex-shrink-0">
                                     <img
                                       className="size-8 rounded-full"
-                                      src="https://images.unsplash.com/photo-1669837401587-f9a4cfe3126e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=320&h=320&q=80"
+                                      src={
+                                        post?.data?.user?.profilePicUrl || ""
+                                      }
                                       alt="Image Description"
                                     />
                                   </div>
@@ -156,7 +158,7 @@ export default function Blog() {
                   <p
                     className="text-lg text-gray-800 dark:text-gray-200 whitespace-pre-line"
                     dangerouslySetInnerHTML={{
-                      __html: post?.data?.description || '',
+                      __html: post?.data?.description || "",
                     }}
                   />
                 </div>

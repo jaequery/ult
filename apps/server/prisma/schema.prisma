@@ -38,6 +38,7 @@ model Post {
   title       String
   teaser      String?
   description String?
+  imageUrl    String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   deletedAt   DateTime?
