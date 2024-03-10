@@ -31,4 +31,4 @@ jobs:
 
       - name: Start the server
         if: ${{ always() }}
-        run: ssh prod 'source ~/.nvm/nvm.sh && cd ~/sites/Ult && pnpm build && pnpm prod'
+        run: ssh prod 'source ~/.nvm/nvm.sh && cd ~/sites/Ult && pnpm build && killall node && pnpm prod'
