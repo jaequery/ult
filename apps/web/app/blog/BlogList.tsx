@@ -41,7 +41,7 @@ export default function BlogList() {
                     {post.title}
                   </h3>
                   <p className="mt-5 text-gray-600 dark:text-gray-400 line-clamp-3">
-                    {post.description}
+                    {post.teaser}
                   </p>
                 </div>
                 <div className="mt-auto flex items-center gap-x-3">
