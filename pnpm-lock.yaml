@@ -20,7 +20,7 @@ importers:
   apps/server:
     specifiers:
       '@faker-js/faker': ^8.4.1
-      '@nestjs-modules/mailer': ^1.11.2
+      '@nestjs-modules/mailer': ^1.10.3
       '@nestjs/cli': ^10.3.2
       '@nestjs/common': ^10.3.3
       '@nestjs/config': ^3.2.0
