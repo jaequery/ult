@@ -1,42 +1,33 @@
-name: Deploy to Production via SSH
-
-on:
-  push:
-    branches: [ main ]  # Replace with your desired branch to trigger on push
-
+name: Deploy via SSH
+on: [push, pull_request]
 jobs:
+
   deploy:
+    name: "Deploy"
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # needs: test
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Install SSH key
-        uses: actions/upload-artifact@v3
-        with:
-          name: ssh-key
-          path: ${{ secrets.SSH_KEY }}  # Replace with your secret name
-
-      - name: Decode SSH key
+      - name: Configure SSH
         run: |
-          echo ${{ secrets.SSH_KEY }} | base64 -d > deploy_key
-          chmod 600 deploy_key
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/prod.key
+          chmod 600 ~/.ssh/prod.key
+          cat >>~/.ssh/config <<END
+          Host prod
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/prod.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
 
-      - name: Add SSH key to agent
-        run: |
-          ssh-add deploy_key
-          rm deploy_key
+      - name: Check out the source
+        run: ssh prod 'cd ~/sites/Ult && git fetch && git merge origin/main'
 
-      - name: SSH into server and deploy
-        uses: appleboy/ssh-action@v2
-        with:
-          host: ${{ secrets.SERVER_HOST }}  # Replace with your server hostname
-          username: ${{ secrets.SERVER_USERNAME }}  # Replace with your server username
-          port: ${{ secrets.SERVER_PORT }}  # Replace with your server port (default 22)
-          script: |
-            cd ~/sites/Ult
-            git pull
-            pnpm build
-            pnpm start
-
-env:
-  CI: true  # Set CI environment variable for potential script adjustments
+      - name: Start the server
+        if: ${{ always() }}
+        run: ssh prod 'cd ~/sites/Ult && pnpm build && pnpm start'
