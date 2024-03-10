@@ -21,7 +21,6 @@ jobs:
             StrictHostKeyChecking no
           END
           cat ~/.ssh/config
-          echo "HELLO"
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_KEY: ${{ secrets.SSH_KEY }}
