@@ -5,9 +5,8 @@ export default function HomeContent() {
     <div className="bg-white">
       <div className="px-6 py-24 sm:px-6 sm:py-32 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          {JSON.stringify(process.env)}
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Boost your productivity. GO
+            Boost your productivity.
             <br />
             Start using our app today.
           </h2>
