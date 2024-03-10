@@ -31,4 +31,4 @@ jobs:
 
       - name: Start the server
         if: ${{ always() }}
-        run: ssh prod 'cd ~/sites/Ult && pnpm build && pnpm start'
+        run: ssh prod './setup_env.sh && cd ~/sites/Ult && pnpm build && pnpm start'
