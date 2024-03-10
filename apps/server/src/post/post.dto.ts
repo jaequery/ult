@@ -16,7 +16,7 @@ export const PostUpdateDto = z.object({
 export type PostUpdateDtoType = z.infer<typeof PostUpdateDto>;
 
 export const PostRemoveDto = z.object({
-  id: z.number(),
+  id: z.array(z.number()),
 });
 export type PostRemoveDtoType = z.infer<typeof PostRemoveDto>;
 

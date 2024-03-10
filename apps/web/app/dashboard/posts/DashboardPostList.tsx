@@ -4,24 +4,37 @@ import { useTrpc } from "@web/contexts/TrpcContext";
 import { format } from "date-fns";
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "react-toastify";
 import { NumberParam, useQueryParam, withDefault } from "use-query-params";
 import DashboardPostCreateModal from "./[id]/DashboardPostCreateModal";
 
 export default function DashboardPostList() {
-  const [page, setPage] = useQueryParam(
-    "page",
-    withDefault(NumberParam, 1)
-  );
+  const { trpc } = useTrpc();
+  // pagination
+  const [page, setPage] = useQueryParam("page", withDefault(NumberParam, 1));
   const [perPage, setPerPage] = useQueryParam(
     "perPage",
     withDefault(NumberParam, 10)
   );
+  // create post
   const [showPostCreate, setShowPostCreate] = useState(false);
-  const { trpc } = useTrpc();
+  // get posts
   const postList = trpc.postRouter.findAll.useQuery({
     page,
     perPage,
   });
+  // remove post
+  const postRemove = trpc.postRouter.remove.useMutation();
+  // bulk delete functionality
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const togglePostSelection = (postId: number) => {
+    setSelectedIds((prevSelectedIds: number[]) =>
+      prevSelectedIds.includes(postId)
+        ? prevSelectedIds.filter((id: number) => id !== postId)
+        : [...prevSelectedIds, postId]
+    );
+  };
+
   return (
     <>
       {/* Table Section */}
@@ -43,6 +56,27 @@ export default function DashboardPostList() {
                   </div>
                   <div>
                     <div className="inline-flex gap-x-2">
+                      {selectedIds?.length > 0 && (
+                        <a
+                          className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-white dark:hover:bg-gray-800 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                          href="#"
+                          onClick={async () => {
+                            const c = confirm(
+                              "Are you sure you want to remove them?"
+                            );
+                            if (c && selectedIds) {
+                              await postRemove.mutateAsync({
+                                id: selectedIds,
+                              });
+                              setSelectedIds([]);
+                              toast("Removed");
+                              postList.refetch();
+                            }
+                          }}
+                        >
+                          Remove
+                        </a>
+                      )}
                       <a
                         className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-white dark:hover:bg-gray-800 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                         href="#"
@@ -82,13 +116,32 @@ export default function DashboardPostList() {
                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                   <thead className="bg-gray-50 dark:bg-slate-800">
                     <tr>
-                      <th scope="col" className="ps-6 py-3 text-start">
+                      <th scope="col" className="ps-6 py-3 text-start px-4">
                         <label
                           htmlFor="hs-at-with-checkboxes-main"
                           className="flex"
                         >
                           <input
                             type="checkbox"
+                            checked={
+                              selectedIds.length ===
+                              postList?.data?.records?.length
+                            }
+                            onChange={(event: any) => {
+                              if (postList?.data) {
+                                if (event.target.checked) {
+                                  // Select all post IDs
+                                  setSelectedIds(
+                                    postList?.data?.records?.map(
+                                      (post) => post.id
+                                    )
+                                  );
+                                } else {
+                                  // Clear selection
+                                  setSelectedIds([]);
+                                }
+                              }
+                            }}
                             className="shrink-0 border-gray-300 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-600 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
                             id="hs-at-with-checkboxes-main"
                           />
@@ -140,6 +193,8 @@ export default function DashboardPostList() {
                             >
                               <input
                                 type="checkbox"
+                                checked={selectedIds.includes(post.id)}
+                                onChange={() => togglePostSelection(post.id)}
                                 className="shrink-0 border-gray-300 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-600 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
                                 id="hs-at-with-checkboxes-1"
                               />

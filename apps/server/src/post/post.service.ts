@@ -58,6 +58,9 @@ export class PostService {
       include: {
         user: true,
       },
+      where: {
+        deletedAt: null,
+      },
       orderBy: {
         createdAt: 'desc',
       },
@@ -86,21 +89,37 @@ export class PostService {
     });
   }
 
-  async remove(id: number, requestUser: UserById) {
-    const post = await this.findById(id);
-    if (
-      !requestUser.roles?.some((r) => r.name === 'Admin') &&
-      post.userId !== requestUser.id
-    ) {
-      throw new UnauthorizedException('You cannot update other users post');
+  async remove(id: number | number[], requestUser: UserById) {
+    let ids: number[] = [];
+    if (id instanceof Array) {
+      ids = id;
+    } else if (typeof id === 'number') {
+      ids = [id];
     }
-    return this.prismaService.post.update({
-      where: {
-        id,
-      },
-      data: {
-        deletedAt: new Date(),
-      },
-    });
+
+    const output = [];
+    console.log('idss', ids);
+    for (const id of ids) {
+      console.log('et post', id);
+      const post = await this.findById(id);
+      console.log('post', post);
+      if (
+        !requestUser.roles?.some((r) => r.name === 'Admin') &&
+        post.userId !== requestUser.id
+      ) {
+        throw new UnauthorizedException('You cannot update other users post');
+      }
+      output.push(
+        await this.prismaService.post.update({
+          where: {
+            id,
+          },
+          data: {
+            deletedAt: new Date(),
+          },
+        }),
+      );
+    }
+    return output;
   }
 }
