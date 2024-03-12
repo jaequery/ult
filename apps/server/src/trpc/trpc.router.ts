@@ -1,5 +1,6 @@
 import { INestApplication, Injectable } from '@nestjs/common';
 import { PostRouter } from '@server/post/post.router';
+import { RoleRouter } from '@server/role/role.router';
 import { TrpcService, createContext } from '@server/trpc/trpc.service';
 import { UserRouter } from '@server/user/user.router';
 import * as trpcExpress from '@trpc/server/adapters/express';
@@ -10,11 +11,13 @@ export class TrpcRouter {
     private readonly trpcService: TrpcService,
     private readonly userRouter: UserRouter,
     private readonly postRouter: PostRouter,
+    private readonly roleRouter: RoleRouter,
   ) {}
 
   appRouter = this.trpcService.trpc.router({
     ...this.userRouter.apply(),
     ...this.postRouter.apply(),
+    ...this.roleRouter.apply(),
   });
 
   async applyMiddleware(app: INestApplication) {

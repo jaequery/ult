@@ -9,7 +9,7 @@ import { QueryParamProvider } from "use-query-params";
 import { useUserContext } from "../user/UserContext";
 
 type DashboardLayoutProps = {
-  children: React.ReactNode; // Use React.ReactNode for children prop
+  children: React.ReactNode;
 };
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
@@ -231,9 +231,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
           </div>
           {/* End Sidebar Toggle */}
           {/* Sidebar */}
-          <div
-            className="hs-overlay hs-overlay-open:translate-x-0 -translate-x-full transition-all duration-300 transform hidden fixed top-0 start-0 bottom-0 z-[10] w-64 bg-gray-100 border-e border-gray-200 pt-7 pb-10 overflow-y-auto lg:block lg:translate-x-0 lg:end-auto lg:bottom-0 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-slate-700 dark:[&::-webkit-scrollbar-thumb]:bg-slate-500 dark:bg-gray-800 dark:border-gray-700 bg-gray-100"
-          >
+          <div className="hs-overlay hs-overlay-open:translate-x-0 -translate-x-full transition-all duration-300 transform hidden fixed top-0 start-0 bottom-0 z-[10] w-64 bg-gray-100 border-e border-gray-200 pt-7 pb-10 overflow-y-auto lg:block lg:translate-x-0 lg:end-auto lg:bottom-0 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-slate-700 dark:[&::-webkit-scrollbar-thumb]:bg-slate-500 dark:bg-gray-800 dark:border-gray-700 bg-gray-100">
             <div className="px-6">
               <Link
                 className="flex-none text-xl font-semibold dark:text-white dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
@@ -268,7 +266,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                     Dashboard
                   </Link>
                 </li>
-                <li className="hs-accordion" id="users-accordion">
+                <li className="hs-accordion">
                   <Link href="/dashboard/users">
                     <button type="button" className="nav-menu">
                       <svg
@@ -292,7 +290,31 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                     </button>
                   </Link>
                 </li>
-                <li className="hs-accordion" id="account-accordion">
+                <li className="hs-accordion">
+                  <Link href="/dashboard/roles">
+                    <button type="button" className="nav-menu">
+                      <svg
+                        className="flex-shrink-0 size-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width={24}
+                        height={24}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                        <circle cx={9} cy={7} r={4} />
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                      </svg>
+                      Roles
+                    </button>
+                  </Link>
+                </li>
+                <li className="hs-accordion">
                   <Link href="/dashboard/posts">
                     <button type="button" className="nav-menu">
                       <svg
