@@ -30,7 +30,7 @@
 
 Ensure you have the following dependencies installed on your system:
 
-* **Node v18**
+* **Node v18+**
 * **Pnpm**
 * **Docker Compose**
 
