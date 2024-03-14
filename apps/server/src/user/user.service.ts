@@ -54,14 +54,14 @@ export class UserService {
         roles: true,
       },
     });
-    if (!user) {
-      throw new NotFoundException('Invalid login');
-    }
-    // check password
-    const verified = await this.authService.verifyPassword(
-      user,
-      userLoginDto.password,
-    );
+
+    // check password and user
+    const verified =
+      (await this.authService.verifyPassword(
+        userLoginDto.password,
+        user?.password ?? '',
+      )) && !!user;
+
     if (!verified) {
       throw new UnauthorizedException('Invalid login');
     }
