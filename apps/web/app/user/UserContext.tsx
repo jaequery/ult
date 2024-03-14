@@ -10,7 +10,6 @@ import React, {
   createContext,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from "react";
 
@@ -45,26 +44,29 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<UserById | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isAuthenticating, setIsAuthenticating] = useState(true); // Initially true, assuming authentication check is in progress
-  const { trpcAsync } = useTrpc();
-  const trpcAsyncRef = useRef(trpcAsync);
+  const { trpc } = useTrpc();
 
   useEffect(() => {
     const fetchUser = async () => {
       const tokenFromCookie = Cookies.get("jwtAccessToken");
       if (tokenFromCookie) {
         setIsAuthenticating(true); // Begin authentication check only if token exists
-        try {
-          const userJwt =
-            await trpcAsyncRef.current.userRouter.verifyAccessToken.query({
-              accessToken: tokenFromCookie,
-            });
-          if (userJwt.user.verifiedAt) {
-            setCurrentUser(userJwt.user);
+        trpc.userRouter.verifyAccessToken.useQuery(
+          {
+            accessToken: tokenFromCookie,
+          },
+          {
+            onSuccess: (userJwt) => {
+              if (userJwt.user.verifiedAt) {
+                setCurrentUser(userJwt.user);
+              }
+            },
+            onError: (err) => {
+              console.error("Error fetching user:", err.message);
+            },
           }
-        } catch (error) {
-          console.error("Error fetching user:", error);
-          // Optionally, handle error state here
-        }
+        );
+
         setIsAuthenticating(false); // End authentication check
       } else {
         // Immediately consider authentication check complete if no token
@@ -72,7 +74,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       }
     };
     fetchUser();
-  }, [token, trpcAsyncRef]);
+  }, [token, trpc]);
 
   // Provide both user and setUser to the context value
   const contextValue = {

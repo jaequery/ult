@@ -1,16 +1,15 @@
 "use client";
 
 import { AppRouter } from "@server/trpc/trpc.router"; // Adjust the import path as necessary
+import { transformer } from "@shared/transformer";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   CreateTRPCClientOptions,
-  createTRPCProxyClient,
   createTRPCReact,
   httpBatchLink,
 } from "@trpc/react-query";
 import Cookies from "js-cookie";
 import React, { ReactNode, createContext, useContext, useState } from "react";
-import { transformer } from "@shared/transformer";
 
 const trpc = createTRPCReact<AppRouter>();
 const trpcUrl =
@@ -31,17 +30,14 @@ const trpcClientOpts: CreateTRPCClientOptions<AppRouter> = {
 };
 
 const trpcReactClient = trpc.createClient(trpcClientOpts);
-const trpcAsync = createTRPCProxyClient<AppRouter>(trpcClientOpts);
 
 interface TrpcContextState {
   trpc: typeof trpc;
-  trpcAsync: typeof trpcAsync;
 }
 
 // Context will now directly store the trpc client
 const TrpcContext = createContext<TrpcContextState>({
   trpc,
-  trpcAsync,
 });
 export const TrpcProvider: React.FC<{ children: ReactNode }> = ({
   children,
@@ -52,7 +48,6 @@ export const TrpcProvider: React.FC<{ children: ReactNode }> = ({
     <TrpcContext.Provider
       value={{
         trpc,
-        trpcAsync: trpcAsync,
       }}
     >
       <trpc.Provider client={trpcClient} queryClient={queryClient}>
