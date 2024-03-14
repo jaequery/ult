@@ -13,8 +13,14 @@
 	<img src="https://img.shields.io/github/last-commit/jaequery/ultima?style=flat&logo=git&logoColor=white&color=0080ff" alt="last-commit">
 	<img src="https://img.shields.io/github/languages/top/jaequery/ultima?style=flat&color=0080ff" alt="repo-top-language">
 	<img src="https://img.shields.io/github/languages/count/jaequery/ultima?style=flat&color=0080ff" alt="repo-language-count">
-<p>
-<p>Dive into the future of web development with Ult, the perfect blend of Nest.js, Prisma, and tRPC on the server side, paired seamlessly with Next.js and Tailwind CSS on the client side. Experience effortless back-end to front-end integration, rapid development cycles, and a modern, stylish UI with minimal code. Ult is your one-stop solution for building scalable, efficient, and visually stunning web applications. Get ready to elevate your projects to the next level with ease and sophistication.</p>
+</p>
+
+<h3>Ult - the modern tech stack built for speed of development, security, and scalability</h3>
+<p>Have you ever wondered how swiftly you could turn your next project or startup idea into reality? This question has often crossed my mind, especially when initiating a new project. The initial phase typically involves rewriting extensive boilerplate code—authentication, registration, admin panels, etc.—which consumes a significant portion of development time. After repeatedly facing this challenge, I was compelled to devise a bootstrap framework for efficient reuse.</p>
+
+<p>Throughout the years, I embarked on a quest to refine this concept, creating numerous versions of these bootstrap frameworks. The tech landscape constantly evolves, yet each solution seemed like forcing a square peg into a round hole. I believed in a streamlined, more efficient approach to system design, aiming for unparalleled speed and precision. Despite the limitations of existing tools, my vision persisted. That was until I discovered tRPC, which revolutionized my workflow. Integrating Nest.js, Next.js, Prisma, and tRPC transformed the development process, making it exceptionally rapid and efficient, suitable for anything from quick projects to enterprise-level applications. Thus, Ult was conceived.</p>
+
+<p>Welcome to the future of web development with Ult—a harmonious combination of Nest.js, Prisma, and tRPC for the server, alongside Next.js and Tailwind CSS for the client. This integration promises seamless backend-to-frontend connectivity, accelerated development cycles, and a modern UI requiring minimal coding. Ult stands as a comprehensive solution for crafting scalable, high-performance, and aesthetically appealing web applications. Prepare to elevate your projects with unparalleled ease and sophistication.</p>
 
 <hr>
 
