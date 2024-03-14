@@ -15,7 +15,7 @@
 	<img src="https://img.shields.io/github/languages/count/jaequery/ultima?style=flat&color=0080ff" alt="repo-language-count">
 </p>
 
-<h3>Ult - the modern tech stack built for speed of development, security, and scalability</h3>
+<h3>Ult - the modern tech stack built for speed, security, and scalability</h3>
 <p>Have you ever wondered how swiftly you could turn your next project or startup idea into reality? This question has often crossed my mind, especially when initiating a new project. The initial phase typically involves rewriting extensive boilerplate code—authentication, registration, admin panels, etc.—which consumes a significant portion of development time. After repeatedly facing this challenge, I was compelled to devise a bootstrap framework for efficient reuse.</p>
 
 <p>Throughout the years, I embarked on a quest to refine this concept, creating numerous versions of these bootstrap frameworks. The tech landscape constantly evolves, yet each solution seemed like forcing a square peg into a round hole. I believed in a streamlined, more efficient approach to system design, aiming for unparalleled speed and precision. Despite the limitations of existing tools, my vision persisted. That was until I discovered tRPC, which revolutionized my workflow. Integrating Nest.js, Next.js, Prisma, and tRPC transformed the development process, making it exceptionally rapid and efficient, suitable for anything from quick projects to enterprise-level applications. Thus, Ult was conceived.</p>
