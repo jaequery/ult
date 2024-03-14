@@ -30,7 +30,7 @@
 
 Ensure you have the following dependencies installed on your system:
 
-* **TypeScript**
+* **Node v18**
 * **Pnpm**
 * **Docker Compose**
 
