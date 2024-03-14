@@ -12,8 +12,8 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async verifyPassword(user: User, password: string) {
-    return bcrypt.compare(password, user.password);
+  async verifyPassword(password: string, encryptedPassword: string) {
+    return bcrypt.compare(password, encryptedPassword);
   }
 
   async encryptPassword(password: string) {
