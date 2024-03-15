@@ -27,8 +27,8 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
 
       - name: Check out the source
-        run: ssh prod 'cd ~/sites/ult && git fetch && git merge origin/main'
+        run: ssh prod 'cd ~/sites/ult && git stash && git fetch && git merge origin/main'
 
       - name: Start the server
         if: ${{ always() }}
-        run: ssh prod 'source ~/.nvm/nvm.sh && cd ~/sites/ult && git stash; pnpm i; pnpm db:migrate; pnpm build && killall node; killall next-server; pnpm prod'
+        run: ssh prod 'source ~/.nvm/nvm.sh && cd ~/sites/ult && pnpm i; pnpm db:migrate; pnpm build && killall node; killall next-server; pnpm prod'
