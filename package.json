@@ -11,7 +11,8 @@
     "dev": "pnpm run --parallel dev",
     "build": "pnpm run --parallel build",
     "prod": "pnpm run --parallel prod",
-    "db:migrate": "pnpm run --parallel db:migrate"
+    "db:migrate": "pnpm run --parallel db:migrate",
+    "pm2:prod": "pm2 delete all; pm2 start 'pnpm prod'"
   },
   "author": "",
   "license": "ISC",
