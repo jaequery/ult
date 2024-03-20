@@ -31,4 +31,4 @@ jobs:
 
       - name: Start the server
         if: ${{ always() }}
-        run: ssh prod 'source ~/.nvm/nvm.sh && cd ~/sites/ult && pnpm i; cd ~/sites/ult/apps/server && npx prisma migrate deploy && npx prisma generate; cd ~/sites/ult && pnpm build && killall node; killall next-server; pnpm prod'
+        run: ssh prod 'source ~/.nvm/nvm.sh && cd ~/sites/ult && pnpm i; cd ~/sites/ult/apps/server && npx prisma migrate deploy && npx prisma generate; cd ~/sites/ult && pnpm build && pnpm pm2:prod'

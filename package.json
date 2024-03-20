@@ -12,7 +12,7 @@
     "build": "pnpm run --parallel build",
     "prod": "pnpm run --parallel prod",
     "db:migrate": "pnpm run --parallel db:migrate",
-    "pm2:prod": "pm2 stop all; pm2 delete all; cd ~/sites/ult; pm2 start 'pnpm prod'"
+    "pm2:prod": "pm2 stop all; pm2 delete all; cd ~/sites/ult && pm2 start 'pnpm prod'"
   },
   "author": "",
   "license": "ISC",
