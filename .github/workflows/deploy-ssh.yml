@@ -1,7 +1,6 @@
 name: Deploy via SSH
 on: [push, pull_request]
 jobs:
-
   deploy:
     name: "Deploy"
     runs-on: ubuntu-latest
@@ -31,4 +30,4 @@ jobs:
 
       - name: Start the server
         if: ${{ always() }}
-        run: ssh prod 'source ~/.nvm/nvm.sh && cd ~/sites/ult && pnpm i; cd ~/sites/ult/apps/server && npx prisma migrate deploy && npx prisma generate; cd ~/sites/ult && pnpm build && pnpm pm2:prod'
+        run: ssh prod 'source ~/.nvm/nvm.sh && cd ~/sites/ult && pnpm i; cd ~/sites/ult/apps/server && npx prisma migrate deploy && npx prisma generate; cd ~/sites/ult && pnpm build && pm2 stop all; pm2 delete all; cd ~/sites/ult && pm2 start 'pnpm prod''
