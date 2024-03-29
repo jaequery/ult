@@ -11,7 +11,8 @@
     "dev": "pnpm run --parallel dev",
     "build": "pnpm run --parallel build",
     "prod": "pnpm run --parallel prod",
-    "db:migrate": "pnpm run --parallel db:migrate"
+    "db:migrate": "pnpm run --filter=server db:migrate",
+    "db:seed": "pnpm run --filter=server db:seed"
   },
   "author": "",
   "license": "ISC",
