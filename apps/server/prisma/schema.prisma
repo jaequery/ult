@@ -14,36 +14,68 @@ datasource db {
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
+  id            Int            @id @default(autoincrement())
   firstName     String?
   lastName      String?
-  email         String    @unique
+  email         String         @unique
   password      String
-  status        String    @default("active")
+  status        String         @default("active")
   phone         String?
   gender        String?
   bio           String?
   profilePicUrl String?
-  createdAt     DateTime  @default(now())
+  createdAt     DateTime       @default(now())
   verifiedAt    DateTime?
-  updatedAt     DateTime  @updatedAt
+  updatedAt     DateTime       @updatedAt
   deletedAt     DateTime?
-  roles         Role[]    @relation("UserRoles")
-  posts         Post[]    @relation("UserPosts")
+  roles         Role[]         @relation("UserRoles")
+  posts         Post[]         @relation("UserPosts")
+  postComments  PostComment[]
+  postReactions PostReaction[]
 }
 
 model Post {
-  id          Int       @id @default(autoincrement())
-  userId      Int
-  title       String
-  teaser      String?
-  description String?
-  imageUrl    String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deletedAt   DateTime?
-  status      String?   @default("published")
-  user        User      @relation("UserPosts", fields: [userId], references: [id])
+  id            Int            @id @default(autoincrement())
+  userId        Int
+  title         String
+  category      String?
+  teaser        String?
+  description   String?
+  imageUrl      String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  deletedAt     DateTime?
+  status        String?        @default("published")
+  user          User           @relation("UserPosts", fields: [userId], references: [id])
+  postComments  PostComment[]
+  postReactions PostReaction[]
+}
+
+model PostComment {
+  id        Int       @id @default(autoincrement())
+  postId    Int
+  userId    Int
+  message   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  user      User      @relation(fields: [userId], references: [id])
+  post      Post      @relation(fields: [postId], references: [id])
+}
+
+enum PostReactionType {
+  like
+  dislike
+}
+
+model PostReaction {
+  id        Int              @id @default(autoincrement())
+  postId    Int
+  userId    Int
+  type      PostReactionType @default(like)
+  createdAt DateTime         @default(now())
+  user      User             @relation(fields: [userId], references: [id])
+  post      Post             @relation(fields: [postId], references: [id])
 }
 
 model Role {

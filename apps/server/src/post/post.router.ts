@@ -4,9 +4,12 @@ import { TrpcExceptionFilter } from '@server/trpc/trpc.exception-handler';
 import { TrpcService } from '@server/trpc/trpc.service';
 import { Roles } from '@shared/interfaces';
 import {
+  PostCommentCreateDto,
+  PostCommentRemoveDto,
   PostCreateDto,
   PostFindAllDto,
   PostFindByIdDto,
+  PostReactionCreateDto,
   PostRemoveDto,
   PostUpdateDto,
 } from './post.dto';
@@ -66,6 +69,41 @@ export class PostRouter {
           .query(async ({ input }) => {
             return this.postService.findAll(input);
           }),
+
+        // add post reaction
+        createReaction: this.trpcService
+          .protectedProcedure()
+          .input(PostReactionCreateDto)
+          .mutation(async ({ input, ctx }) => {
+            if (ctx.user) {
+              return this.postService.createReaction(input, ctx.user);
+            }
+          }),
+
+        // add post comment
+        createComment: this.trpcService
+          .protectedProcedure()
+          .input(PostCommentCreateDto)
+          .mutation(async ({ input, ctx }) => {
+            if (ctx.user) {
+              return this.postService.createComment(input, ctx.user);
+            }
+          }),
+
+        // add post comment
+        removeComment: this.trpcService
+          .protectedProcedure()
+          .input(PostCommentRemoveDto)
+          .mutation(async ({ input, ctx }) => {
+            if (ctx.user) {
+              return this.postService.removeComment(input, ctx.user);
+            }
+          }),
+
+        // add post comment
+        getCategories: this.trpcService.protectedProcedure().query(async () => {
+          return this.postService.getCategories();
+        }),
       }),
     };
   }

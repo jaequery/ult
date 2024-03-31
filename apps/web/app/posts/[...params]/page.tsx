@@ -1,10 +1,10 @@
 import AppLayout from "@web/components/AppLayout";
-import BlogView from "./BlogView";
+import PostView from "./PostView";
 
 export default function BlogViewPage() {
   return (
     <AppLayout>
-      <BlogView />
+      <PostView />
     </AppLayout>
   );
 }

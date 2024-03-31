@@ -1,13 +1,17 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PostUpdateDto, PostUpdateDtoType } from "@server/post/post.dto";
+import {
+  PostCategories,
+  PostUpdateDto,
+  PostUpdateDtoType,
+} from "@server/post/post.dto";
 import { Uploader } from "@web/components/Uploader";
 import { useTrpc } from "@web/contexts/TrpcContext";
 import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import "react-quill/dist/quill.snow.css";
 import { toast } from "react-toastify";
 
@@ -24,6 +28,7 @@ export default function DashboardPostView() {
     reset,
     getValues,
     setValue,
+    control,
   } = useForm<PostUpdateDtoType>({
     resolver: zodResolver(PostUpdateDto),
   });
@@ -36,6 +41,7 @@ export default function DashboardPostView() {
       const formData = {
         id: post.data.id,
         title: post.data.title,
+        category: post.data.category || "General",
         teaser: post.data.teaser || "",
         description: post.data.description || "",
         imageUrl: post.data.imageUrl || "",
@@ -160,6 +166,41 @@ export default function DashboardPostView() {
                 </p>
               )}
             </div>
+            <div className="sm:col-span-3">
+              <label
+                htmlFor="title"
+                className="inline-block text-sm text-gray-800 mt-2.5 dark:text-gray-200"
+              >
+                Category
+              </label>{" "}
+              <span className="text-sm text-gray-800 dark:text-gray-600">
+                *
+              </span>
+            </div>
+            {/* End Col */}
+            <div className="sm:col-span-9">
+              <Controller
+                name="category"
+                control={control}
+                render={({ field }) => (
+                  <select
+                    className="py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
+                    {...field}
+                  >
+                    {Object.values(PostCategories).map((category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
+                )}
+              />
+              {errors.category && (
+                <p className="mt-2 pl-2 text-sm text-red-600">
+                  {errors.category.message}
+                </p>
+              )}
+            </div>
             {/* End Col */}
             <div className="sm:col-span-3">
               <label
@@ -187,10 +228,10 @@ export default function DashboardPostView() {
             {/* End Col */}
             <div className="sm:col-span-3">
               <label
-                htmlFor="af-account-bio"
+                htmlFor="af-description"
                 className="inline-block text-sm text-gray-800 mt-2.5 dark:text-gray-200"
               >
-                Bio
+                Description
               </label>
             </div>
             {/* End Col */}
@@ -212,7 +253,7 @@ export default function DashboardPostView() {
               disabled={updatePost.isLoading}
               className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
             >
-              {updatePost.isLoading ? "Saving ..." : "Save changes"}
+              {updatePost.isLoading ? "Saving ..." : "Save"}
             </button>
           </div>
         </form>
