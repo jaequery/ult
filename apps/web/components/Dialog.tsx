@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 
 type DialogProps = {
   children: React.ReactNode;
@@ -8,17 +8,17 @@ type DialogProps = {
 export const Dialog: React.FC<DialogProps> = ({ children, onClose }) => {
   const modalRef = useRef<HTMLDivElement>(null); // Reference to the modal content
 
-  const handleOutsideClick = (event: MouseEvent) => {
+  const handleOutsideClick = useCallback((event: MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       onClose();
     }
-  };
+  }, [onClose]);
 
-  const handleEscapeKeyPress = (event: KeyboardEvent) => {
+  const handleEscapeKeyPress = useCallback((event: KeyboardEvent) => {
     if (event.key === "Escape") {
       onClose();
     }
-  };
+  }, [onClose]);
 
   useEffect(() => {
     // Disable body scroll
@@ -35,7 +35,7 @@ export const Dialog: React.FC<DialogProps> = ({ children, onClose }) => {
       document.removeEventListener("mousedown", handleOutsideClick);
       document.removeEventListener("keydown", handleEscapeKeyPress);
     };
-  }, []);
+  }, [handleEscapeKeyPress, handleOutsideClick]);
 
   return (
     <div className="fixed z-30 overflow-y-auto overflow-scroll top-0 w-full left-0 p-8 modal-content">

@@ -11,6 +11,7 @@
     "dev": "pnpm run --parallel dev",
     "build": "pnpm run --parallel build",
     "prod": "pnpm run --parallel prod",
+    "prod:docker": "docker-compose -f docker-compose.production.yml up",
     "db:migrate": "pnpm run --parallel db:migrate"
   },
   "author": "",
