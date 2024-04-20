@@ -1,23 +1,69 @@
 "use client";
 
+import { PostReactionType } from "@prisma/client";
+import { useUserContext } from "@web/app/user/UserContext";
 import { useTrpc } from "@web/contexts/TrpcContext";
 import { format } from "date-fns";
+import Link from "next/link";
 import { useParams } from "next/navigation";
+import { toast } from "react-toastify";
+import { StringParam, useQueryParam, withDefault } from "use-query-params";
+import PostCategoryTabs from "../PostCategoryTabs";
+import PostComments from "./PostComments";
 
-export default function Blog() {
+export default function PostView() {
   const { trpc } = useTrpc();
-  const params = useParams();
-  const post = trpc.postRouter.findById.useQuery({ id: Number(params.id) });
+  const { params } = useParams();
+  const { currentUser } = useUserContext();
+  const [category, setCategory] = useQueryParam(
+    "category",
+    withDefault(StringParam, "All")
+  );
+  const id = params[0];
+  const post = trpc.postRouter.findById.useQuery({ id: Number(id) });
+  const createPostReaction = trpc.postRouter.createReaction.useMutation({});
   return (
     <>
-      <div className="flex min-h-full flex-1 flex-col text-center justify-center px-6 py-12 lg:px-8">
+      {post.isLoading ? (
+        <div className="flex animate-pulse bg-white px-6 py-4 mt-8">
+          <div className="flex-shrink-0">
+            <span className="size-12 block bg-gray-200 rounded-full dark:bg-gray-700" />
+          </div>
+          <div className="ms-4 mt-2 w-full">
+            <h3
+              className="h-4 bg-gray-200 rounded-full dark:bg-gray-700"
+              style={{ width: "40%" }}
+            />
+            <ul className="mt-5 space-y-3">
+              <li className="w-full h-4 bg-gray-200 rounded-full dark:bg-gray-700" />
+              <li className="w-full h-4 bg-gray-200 rounded-full dark:bg-gray-700" />
+              <li className="w-full h-4 bg-gray-200 rounded-full dark:bg-gray-700" />
+              <li className="w-full h-4 bg-gray-200 rounded-full dark:bg-gray-700" />
+            </ul>
+          </div>
+        </div>
+      ) : (
         <div>
-          {/* Blog Article */}
-          <div className="max-w-6xl px-4 pt-6 lg:pt-10 pb-12 sm:px-6 lg:px-8 mx-auto">
+          <div className="bg-white px-6 py-4 mt-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Message Board
+            </h1>
+            <p className="text-gray-600 mb-4 text-xl">
+              Ask questions, find support, and connect with the community.
+            </p>
+            <Link
+              href={`/posts/new?category=${category}`}
+              className="bg-red-500 text-white px-4 py-2 rounded-md shadow-lg hover:bg-red-600 mt-2"
+            >
+              New Post
+            </Link>
+            <PostCategoryTabs />
+          </div>
+          <div className="mt-8 px-4 pt-6 lg:pt-10 pb-12 sm:px-6 lg:px-8 mx-auto">
             <div className="max-w-full">
               {/* Avatar Media */}
-              <div className="flex justify-between items-center mb-6">
-                <div className="flex w-full sm:items-center gap-x-5 sm:gap-x-3">
+              <div className="flex justify-between mb-6">
+                <div className="flex w-full sm:items- gap-x-5 sm:gap-x-3">
                   <div className="flex-shrink-0">
                     <img
                       className="size-12 rounded-full"
@@ -26,11 +72,11 @@ export default function Blog() {
                     />
                   </div>
                   <div className="grow">
-                    <div className="flex justify-between items-center gap-x-2">
+                    <div className="flex justify-between items-center gap-x-2 text-left">
                       <div>
                         <div className="hs-tooltip inline-block [--trigger:hover] [--placement:bottom]">
                           <div className="hs-tooltip-toggle sm:mb-1 block text-start cursor-pointer">
-                            <span className="font-semibold text-gray-800 dark:text-gray-200">
+                            <span className="font-semibold text-gray-800 dark:text-gray-200 text-left">
                               {post?.data?.user?.firstName}{" "}
                               {post?.data?.user?.lastName}
                             </span>
@@ -120,7 +166,9 @@ export default function Blog() {
                               format(post?.data?.createdAt, "MMM dd, yyyy")}
                           </li>
                           <li className="inline-block relative pe-6 last:pe-0 last-of-type:before:hidden before:absolute before:top-1/2 before:end-2 before:-translate-y-1/2 before:size-1 before:bg-gray-300 before:rounded-full dark:text-gray-400 dark:before:bg-gray-600">
-                            8 min read
+                            {calculateReadingTime(
+                              post?.data?.description || ""
+                            )}
                           </li>
                         </ul>
                       </div>
@@ -150,13 +198,13 @@ export default function Blog() {
               </div>
               {/* End Avatar Media */}
               {/* Content */}
-              <div className="space-y-5 md:space-y-8">
+              <div className="space-y-5 md:space-y-8 mt-12">
                 <div className="space-y-3">
-                  <h2 className="text-2xl font-bold md:text-3xl dark:text-white">
+                  <h2 className="text-2xl font-bold md:text-3xl dark:text-white text-left">
                     {post?.data?.title}
                   </h2>
                   <p
-                    className="text-lg text-gray-800 dark:text-gray-200 whitespace-pre-line"
+                    className="text-lg text-gray-800 dark:text-gray-200 whitespace-pre-line text-left"
                     dangerouslySetInnerHTML={{
                       __html: post?.data?.description || "",
                     }}
@@ -168,7 +216,7 @@ export default function Blog() {
           </div>
           {/* End Blog Article */}
           {/* Sticky Share Group */}
-          <div className="sticky bottom-6 inset-x-0 text-center">
+          <div className="inset-x-0 text-center">
             <div className="inline-block bg-white shadow-md rounded-full py-3 px-4 dark:bg-gray-800">
               <div className="flex items-center gap-x-1.5">
                 {/* Button */}
@@ -176,6 +224,13 @@ export default function Blog() {
                   <button
                     type="button"
                     className="hs-tooltip-toggle flex items-center gap-x-2 text-sm text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                    onClick={async () => {
+                      await createPostReaction.mutateAsync({
+                        type: PostReactionType.like,
+                        postId: post?.data?.id || 0,
+                      });
+                      await post.refetch();
+                    }}
                   >
                     <svg
                       className="flex-shrink-0 size-4"
@@ -183,15 +238,29 @@ export default function Blog() {
                       width={24}
                       height={24}
                       viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
+                      fill={
+                        post?.data?.postReactions.some(
+                          (postReaction) =>
+                            postReaction.userId === currentUser?.id
+                        )
+                          ? "red"
+                          : "none"
+                      }
+                      stroke={
+                        post?.data?.postReactions.some(
+                          (postReaction) =>
+                            postReaction.userId === currentUser?.id
+                        )
+                          ? "red"
+                          : "currentColor"
+                      }
                       strokeWidth={2}
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     >
                       <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
                     </svg>
-                    875
+                    {post?.data?.postReactions?.length}
                     <span
                       className="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm dark:bg-black"
                       role="tooltip"
@@ -222,7 +291,7 @@ export default function Blog() {
                     >
                       <path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z" />
                     </svg>
-                    16
+                    {post?.data?.postComments?.length}
                     <span
                       className="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm dark:bg-black"
                       role="tooltip"
@@ -337,10 +406,27 @@ export default function Blog() {
                 {/* Button */}
               </div>
             </div>
+            {post?.data && (
+              <PostComments
+                post={post.data}
+                onChange={() => {
+                  post.refetch();
+                  toast.success("Comment added");
+                }}
+              />
+            )}
           </div>
-          {/* End Sticky Share Group */}
         </div>
-      </div>
+      )}
     </>
   );
+}
+
+function calculateReadingTime(text: string) {
+  const wordsPerMinute = 225;
+  const wordCount = text.split(/\s+/).length;
+  const readingTime = Math.ceil(wordCount / wordsPerMinute);
+  return readingTime === 1
+    ? `${readingTime} minute read`
+    : `${readingTime} minutes read`;
 }
