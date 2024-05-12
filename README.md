@@ -62,15 +62,14 @@ pnpm install
 docker-compose up -d
 ```
 
-2. Create ./apps/server/.env.development
+2. Create .env for server
 
 ```
 cd ./apps/server
-cp .env.example .env.development
+cp .env.example .env
 ```
 
-Database should work out of the box with the default credentials for local development.
-But for email, you will need a valid SMTP account. You can get it free at brevo.com.
+Database should work out of the box with the default credentials for local development. But for email, you will need a valid SMTP account, which you can get one for free at brevo.com.
 
 1. Run db migration to create the database tables
 
@@ -78,15 +77,7 @@ But for email, you will need a valid SMTP account. You can get it free at brevo.
 pnpm db:migrate
 ```
 
-4. Run the db seed to populate the database with initial data
-
-```sh
-pnpm db:seed
-```
-
-###  Running development environment
-
-Use the following command to run both Nest and Next server.
+2. Run dev environment
 
 ```sh
 pnpm dev
@@ -94,6 +85,11 @@ pnpm dev
 
 This will start the Next.js server on http://localhost:3000 and the Nest.js on http://localhost:3001.
 
+3. Run the db seed to populate the database with initial admin user account. You can find the seed file at ./apps/server/prisma/seed.ts.
+
+```sh
+pnpm db:seed
+```
 
 ###  Tests
 
