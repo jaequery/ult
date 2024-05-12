@@ -189,7 +189,7 @@ export default function AppLayout({
               >
                 <defs>
                   <radialGradient
-                    id={0}
+                    id={'0'}
                     cx="332.14"
                     cy="2511.81"
                     r="3263.54"
@@ -199,7 +199,7 @@ export default function AppLayout({
                     <stop offset=".78" stopColor="#d82d7e" />
                   </radialGradient>
                   <radialGradient
-                    id={1}
+                    id={'1'}
                     cx="1516.14"
                     cy="2623.81"
                     r="2572.12"
