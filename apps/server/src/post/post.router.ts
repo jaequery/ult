@@ -3,6 +3,7 @@ import { PostService } from '@server/post/post.service';
 import { TrpcExceptionFilter } from '@server/trpc/trpc.exception-handler';
 import { TrpcService } from '@server/trpc/trpc.service';
 import { Roles } from '@shared/interfaces';
+import { Router } from '@trpc/server';
 import {
   PostCommentCreateDto,
   PostCommentRemoveDto,
@@ -21,7 +22,7 @@ export class PostRouter {
     private readonly trpcService: TrpcService,
     private readonly postService: PostService,
   ) {}
-  apply() {
+  apply(): { postRouter: Router<any> } {
     return {
       postRouter: this.trpcService.trpc.router({
         // creates a post from dashboard

@@ -10,6 +10,7 @@ import {
   RoleRemoveDto,
   RoleUpdateDto,
 } from './role.dto';
+import { Router } from '@trpc/server';
 
 @Injectable()
 @UseFilters(new TrpcExceptionFilter())
@@ -18,7 +19,7 @@ export class RoleRouter {
     private readonly trpcService: TrpcService,
     private readonly roleService: RoleService,
   ) {}
-  apply() {
+  apply(): { roleRouter: Router<any> } {
     return {
       roleRouter: this.trpcService.trpc.router({
         // creates a role from dashboard
