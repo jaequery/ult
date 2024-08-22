@@ -3,7 +3,6 @@ import { TrpcExceptionFilter } from '@server/trpc/trpc.exception-handler';
 import { TrpcService } from '@server/trpc/trpc.service';
 import { UserService } from '@server/user/user.service';
 import { Roles } from '@shared/interfaces';
-import { Router } from '@trpc/server';
 import {
   UserCreateDto,
   UserFindAllDto,
@@ -23,7 +22,7 @@ export class UserRouter {
     private readonly trpcService: TrpcService,
     private readonly userService: UserService,
   ) {}
-  apply(): { userRouter: Router<any> } {
+  apply() {
     return {
       userRouter: this.trpcService.trpc.router({
         // login user
