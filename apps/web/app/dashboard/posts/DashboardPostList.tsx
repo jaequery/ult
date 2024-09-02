@@ -118,8 +118,10 @@ export default function DashboardPostList() {
                           <input
                             type="checkbox"
                             checked={
+                              postList?.data?.records &&
+                              postList?.data?.records?.length > 0 &&
                               selectedIds.length ===
-                              postList?.data?.records?.length
+                                postList?.data?.records?.length
                             }
                             onChange={(event: any) => {
                               if (postList?.data) {
@@ -177,6 +179,28 @@ export default function DashboardPostList() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                    {postList?.isLoading && (
+                      <tr>
+                        <td colSpan={100} className="text-center">
+                          <div className="py-4">
+                            <div className="flex items-center justify-center">
+                              <div className="w-12 h-12 border-t-2 border-b-2 border-gray-900 rounded-full animate-spin"></div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                    {postList?.data?.records?.length === 0 && (
+                      <tr>
+                        <td colSpan={100} className="text-center">
+                          <div className="py-4">
+                            <div className="flex items-center justify-center text-sm text-gray-500">
+                              No posts found
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
                     {postList?.data?.records?.map((post) => (
                       <tr key={post.id}>
                         <td className="size-px whitespace-nowrap">
