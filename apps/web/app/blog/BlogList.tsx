@@ -43,6 +43,8 @@ export default function BlogList() {
                 </ul>
               </div>
             </div>
+          ) : postList?.data?.records?.length === 0 ? (
+            <div className="text-center">There are no posts</div>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {postList?.data?.records?.map((post) => (
@@ -86,28 +88,6 @@ export default function BlogList() {
           )}
           {/* End Grid */}
           {/* Card */}
-          <div className="mt-12 text-center">
-            <a
-              className="py-3 px-4 inline-flex items-center gap-x-1 text-sm font-medium rounded-full border border-gray-200 bg-white text-blue-600 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-blue-500 dark:hover:bg-gray-800 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-              href="/blog/3"
-            >
-              Load more
-              <svg
-                className="flex-shrink-0 size-4"
-                xmlns="http://www.w3.org/2000/svg"
-                width={24}
-                height={24}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="m9 18 6-6-6-6" />
-              </svg>
-            </a>
-          </div>
           {/* End Card */}
         </div>
         {/* End Card Blog */}
