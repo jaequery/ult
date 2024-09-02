@@ -43,7 +43,6 @@
     "@swc/core": "^1.4.2",
     "@trpc/server": "^10.45.1",
     "bcrypt": "^5.1.1",
-    "class-validator": "^0.14.1",
     "cors": "^2.8.5",
     "date-fns": "^3.3.1",
     "ejs": "^3.1.9",
