@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { AuthJwt } from '@server/auth/auth.types';
+import { PrismaService } from '@server/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -10,6 +11,7 @@ export class AuthService {
   constructor(
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
+    private readonly prismaService: PrismaService,
   ) {}
 
   async verifyPassword(password: string, encryptedPassword: string) {
@@ -44,5 +46,55 @@ export class AuthService {
     return this.jwtService.verifyAsync(accessToken, {
       secret: this.configService.get<string>('JWT_SECRET'),
     });
+  }
+
+  async googleLogin(req: any) {
+    let user: User | null;
+    if (req.user.email) {
+      user = await this.prismaService.user.findFirst({
+        where: {
+          email: req.user.email,
+        },
+      });
+      if (!user) {
+        // assign a default User role
+        let roleConnections: { id: number }[] = [];
+        const role = await this.prismaService.role.findFirst({
+          where: {
+            name: 'User',
+          },
+        });
+        if (role) {
+          roleConnections = [{ id: role.id }];
+        }
+
+        user = await this.prismaService.user.create({
+          data: {
+            email: req.user.email,
+            password: '',
+            verifiedAt: new Date(),
+            lastLoggedInAt: new Date(),
+            firstName: req.user.firstName,
+            lastName: req.user.lastName,
+            profilePicUrl: req.user.picture,
+            authType: 'google',
+            roles: {
+              connect: roleConnections,
+            },
+          },
+        });
+      } else {
+        await this.prismaService.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            lastLoggedInAt: new Date(),
+          },
+        });
+      }
+      const jwt = this.getJwt(user);
+      return { user, jwt };
+    }
   }
 }
