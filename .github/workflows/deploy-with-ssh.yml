@@ -1,0 +1,80 @@
+name: deploy-with-ssh
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    env:
+      SSH_HOST: ubuntu@x.x.x.x
+      WORKING_DIR: /home/ubuntu/startupreviews
+      DOCKER_COMPOSE_FILE: docker-compose.prod.yml
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: ghcr.io/${{ github.repository }}:latest
+
+    - name: Set up SSH agent
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_KEY }}
+
+    - name: Copy Docker Compose file
+      run: |
+        scp -o StrictHostKeyChecking=no $DOCKER_COMPOSE_FILE $SSH_HOST:$WORKING_DIR/
+
+    - name: Log in to GitHub Container Registry
+      run: |
+        ssh -o StrictHostKeyChecking=no $SSH_HOST "echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin"
+
+    - name: Pull Docker images
+      run: |
+        ssh -o StrictHostKeyChecking=no $SSH_HOST "docker pull ghcr.io/${{ github.repository }}:latest"
+
+    - name: Check and setup nginx-proxy
+      run: |
+        ssh -o StrictHostKeyChecking=no $SSH_HOST "
+          if ! docker network inspect proxy-network >/dev/null 2>&1; then
+            echo 'Creating proxy-network...'
+            docker network create proxy-network
+          fi
+          if ! docker ps | grep -q nginx-proxy; then
+            echo 'nginx-proxy not detected. Setting it up...'
+            docker run -d -p 80:80 \
+              --name nginx-proxy \
+              --network proxy-network \
+              --restart always \
+              -v /var/run/docker.sock:/tmp/docker.sock:ro \
+              jwilder/nginx-proxy
+          else
+            echo 'nginx-proxy already running. Skipping setup.'
+          fi
+        "
+    - name: Run Docker Compose
+      run: |
+        ssh -o StrictHostKeyChecking=no $SSH_HOST "cd $WORKING_DIR && docker-compose -f $DOCKER_COMPOSE_FILE up -d"
