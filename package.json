@@ -3,24 +3,32 @@
     "@nestjs/mapped-types": "*"
   },
   "name": "ult",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "pnpm run --parallel dev",
     "build": "pnpm run --parallel build",
-    "prod": "pnpm run --parallel prod",
-    "prod:docker": "docker-compose -f docker-compose.production.yml up",
-    "db:migrate": "pnpm run --parallel db:migrate",
-    "db:seed": "pnpm run --filter=server db:seed"
+    "dev": "pnpm db:prisma:generate && pnpm run --parallel dev",
+    "db:prisma:generate": "pnpm run --filter=server prisma:generate",
+    "db:migrate": "pnpm db:prisma:generate && pnpm run --filter=server db:migrate",
+    "db:migrate:new": "pnpm db:prisma:generate && pnpm run --filter=server db:migrate:new",
+    "db:seed": "pnpm db:prisma:generate && pnpm run --filter=server db:seed",
+    "prod:server": "dotenv -e ./apps/server/.env.production -- pnpm db:prisma:generate && pnpm run --parallel --filter=server prod",
+    "prod:web": "dotenv -e ./apps/server/.env.production -- pnpm db:prisma:generate && pnpm run --parallel --filter=web prod",
+    "prod:db:migrate": "dotenv -e ./apps/server/.env.production -- pnpm run --filter=server db:migrate",
+    "prod:db:seed": "dotenv -e ./apps/server/.env.production -- pnpm run --filter=server db:seed"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@swc/cli": "^0.3.14",
+    "@swc/core": "^1.7.23",
     "jest-mock-extended": "^3.0.5",
     "jest-ts-auto-mock": "^2.1.0",
     "ts-auto-mock": "^3.7.2",
-    "ts-patch": "^3.1.2"
+    "ts-patch": "^3.1.2",
+    "tsconfig-paths": "^4.2.0",
+    "dotenv-cli": "^7.2.1"
   }
 }

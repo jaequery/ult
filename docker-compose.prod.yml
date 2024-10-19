@@ -1,0 +1,47 @@
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    env_file:
+      - .env.production.server
+    ports:
+      - 5432
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+  server:
+    image: ghcr.io/jaequery/ult:latest
+    restart: always
+    env_file:
+      - .env.production.server
+    environment:
+      - VIRTUAL_PORT=3001
+      - VIRTUAL_HOST=ult-api.jaequery.dev
+    ports:
+      - 3001
+    networks:
+      - app-network
+      - proxy-network
+    command: pnpm prod:server
+    depends_on:
+      - db
+  web:
+    image: ghcr.io/jaequery/ult:latest
+    restart: always
+    env_file:
+      - .env.production.web
+    environment:
+      - VIRTUAL_PORT=3000
+      - VIRTUAL_HOST=ult.jaequery.dev
+    ports:
+      - 3000
+    networks:
+      - app-network
+      - proxy-network
+    command: pnpm prod:web
+networks:
+  app-network:
+    driver: bridge
+  proxy-network:
+    external: true

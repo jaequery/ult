@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "prod": "next build; pnpm start",
+    "prod": "next build && pnpm start",
     "lint": "next lint"
   },
   "dependencies": {
