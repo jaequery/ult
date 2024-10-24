@@ -14,7 +14,7 @@ export class EmailService {
     const confirmationUrl = `${this.configService.get('WEB_HOST')}/verify-email?token=${token}`;
     await this.mailerService.sendMail({
       to: user.email,
-      subject: 'Welcome to Ult! Confirm your Email',
+      subject: 'Welcome to Hanmi News! Confirm your Email',
       template: './welcome',
       context: {
         firstName: user.firstName,

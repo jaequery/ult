@@ -48,7 +48,7 @@ export class AuthService {
     });
   }
 
-  async googleLogin(req: any) {
+  async loginFromGoogle(req: any) {
     let user: User | null;
     if (req.user.email) {
       user = await this.prismaService.user.findFirst({
@@ -90,6 +90,7 @@ export class AuthService {
           },
           data: {
             lastLoggedInAt: new Date(),
+            profilePicUrl: req.user.picture,
           },
         });
       }

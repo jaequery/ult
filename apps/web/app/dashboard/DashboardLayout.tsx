@@ -232,7 +232,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
           <div className="px-6 bg-white">
             <Link
               className="flex-none text-xl font-semibold dark:text-white dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-              href="/dashboard"
+              href="#"
             >
               Ult
             </Link>
@@ -242,6 +242,26 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             data-hs-accordion-always-open
           >
             <ul className="space-y-1.5">
+              {/* <li>
+                <Link className="nav-menu" href="/dashboard">
+                  <svg
+                    className="flex-shrink-0 size-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width={24}
+                    height={24}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                  </svg>
+                  Dashboard
+                </Link>
+              </li> */}
               <li className="hs-accordion">
                 <Link href="/dashboard/users">
                   <button type="button" className="nav-menu">
@@ -266,6 +286,30 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                   </button>
                 </Link>
               </li>
+              {/* <li className="hs-accordion">
+                <Link href="/dashboard/roles">
+                  <button type="button" className="nav-menu">
+                    <svg
+                      className="flex-shrink-0 size-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width={24}
+                      height={24}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                      <circle cx={9} cy={7} r={4} />
+                      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                    Roles
+                  </button>
+                </Link>
+              </li> */}
               <li className="hs-accordion">
                 <Link href="/dashboard/posts">
                   <button type="button" className="nav-menu">
@@ -294,6 +338,44 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                       <path d="m20.7 13.8 1-.4" />
                     </svg>
                     Posts
+                  </button>
+                </Link>
+              </li>
+              <li className="hs-accordion">
+                <Link href="/dashboard/categories">
+                  <button type="button" className="nav-menu">
+                    <svg
+                      className="flex-shrink-0 mt-0.5 size-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width={24}
+                      height={24}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle cx={18} cy={15} r={3} />
+                      <circle cx={9} cy={7} r={4} />
+                      <path d="M10 15H6a4 4 0 0 0-4 4v2" />
+                      <path d="m21.7 16.4-.9-.3" />
+                      <path d="m15.2 13.9-.9-.3" />
+                      <path d="m16.6 18.7.3-.9" />
+                      <path d="m19.1 12.2.3-.9" />
+                      <path d="m19.6 18.7-.4-1" />
+                      <path d="m16.8 12.3-.4-1" />
+                      <path d="m14.3 16.6 1-.4" />
+                      <path d="m20.7 13.8 1-.4" />
+                    </svg>
+                    Categories
+                  </button>
+                </Link>
+              </li>
+              <li className="hs-accordion">
+                <Link href="/dashboard/datatypes">
+                  <button type="button" className="nav-menu absolute bottom-0">
+                    Add Data Type
                   </button>
                 </Link>
               </li>

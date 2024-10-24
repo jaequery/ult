@@ -4,7 +4,7 @@ import PostList from "./PostList";
 export default function PostListPage() {
   return (
     <AppLayout>
-      <PostList />
+      <PostList showPagination={true} />
     </AppLayout>
   );
 }

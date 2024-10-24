@@ -5,10 +5,10 @@ import {
 } from '@nestjs/common/exceptions';
 import { PostReactionType } from '@prisma/client';
 import { PrismaService } from '@server/prisma/prisma.service';
-import { UserById } from '@shared/interfaces';
+import { PostById, UserById } from '@shared/interfaces';
 import {
   PostCommentCreateDtoType,
-  PostCommentRemoveDtoType,
+  PostCommentRemoveDtoType as PostCommentDeleteDtoType,
   PostCreateDtoType,
   PostFindAllDtoType,
   PostReactionCreateDtoType,
@@ -33,12 +33,36 @@ export class PostService {
    * @returns The created post.
    */
   async create(postCreateDto: PostCreateDtoType, requestUser: UserById) {
+    const category = await this.prismaService.category.findFirst({
+      where: {
+        id: postCreateDto.categoryId,
+      },
+    });
+    if (!category) {
+      throw new NotFoundException('Category not found');
+    }
+    if (
+      category?.adminWriteOnly &&
+      !requestUser.roles?.some((r) => r.name === 'Admin')
+    ) {
+      throw new UnauthorizedException('You cannot write to this category');
+    }
     const post = await this.prismaService.post.create({
       data: {
         ...postCreateDto,
         userId: requestUser.id,
       },
     });
+    if (postCreateDto.categoryId) {
+      await this.prismaService.category.update({
+        where: {
+          id: postCreateDto.categoryId,
+        },
+        data: {
+          lastPostedAt: new Date(),
+        },
+      });
+    }
     return post;
   }
 
@@ -53,12 +77,14 @@ export class PostService {
    */
   async update(postUpdateDto: PostUpdateDtoType, requestUser: UserById) {
     const post = await this.findById(postUpdateDto.id);
-    if (
-      !requestUser.roles?.some((r) => r.name === 'Admin') &&
-      post.userId !== requestUser.id
-    ) {
-      throw new UnauthorizedException('You cannot update other users post');
+
+    const isAdmin = requestUser.roles?.some((r) => r.name === 'Admin');
+    const isPostOwner = post.userId === requestUser.id;
+
+    if (!isAdmin && !isPostOwner) {
+      throw new UnauthorizedException("You cannot update other users' posts");
     }
+
     const updatedPost = await this.prismaService.post.update({
       where: {
         id: post.id,
@@ -75,26 +101,34 @@ export class PostService {
    * @returns A paginated list of posts.
    */
   async findAll(opts: PostFindAllDtoType) {
-    let category = opts.category;
-    if (category === 'All' || category === '') {
-      category = undefined;
-    }
     const records = await this.prismaService.post.findMany({
       skip: (opts.page - 1) * opts.perPage,
       take: opts.perPage,
       include: {
         user: true,
         postComments: true,
+        category: true,
       },
       where: {
         deletedAt: null,
-        category,
+        categoryId: opts.categoryId ? opts.categoryId : undefined,
+        title: opts.search
+          ? {
+              contains: opts.search,
+              mode: 'insensitive',
+            }
+          : undefined,
       },
       orderBy: {
         createdAt: 'desc',
       },
     });
-    const total = await this.prismaService.post.count();
+    const total = await this.prismaService.post.count({
+      where: {
+        deletedAt: null,
+        categoryId: opts.categoryId,
+      },
+    });
     const lastPage = Math.ceil(total / opts.perPage);
     return {
       records,
@@ -111,8 +145,16 @@ export class PostService {
    * @param id - The ID of the post to find.
    * @returns The post with the given ID.
    */
-  async findById(id: number) {
-    return this.prismaService.post.findFirstOrThrow({
+  async findById(id: number): Promise<PostById> {
+    await this.prismaService.post.update({
+      where: { id },
+      data: {
+        viewCount: {
+          increment: 1,
+        },
+      },
+    });
+    const post = await this.prismaService.post.findFirstOrThrow({
       where: { id, deletedAt: null },
       include: {
         user: {
@@ -120,6 +162,7 @@ export class PostService {
             roles: true,
           },
         },
+        category: true,
         postReactions: true,
         postComments: {
           orderBy: {
@@ -131,6 +174,8 @@ export class PostService {
         },
       },
     });
+
+    return post;
   }
 
   /**
@@ -144,7 +189,7 @@ export class PostService {
    * @param requestUser - The requesting user.
    * @returns The updated posts.
    */
-  async remove(id: number | number[], requestUser: UserById) {
+  async delete(id: number | number[], requestUser: UserById) {
     let ids: number[] = [];
     if (id instanceof Array) {
       ids = id;
@@ -252,14 +297,14 @@ export class PostService {
    * Checks if the post exists, and if not throws NotFoundException.
    * Deletes the post comment with the provided input post ID and comment ID.
    */
-  async removeComment(
-    postCommentRemoveDto: PostCommentRemoveDtoType,
+  async deleteComment(
+    postCommentDeleteDto: PostCommentDeleteDtoType,
     requestUser: UserById,
   ) {
     const existingComment = await this.prismaService.postComment.findFirst({
       where: {
         userId: requestUser.id,
-        id: postCommentRemoveDto.id,
+        id: postCommentDeleteDto.id,
       },
     });
     if (!existingComment) {
@@ -272,39 +317,39 @@ export class PostService {
     });
   }
 
-  /**
-   * Gets all post categories and their post counts.
-   *
-   * Groups posts by category and returns the category name and count for each.
-   */
-  async getCategories() {
-    // First, get the count of posts per category
-    const categories = await this.prismaService.post.groupBy({
-      by: ['category'],
-      _count: {
-        category: true,
-      },
-      where: {
-        category: {
-          not: null, // Exclude posts without a category
-        },
-      },
-      orderBy: {
-        _count: {
-          category: 'desc',
-        },
-      },
-    });
+  // /**
+  //  * Gets all post categories and their post counts.
+  //  *
+  //  * Groups posts by category and returns the category name and count for each.
+  //  */
+  // async getCategories() {
+  //   // First, get the count of posts per category
+  //   const categories = await this.prismaService.post.groupBy({
+  //     by: ['category'],
+  //     _count: {
+  //       category: true,
+  //     },
+  //     where: {
+  //       category: {
+  //         not: null, // Exclude posts without a category
+  //       },
+  //     },
+  //     orderBy: {
+  //       _count: {
+  //         category: 'desc',
+  //       },
+  //     },
+  //   });
 
-    // Next, get the total count of all posts
-    const totalPostsCount = await this.prismaService.post.count();
+  //   // Next, get the total count of all posts
+  //   const totalPostsCount = await this.prismaService.post.count();
 
-    // Now, add the "All" category with the totalPostsCount to the categories array
-    const categoriesWithAll = [
-      { category: 'All', _count: { category: totalPostsCount } },
-      ...categories,
-    ];
+  //   // Now, add the "All" category with the totalPostsCount to the categories array
+  //   const categoriesWithAll = [
+  //     { category: 'All', _count: { category: totalPostsCount } },
+  //     ...categories,
+  //   ];
 
-    return categoriesWithAll;
-  }
+  //   return categoriesWithAll;
+  // }
 }

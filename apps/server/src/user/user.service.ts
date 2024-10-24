@@ -6,13 +6,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common/exceptions';
 import { AuthService } from '@server/auth/auth.service';
-import _ from 'lodash';
-import { AvatarGenerator } from 'random-avatar-generator';
 import { EmailService } from '@server/email/email.service';
 import { PrismaService } from '@server/prisma/prisma.service';
 import { UserLoginResponse } from '@server/user/user.types';
 import { Roles, UserById } from '@shared/interfaces';
 import generator from 'generate-password-ts';
+import _ from 'lodash';
+import { AvatarGenerator } from 'random-avatar-generator';
 import {
   UserCreateDtoType,
   UserFindAllDtoType,
@@ -21,7 +21,6 @@ import {
   UserSignupDtoType,
   UserUpdateDtoType,
 } from './user.dto';
-import { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -67,6 +66,17 @@ export class UserService {
     }
     // retrieve JWT
     const jwt = this.authService.getJwt(user);
+
+    // update user lastLoggedInAt
+    await this.prismaService.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        lastLoggedInAt: new Date(),
+      },
+    });
+
     // return login response
     return {
       jwt,
@@ -151,7 +161,13 @@ export class UserService {
     }
   }
 
-  async update(userUpdateDto: UserUpdateDtoType) {
+  async update(userUpdateDto: UserUpdateDtoType, requestUser: UserById) {
+    if (
+      !requestUser.roles?.some((r) => r.name === Roles.Admin) &&
+      userUpdateDto.id !== requestUser.id
+    ) {
+      throw new UnauthorizedException('You cannot update other user');
+    }
     const user = await this.prismaService.user.findFirstOrThrow({
       where: {
         id: userUpdateDto.id,
@@ -180,7 +196,7 @@ export class UserService {
     let roleConnections: { id: number }[] = [];
     let roleDisconnections: { id: number }[] = [];
     if (
-      user.roles.some((r) => r.name === Roles.Admin) &&
+      requestUser?.roles?.some((r) => r.name === Roles.Admin) &&
       userUpdateDto.roles &&
       userUpdateDto.roles.length > 0
     ) {
@@ -275,7 +291,7 @@ export class UserService {
         !requestUser.roles?.some((r) => r.name === 'Admin') &&
         user?.id !== requestUser.id
       ) {
-        throw new UnauthorizedException('You cannot update other users post');
+        throw new UnauthorizedException('You cannot update other users');
       }
       output.push(
         await this.prismaService.user.update({

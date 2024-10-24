@@ -1,10 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  UserLoginDtoType,
-  UserResetPasswordDto,
-} from "@server/user/user.dto";
+import { UserLoginDtoType, UserResetPasswordDto } from "@server/user/user.dto";
 import { CircularProgress } from "@web/components/CircularProgress";
 import { useTrpc } from "@web/contexts/TrpcContext";
 import { useRouter } from "next/navigation";
@@ -27,12 +24,15 @@ export default function ForgotPassword() {
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Reset your password
+            비밀번호 찾기
           </h2>
+          <p className="mt-6 text-center text-gray-500">
+            이메일로 비밀번호를 찾아보세요.
+          </p>
         </div>
         {resetPassword.data && (
           <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm text-center">
-            Please check your email for the temporary password.
+            이메일로 비밀번호를 찾아보세요.
           </div>
         )}
 
@@ -51,15 +51,16 @@ export default function ForgotPassword() {
                   htmlFor="email"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  Email address
+                  Email
                 </label>
                 <div className="mt-2">
                   <input
                     id="email"
                     type="email"
+                    placeholder="john.doe@example.com"
                     required
                     {...register("email", { required: true })}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
                   />
                 </div>
                 {errors.email && (
@@ -71,11 +72,18 @@ export default function ForgotPassword() {
               <div>
                 <button
                   type="submit"
-                  className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+                  style={{
+                    backgroundColor: "#00CA5A",
+                  }}
                 >
                   Reset
                 </button>
-                {resetPassword.isLoading && <CircularProgress />}
+                {resetPassword.isLoading && (
+                  <div className="mt-4 justify-center flex">
+                    <CircularProgress />
+                  </div>
+                )}
               </div>
             </form>
             {resetPassword.error && (

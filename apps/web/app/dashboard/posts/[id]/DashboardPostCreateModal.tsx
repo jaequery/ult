@@ -3,7 +3,7 @@ import { PostCreateDto, PostCreateDtoType } from "@server/post/post.dto";
 import { Dialog } from "@web/components/Dialog";
 import { useTrpc } from "@web/contexts/TrpcContext";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 type DashboardPostCreateModalProps = {
@@ -14,11 +14,13 @@ export default function DashboardPostCreateModal(
 ) {
   const { trpc } = useTrpc();
   const createPost = trpc.postRouter.create.useMutation();
+  const categories = trpc.categoryRouter.findAll.useQuery({});
   const router = useRouter();
   const {
     register,
     formState: { errors },
     handleSubmit,
+    control
   } = useForm<PostCreateDtoType>({
     resolver: zodResolver(PostCreateDto),
   });
@@ -88,6 +90,45 @@ export default function DashboardPostCreateModal(
                   </p>
                 )}
               </div>
+
+              <div>
+                <label
+                  htmlFor="categoryId"
+                  className="block text-sm mb-2 dark:text-white"
+                >
+                  Category *
+                </label>
+                <div className="relative">
+                  <Controller
+                    name="categoryId"
+                    control={control}
+                    render={({ field }) => (
+                      <select
+                        className="py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
+                        {...field}
+                        onChange={(e) => {
+                          // Convert the string value to a number before passing it to the field.onChange
+                          const value = parseInt(e.target.value);
+                          field.onChange(isNaN(value) ? "" : value); // Handle potential NaN values gracefully
+                        }}
+                      >
+                        <option>Choose a category</option>
+                        {categories?.data?.records?.map((category) => (
+                          <option key={category.id} value={category.id}>
+                            {category.name}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  />
+                </div>
+                {errors.categoryId && (
+                  <p className="mt-2 pl-2 text-sm text-red-600">
+                    {errors.categoryId.message}
+                  </p>
+                )}
+              </div>
+
               <button
                 type="submit"
                 disabled={createPost.isLoading}

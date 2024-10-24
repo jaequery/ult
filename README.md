@@ -1,9 +1,6 @@
 <p align="center">
     <h1 align="center">Ult</h1>
 </p>
-<p align="center">
-    <em>Ult: Uniting Nest.js + Prisma + tRPC, Next.js + Tailwind for the ultimate streamlined web development.</em>
-</p>
 
 ![image](https://github.com/jaequery/ult/assets/794507/280b360d-0b75-4a0a-9325-c7c87358a6cb)
 
@@ -62,14 +59,15 @@ pnpm install
 docker-compose up -d
 ```
 
-2. Create .env for server
+2. Create ./apps/server/.env.development
 
 ```
 cd ./apps/server
-cp .env.example .env
+cp .env.example .env.development
 ```
 
-Database should work out of the box with the default credentials for local development. But for email, you will need a valid SMTP account, which you can get one for free at brevo.com.
+Database should work out of the box with the default credentials for local development.
+But for email, you will need a valid SMTP account. You can get it free at brevo.com.
 
 1. Run db migration to create the database tables
 
@@ -77,7 +75,15 @@ Database should work out of the box with the default credentials for local devel
 pnpm db:migrate
 ```
 
-2. Run dev environment
+4. Run the db seed to populate the database with initial data
+
+```sh
+pnpm db:seed
+```
+
+###  Running development environment
+
+Use the following command to run both Nest and Next server.
 
 ```sh
 pnpm dev
@@ -85,11 +91,6 @@ pnpm dev
 
 This will start the Next.js server on http://localhost:3000 and the Nest.js on http://localhost:3001.
 
-3. Run the db seed to populate the database with initial admin user account. You can find the seed file at ./apps/server/prisma/seed.ts.
-
-```sh
-pnpm db:seed
-```
 
 ###  Tests
 

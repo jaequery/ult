@@ -45,6 +45,7 @@ export default function DashboardUserView() {
         email: user.data.email,
         firstName: user.data.firstName || "",
         lastName: user.data.lastName || "",
+        username: user.data.username || "",
         phone: user.data.phone || "",
         gender: user.data.gender || "",
         bio: user.data.bio || "",
@@ -205,6 +206,29 @@ export default function DashboardUserView() {
                 htmlFor="af-account-email"
                 className="inline-block text-sm text-gray-800 mt-2.5 dark:text-gray-200"
               >
+                Username
+              </label>{" "}
+              <span className="text-sm text-gray-800 dark:text-gray-600"></span>
+            </div>
+            {/* End Col */}
+            <div className="sm:col-span-9">
+              <input
+                type="text"
+                {...register("username")}
+                className="py-2 px-3 pe-11 block w-full border-gray-200 shadow-sm text-sm rounded-lg focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
+                placeholder="Some fun username"
+              />
+              {errors.username && (
+                <p className="mt-2 pl-2 text-sm text-red-600">
+                  {errors.username.message}
+                </p>
+              )}
+            </div>
+            <div className="sm:col-span-3">
+              <label
+                htmlFor="af-account-email"
+                className="inline-block text-sm text-gray-800 mt-2.5 dark:text-gray-200"
+              >
                 Email
               </label>{" "}
               <span className="text-sm text-gray-800 dark:text-gray-600">
@@ -339,16 +363,16 @@ export default function DashboardUserView() {
               )}
             </div>
             {/* End Col */}
-            <div className="sm:col-span-3">
+            {/* <div className="sm:col-span-3">
               <label
                 htmlFor="af-account-gender-checkbox"
                 className="inline-block text-sm text-gray-800 mt-2.5 dark:text-gray-200"
               >
                 Gender
               </label>
-            </div>
+            </div> */}
             {/* End Col */}
-            <div className="sm:col-span-9">
+            {/* <div className="sm:col-span-9">
               <div className="sm:flex">
                 <select
                   {...register("gender")}
@@ -362,7 +386,7 @@ export default function DashboardUserView() {
                   <option value="others">Others</option>
                 </select>
               </div>
-            </div>
+            </div> */}
             {/* End Col */}
             <div className="sm:col-span-3">
               <label

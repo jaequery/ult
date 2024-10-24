@@ -4,12 +4,14 @@ import * as Joi from 'joi';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { OpenaiModule } from './openai/openai.module';
 import { PrismaService } from './prisma/prisma.service';
 import { TrpcModule } from './trpc/trpc.module';
 import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
+    OpenaiModule,
     ConfigModule.forRoot({
       isGlobal: true,
       expandVariables: true,
@@ -39,11 +41,23 @@ import { UserModule } from './user/user.module';
         MAIL_SMTP_USERNAME: Joi.string().default('user@gmail.com'),
         MAIL_SMTP_PASSWORD: Joi.string().default('password'),
         MAIL_DEFAULT_FROM: Joi.string().default('user@gmail.com'),
+
+        // Google SSO config
+        GOOGLE_CLIENT_ID: Joi.string(),
+        GOOGLE_CLIENT_SECRET: Joi.string(),
+        GOOGLE_CALLBACK_URL: Joi.string(),
+
+        // OpenAI config
+        OPENAI_API_KEY: Joi.string(),
+
+        // Pinecone config
+        PINECONE_API_KEY: Joi.string(),
       }),
     }),
     TrpcModule,
-    AuthModule,
     UserModule,
+    AuthModule,
+    OpenaiModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

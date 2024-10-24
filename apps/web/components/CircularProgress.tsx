@@ -1,6 +1,6 @@
 export const CircularProgress = () => {
   return (
-    <div className="grid w-full place-items-center overflow-x-scroll rounded-lg my-4 lg:overflow-visible">
+    <div className="">
       <div className="flex gap-8">
         <svg
           className="text-gray-300 animate-spin"

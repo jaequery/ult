@@ -4,7 +4,7 @@ services:
     restart: always
     env_file:
       - .env.production.server
-    ports:
+    expose:
       - 5432
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
@@ -18,7 +18,7 @@ services:
     environment:
       - VIRTUAL_PORT=3001
       - VIRTUAL_HOST=ult-api.jaequery.dev
-    ports:
+    expose:
       - 3001
     networks:
       - app-network
@@ -34,7 +34,7 @@ services:
     environment:
       - VIRTUAL_PORT=3000
       - VIRTUAL_HOST=ult.jaequery.dev
-    ports:
+    expose:
       - 3000
     networks:
       - app-network
