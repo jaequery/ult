@@ -14,8 +14,8 @@ jobs:
       packages: write
 
     env:
-      SSH_HOST: ubuntu@x.x.x.x
-      WORKING_DIR: /home/ubuntu/startupreviews
+      SSH_HOST: ${{ secrets.SSH_SERVER }}
+      WORKING_DIR: ${{ secrets.SSH_WORKING_DIR }}
       DOCKER_COMPOSE_FILE: docker-compose.prod.yml
 
     steps:
@@ -42,7 +42,7 @@ jobs:
     - name: Set up SSH agent
       uses: webfactory/ssh-agent@v0.5.3
       with:
-        ssh-private-key: ${{ secrets.SSH_KEY }}
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
     - name: Copy Docker Compose file
       run: |
