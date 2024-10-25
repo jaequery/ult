@@ -1,18 +1,16 @@
 services:
   db:
-    image: postgres:16-alpine
+    image: postgres:15-alpine
     restart: always
-    environment:
-      NODE_ENV: development
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+    env_file:
+      - ./apps/server/.env.development
     ports:
       - 5432:5432
     volumes:
-      - ./docker/volumes/postgres-data:/var/lib/postgresql/data
+      - ./postgres-data:/var/lib/postgresql/data
     networks:
       - app-network
+
 networks:
   app-network:
     driver: bridge

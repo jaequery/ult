@@ -1,15 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  PostCategories,
-  PostUpdateDto,
-  PostUpdateDtoType,
-} from "@server/post/post.dto";
-import { Uploader } from "@web/components/Uploader";
+import { PostUpdateDto, PostUpdateDtoType } from "@server/post/post.dto";
+import { Uploader } from "@web/components/forms/Uploader";
 import { useTrpc } from "@web/contexts/TrpcContext";
 import dynamic from "next/dynamic";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import "react-quill/dist/quill.snow.css";
@@ -18,7 +14,13 @@ import { toast } from "react-toastify";
 export default function DashboardPostView() {
   const { trpc } = useTrpc();
   const params = useParams();
-  const post = trpc.postRouter.findById.useQuery({ id: Number(params.id) });
+  const router = useRouter();
+  const categories = trpc.categoryRouter.findAll.useQuery({});
+  const deletePost = trpc.postRouter.delete.useMutation();
+  const post = trpc.postRouter.findById.useQuery(
+    { id: Number(params.id) },
+    { refetchOnWindowFocus: false }
+  );
   const updatePost = trpc.postRouter.update.useMutation();
   const [showImageUrlUploader, setShowImageUrlUploader] = useState(false);
   const {
@@ -41,7 +43,7 @@ export default function DashboardPostView() {
       const formData = {
         id: post.data.id,
         title: post.data.title,
-        category: post.data.category || "General",
+        categoryId: post.data.categoryId || 0,
         teaser: post.data.teaser || "",
         description: post.data.description || "",
         imageUrl: post.data.imageUrl || "",
@@ -91,11 +93,13 @@ export default function DashboardPostView() {
             <div className="sm:col-span-9">
               <div className="flex items-center gap-5">
                 {data?.imageUrl && (
-                  <img
-                    className="inline-block size-16 rounded-full ring-2 ring-white dark:ring-gray-800"
-                    src={data?.imageUrl}
-                    alt="Image"
-                  />
+                  <a href={data?.imageUrl} target="_blank">
+                    <img
+                      className="inline-block size-16 ring-2 ring-white dark:ring-gray-800"
+                      src={data?.imageUrl}
+                      alt="Image"
+                    />
+                  </a>
                 )}
                 <div className="flex gap-x-2">
                   <div>
@@ -130,7 +134,9 @@ export default function DashboardPostView() {
                         onClose={() => {
                           setShowImageUrlUploader(false);
                         }}
-                        onUpload={(file) => {
+                        onUpload={(file) => {}}
+                        onComplete={(file) => {
+                          console.log("completed file", file);
                           setValue("imageUrl", file.url);
                           setShowImageUrlUploader(false);
                         }}
@@ -180,38 +186,43 @@ export default function DashboardPostView() {
             {/* End Col */}
             <div className="sm:col-span-9">
               <Controller
-                name="category"
+                name="categoryId"
                 control={control}
                 render={({ field }) => (
                   <select
                     className="py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
                     {...field}
+                    onChange={(e) => {
+                      // Convert the string value to a number before passing it to the field.onChange
+                      const value = parseInt(e.target.value);
+                      field.onChange(isNaN(value) ? "" : value); // Handle potential NaN values gracefully
+                    }}
                   >
-                    {Object.values(PostCategories).map((category) => (
-                      <option key={category} value={category}>
-                        {category}
+                    {categories?.data?.records?.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
                       </option>
                     ))}
                   </select>
                 )}
               />
-              {errors.category && (
+              {errors.categoryId && (
                 <p className="mt-2 pl-2 text-sm text-red-600">
-                  {errors.category.message}
+                  {errors.categoryId.message}
                 </p>
               )}
             </div>
             {/* End Col */}
-            <div className="sm:col-span-3">
+            {/* <div className="sm:col-span-3">
               <label
                 htmlFor="teaser"
                 className="inline-block text-sm text-gray-800 mt-2.5 dark:text-gray-200"
               >
                 Teaser
               </label>
-            </div>
+            </div> */}
             {/* End Col */}
-            <div className="sm:col-span-9">
+            {/* <div className="sm:col-span-9">
               <div className="space-y-2">
                 <textarea
                   {...register("teaser")}
@@ -224,7 +235,7 @@ export default function DashboardPostView() {
                   <p className="mt-2 pl-2 text-sm text-red-600"></p>
                 )}
               </div>
-            </div>
+            </div> */}
             {/* End Col */}
             <div className="sm:col-span-3">
               <label
@@ -247,7 +258,27 @@ export default function DashboardPostView() {
           </div>
 
           {/* End Grid */}
-          <div className="mt-5 flex justify-end gap-x-2">
+          <div className="mt-5 flex gap-x-2 justify-between">
+            <button
+              className="text-red-500 font-bold text-xs "
+              data-id={20}
+              type="submit"
+              disabled={deletePost.isLoading}
+              onClick={async (e) => {
+                e.preventDefault();
+                if (post?.data?.id) {
+                  const c = confirm("Are you sure?");
+                  if (c) {
+                    await deletePost.mutateAsync({
+                      id: [post.data.id],
+                    });
+                    router.push(`/dashboard/posts`);
+                  }
+                }
+              }}
+            >
+              삭재
+            </button>
             <button
               type="submit"
               disabled={updatePost.isLoading}

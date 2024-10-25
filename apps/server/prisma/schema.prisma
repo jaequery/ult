@@ -46,7 +46,6 @@ model Post {
   id            Int            @id @default(autoincrement())
   userId        Int
   title         String
-  category      String?
   teaser        String?
   description   String?
   imageUrl      String?
@@ -57,6 +56,9 @@ model Post {
   user          User           @relation("UserPosts", fields: [userId], references: [id])
   postComments  PostComment[]
   postReactions PostReaction[]
+  category      Category?      @relation(fields: [categoryId], references: [id])
+  categoryId    Int?
+  viewCount     Int?           @default(0)
 }
 
 model PostComment {
@@ -90,4 +92,17 @@ model Role {
   id    Int    @id @default(autoincrement())
   name  String @unique
   users User[] @relation("UserRoles")
+}
+
+model Category {
+  id             Int       @id @default(autoincrement())
+  parentId       Int       @default(0)
+  name           String    @unique
+  sortOrder      Int       @default(0)
+  createdAt      DateTime  @default(now())
+  posts          Post[]
+  template       String?
+  adminWriteOnly Boolean   @default(true)
+  singlePostOnly Boolean   @default(false)
+  lastPostedAt   DateTime?
 }

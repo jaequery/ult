@@ -2,12 +2,14 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  getUsername,
   PostCommentCreateDto,
   PostCommentCreateDtoType,
 } from "@server/post/post.dto";
 import { PostById } from "@shared/interfaces";
 import { useUserContext } from "@web/app/user/UserContext";
 import { useTrpc } from "@web/contexts/TrpcContext";
+import { format } from "date-fns";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -21,7 +23,7 @@ export default function PostComments({
   const { trpc } = useTrpc();
   const { currentUser } = useUserContext();
   const createPostComment = trpc.postRouter.createComment.useMutation();
-  const removePostComment = trpc.postRouter.removeComment.useMutation();
+  const deletePostComment = trpc.postRouter.deleteComment.useMutation();
   const {
     register,
     formState: { errors },
@@ -33,10 +35,13 @@ export default function PostComments({
 
   return (
     <>
-      <div className="w-full mx-auto px-8 mt-24">
+      <div className="w-full mx-auto rounded-lg border border-gray-200 p-4 bg-gray-50">
         {/* Reply to section */}
         <form
           onSubmit={handleSubmit(async (data) => {
+            if (!currentUser) {
+              toast("Please login");
+            }
             try {
               const postComment = await createPostComment.mutateAsync(data);
               if (onChange && postComment) {
@@ -53,71 +58,65 @@ export default function PostComments({
               valueAsNumber: true,
             })}
           />
-          <div className="flex items-center space-x-4 mb-4">
-            <img
-              className="w-10 h-10 rounded-full"
-              src={
-                currentUser?.profilePicUrl ||
-                "https://avataaars.io/?accessoriesType=Wayfarers&avatarStyle=Circle&clotheColor=Red&clotheType=CollarSweater&eyeType=Surprised&eyebrowType=RaisedExcitedNatural&facialHairColor=BlondeGolden&facialHairType=BeardMedium&hairColor=PastelPink&hatColor=Blue02&mouthType=Default&skinColor=Brown&topType=ShortHairShortCurly"
-              }
-              alt="Avatar"
-            />
-            <input
-              type="text"
+          <div className="flex items-stretch space-x-4">
+            <textarea
               {...register("message")}
-              className="w-full border-none focus:border-0 focus:outline-none focus:ring-0 focus:ring-offset-0"
-              placeholder="Leave a comment..."
+              className="flex-grow h-14 px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-transparent resize-none"
+              placeholder={
+                currentUser ? "Write a reply..." : "Please login"
+              }
+              disabled={!currentUser}
+              onClick={() => {
+                if (!currentUser) {
+                  toast("Please login", { type: "warning" });
+                }
+              }}
             />
-            <span className="flex-grow" />
+          </div>
+          <div className="flex justify-end mt-4">
             <button
               type="submit"
-              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+              onClick={() => {
+                if (!currentUser) {
+                  alert("Please login");
+                }
+              }}
+              className="w-32 px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-2"
             >
-              Comment
+              Write a reply
             </button>
           </div>
         </form>
         {/* Divider */}
-        <div className="border-t border-gray-300 my-4" />
         <div className="text-red-400 text-left">
           {errors.message && (
             <p className="text-sm">{errors.message.message}</p>
           )}
         </div>
         {/* Replies Section */}
-        <h3 className="text-xl text-left my-12">
-          {post?.postComments?.length || 0} Comments
-        </h3>
-        {!post?.postComments ||
-          (post?.postComments?.length === 0 && (
-            <div className="text-left">Be the first to comment</div>
-          ))}
         {post?.postComments?.map((postComment) => (
-          <div key={postComment.id} className="mb-8">
+          <div key={postComment.id} className="mt-6">
             <div className="flex items-start space-x-1 gap-2">
-              <img
-                className="w-8 h-8 rounded-full"
-                src={
-                  postComment.user.profilePicUrl ||
-                  "https://avataaars.io/?accessoriesType=Wayfarers&avatarStyle=Circle&clotheColor=Red&clotheType=CollarSweater&eyeType=Surprised&eyebrowType=RaisedExcitedNatural&facialHairColor=BlondeGolden&facialHairType=BeardMedium&hairColor=PastelPink&hatColor=Blue02&mouthType=Default&skinColor=Brown&topType=ShortHairShortCurly"
-                }
-                alt="Avatar"
-              />
               <div className="flex flex-col text-left">
-                <span className="font-medium text-gray-900">
-                  {postComment.user.firstName} {postComment.user.lastName}
+                <span className=" text-gray-900 text-sm">
+                {getUsername(postComment.user)}
+                  <span className="ml-4 text-sm">{postComment.message}</span>
                 </span>
-                <p className="text-gray-700 mt-1">{postComment.message}</p>
-                <div className="flex items-center text-sm text-gray-500 space-x-2 mt-2">
-                  <time dateTime="2023-03-29">Mar 29</time>
+                <div className="flex items-center text-xs text-gray-500 space-x-2 mt-2">
+                  <time dateTime="2023-03-29">
+                    {format(postComment.createdAt, "yyyy.MM.dd hh:mm a")}
+                  </time>
                   {/* <button className="hover:text-gray-700">Report</button> */}
-                  {postComment.userId === currentUser?.id && (
+                  <span className="flex-grow" />
+                </div>
+                {postComment.userId === currentUser?.id && (
+                  <div className="">
                     <button
-                      className="hover:text-gray-700"
+                      className="text-red-500 font-bold text-xs"
                       onClick={async () => {
                         const c = confirm("Are you sure?");
                         if (c) {
-                          await removePostComment.mutateAsync({
+                          await deletePostComment.mutateAsync({
                             id: postComment.id,
                           });
                           toast("Comment deleted");
@@ -127,9 +126,8 @@ export default function PostComments({
                     >
                       Delete
                     </button>
-                  )}
-                  <span className="flex-grow" />
-                </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

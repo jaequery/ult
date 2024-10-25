@@ -50,7 +50,7 @@ export default function DashboardUserList() {
                       Users
                     </h2>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      Add users, edit and more.
+                      Add users, edit, and manage <Link className="text-orange-600" href="/dashboard/roles">roles</Link>
                     </p>
                   </div>
                   <div>

@@ -1,10 +1,10 @@
-import AppLayout from "@web/components/AppLayout";
+import PlainLayout from "@web/components/home/layouts/PlainLayout";
 import VerifyEmail from "./VerifyEmail";
 
 export default function VerifyEmailPage() {
   return (
-    <AppLayout>
+    <PlainLayout>
       <VerifyEmail />
-    </AppLayout>
+    </PlainLayout>
   );
 }

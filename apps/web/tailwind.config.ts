@@ -10,8 +10,14 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      backgroundImage: {},
-    },
+      colors: {
+        beige: {
+          200: '#f5f5dc',
+          300: '#ede9e0',
+          500: '#d2b48c'
+        }
+      }
+    }
   },
   plugins: [require("@tailwindcss/forms"), require("preline/plugin")],
 };

@@ -1,9 +1,11 @@
-import { INestApplication, Injectable } from '@nestjs/common';
-import { PostRouter } from '@server/post/post.router';
-import { RoleRouter } from '@server/role/role.router';
-import { TrpcService, createContext } from '@server/trpc/trpc.service';
-import { UserRouter } from '@server/user/user.router';
-import * as trpcExpress from '@trpc/server/adapters/express';
+import { INestApplication, Injectable } from "@nestjs/common";
+import { CategoryRouter } from "@server/category/category.router";
+import { PostRouter } from "@server/post/post.router";
+import { RoleRouter } from "@server/role/role.router";
+import { TrpcService, createContext } from "@server/trpc/trpc.service";
+import { UserRouter } from "@server/user/user.router";
+import * as trpcExpress from "@trpc/server/adapters/express";
+import { MagazineRouter } from "../magazine/magazine.router";
 
 @Injectable()
 export class TrpcRouter {
@@ -12,12 +14,16 @@ export class TrpcRouter {
     private readonly userRouter: UserRouter,
     private readonly postRouter: PostRouter,
     private readonly roleRouter: RoleRouter,
+    private readonly categoryRouter: CategoryRouter,
+    private readonly magazineRouter: MagazineRouter
   ) {}
 
   appRouter = this.trpcService.trpc.router({
     ...this.userRouter.apply(),
     ...this.postRouter.apply(),
     ...this.roleRouter.apply(),
+    ...this.categoryRouter.apply(),
+    ...this.magazineRouter.apply(),
   });
 
   async applyMiddleware(app: INestApplication) {
@@ -26,7 +32,7 @@ export class TrpcRouter {
       trpcExpress.createExpressMiddleware({
         router: this.appRouter,
         createContext,
-      }),
+      })
     );
   }
 }

@@ -23,8 +23,8 @@ export default function DashboardPostList() {
     page,
     perPage,
   });
-  // remove post
-  const postRemove = trpc.postRouter.remove.useMutation();
+  // delete post
+  const postDelete = trpc.postRouter.delete.useMutation();
   // bulk delete functionality
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const togglePostSelection = (postId: number) => {
@@ -45,8 +45,8 @@ export default function DashboardPostList() {
             <div className="min-w-full inline-block align-middle">
               <div className="bg-white  border-gray-200 rounded-xl shadow-sm overflow-hidden dark:bg-slate-900 dark:border-gray-700">
                 {/* Header */}
-                <div className="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-gray-700">
-                  <div>
+                <div className="px-0 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-gray-700">
+                  <div className="pl-6">
                     <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
                       Posts
                     </h2>
@@ -62,19 +62,19 @@ export default function DashboardPostList() {
                           href="#"
                           onClick={async () => {
                             const c = confirm(
-                              "Are you sure you want to remove them?"
+                              "Are you sure you want to delete them?"
                             );
                             if (c && selectedIds) {
-                              await postRemove.mutateAsync({
+                              await postDelete.mutateAsync({
                                 id: selectedIds,
                               });
                               setSelectedIds([]);
-                              toast("Removed");
+                              toast("Deleted");
                               postList.refetch();
                             }
                           }}
                         >
-                          Remove
+                          Delete
                         </a>
                       )}
                       <Link
@@ -118,8 +118,7 @@ export default function DashboardPostList() {
                           <input
                             type="checkbox"
                             checked={
-                              postList?.data?.records &&
-                              postList?.data?.records?.length > 0 &&
+                              selectedIds.length > 0 &&
                               selectedIds.length ===
                                 postList?.data?.records?.length
                             }
@@ -164,6 +163,13 @@ export default function DashboardPostList() {
                       <th scope="col" className="px-6 py-3 text-start">
                         <div className="flex items-center gap-x-2">
                           <span className="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-gray-200">
+                            Category
+                          </span>
+                        </div>
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-start">
+                        <div className="flex items-center gap-x-2">
+                          <span className="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-gray-200">
                             Status
                           </span>
                         </div>
@@ -179,28 +185,6 @@ export default function DashboardPostList() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                    {postList?.isLoading && (
-                      <tr>
-                        <td colSpan={100} className="text-center">
-                          <div className="py-4">
-                            <div className="flex items-center justify-center">
-                              <div className="w-12 h-12 border-t-2 border-b-2 border-gray-900 rounded-full animate-spin"></div>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    )}
-                    {postList?.data?.records?.length === 0 && (
-                      <tr>
-                        <td colSpan={100} className="text-center">
-                          <div className="py-4">
-                            <div className="flex items-center justify-center text-sm text-gray-500">
-                              No posts found
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    )}
                     {postList?.data?.records?.map((post) => (
                       <tr key={post.id}>
                         <td className="size-px whitespace-nowrap">
@@ -233,11 +217,19 @@ export default function DashboardPostList() {
                             </div>
                           </div>
                         </td>
-                        <td className="h-px w-72 whitespace-nowrap">
+                        <td className="h-px w-36 whitespace-nowrap">
                           <div className="px-6 py-3">
                             <span className="block text-sm font-semibold text-gray-800 dark:text-gray-200"></span>
                             <span className="block text-sm text-gray-500">
                               {post.title}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="h-px w-36 whitespace-nowrap">
+                          <div className="px-6 py-3">
+                            <span className="block text-sm font-semibold text-gray-800 dark:text-gray-200"></span>
+                            <span className="block text-sm text-gray-500">
+                              {post.category?.name}
                             </span>
                           </div>
                         </td>

@@ -110,7 +110,7 @@ export default function DashboardRoleList() {
                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                   <thead className="bg-gray-50 dark:bg-slate-800">
                     <tr>
-                      <th scope="col" className="ps-6 py-3">
+                      <th scope="col" className="w-[10%] ps-6 py-3">
                         <label
                           htmlFor="hs-at-with-checkboxes-main"
                           className="flex"
@@ -142,7 +142,7 @@ export default function DashboardRoleList() {
                           <span className="sr-only">Checkbox</span>
                         </label>
                       </th>
-                      <th scope="col">
+                      <th scope="col" className="w-[80%]">
                         <div className="flex gap-x-2">
                           <span className="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-gray-200">
                             Role

@@ -1,6 +1,6 @@
 // you can import this from any of the apps
 // eg; import { SomeInterface } from '@shared/interfaces';
-import { Post, PostComment, PostReaction, Role, User } from "@prisma/client";
+import { Post, PostComment, PostReaction, Role, User, Category } from "@prisma/client";
 
 export interface UserById extends User {
   roles?: Role[];
@@ -21,6 +21,8 @@ export interface PostCommentWithUser extends PostComment {
 }
 
 export interface PostById extends Post {
-  postComments?: PostCommentWithUser[];
-  postReactions?: PostReaction[];
+  user: UserById;
+  category: Category | null;
+  postReactions: PostReaction[];
+  postComments: PostCommentWithUser[];
 }

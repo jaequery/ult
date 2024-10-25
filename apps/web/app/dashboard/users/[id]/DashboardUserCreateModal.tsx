@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserCreateDto, UserCreateDtoType } from "@server/user/user.dto";
-import { Dialog } from "@web/components/Dialog";
+import { Dialog } from "@web/components/dashboard/Dialog";
 import { useTrpc } from "@web/contexts/TrpcContext";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";

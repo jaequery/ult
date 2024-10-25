@@ -12,6 +12,7 @@ export const UserSignupDto = z.object({
   password: z.string().min(8, 'Password must be at least 8 characters'),
   firstName: z.string(),
   lastName: z.string(),
+  phone: z.string().optional(),
 });
 export type UserSignupDtoType = z.infer<typeof UserSignupDto>;
 
@@ -32,6 +33,7 @@ export const UserUpdateDto = z.object({
   id: z.number(),
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
+  username: z.string(),
   roles: z.array(z.nativeEnum(Roles)).optional(),
   email: z.string().email(),
   password: z

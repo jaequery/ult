@@ -1,10 +1,10 @@
-import AppLayout from "@web/components/AppLayout";
+import HomeLayout from "@web/components/home/layouts/HomeLayout";
 import PostList from "./PostList";
 
 export default function PostListPage() {
   return (
-    <AppLayout>
-      <PostList />
-    </AppLayout>
+    <HomeLayout>
+      <PostList showPagination={true} />
+    </HomeLayout>
   );
 }

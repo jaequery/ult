@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { PrismaClient } from '@prisma/client';
 import { AppModule } from '@server/app.module';
+import { CategoryService } from '@server/category/category.service';
 import { UserService } from '@server/user/user.service';
 import { Roles } from '@shared/interfaces';
 
@@ -9,6 +10,7 @@ const prisma = new PrismaClient();
 async function main() {
   const app = await NestFactory.createApplicationContext(AppModule);
   const userService = app.get(UserService);
+  const categoryService = app.get(CategoryService);
 
   // setup roles
   const adminRole = await prisma.role.create({
@@ -43,6 +45,14 @@ async function main() {
   console.log(
     `Created new user: ${normalUser.user.email} (ID: ${normalUser.user.id})`,
   );
+
+  // setup categories
+  const categories = ['News', 'Events', 'Message Board'];
+  for (const name of categories) {
+    await categoryService.create({
+      name,
+    });
+  }
 
   // Add more seeding logic as needed
 }

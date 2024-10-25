@@ -5,12 +5,12 @@ import { TrpcService } from '@server/trpc/trpc.service';
 import { Roles } from '@shared/interfaces';
 import {
   PostCommentCreateDto,
-  PostCommentRemoveDto,
+  PostCommentRemoveDto as PostCommentDeleteDto,
   PostCreateDto,
   PostFindAllDto,
   PostFindByIdDto,
   PostReactionCreateDto,
-  PostRemoveDto,
+  PostRemoveDto as PostDeleteDto,
   PostUpdateDto,
 } from './post.dto';
 
@@ -44,13 +44,13 @@ export class PostRouter {
             }
           }),
 
-        // remove post
-        remove: this.trpcService
+        // delete post
+        delete: this.trpcService
           .protectedProcedure([Roles.Admin])
-          .input(PostRemoveDto)
+          .input(PostDeleteDto)
           .mutation(async ({ input, ctx }) => {
             if (ctx.user) {
-              return this.postService.remove(input.id, ctx.user);
+              return this.postService.delete(input.id, ctx.user);
             }
           }),
 
@@ -90,20 +90,15 @@ export class PostRouter {
             }
           }),
 
-        // add post comment
-        removeComment: this.trpcService
+        // delete post comment
+        deleteComment: this.trpcService
           .protectedProcedure()
-          .input(PostCommentRemoveDto)
+          .input(PostCommentDeleteDto)
           .mutation(async ({ input, ctx }) => {
             if (ctx.user) {
-              return this.postService.removeComment(input, ctx.user);
+              return this.postService.deleteComment(input, ctx.user);
             }
           }),
-
-        // add post comment
-        getCategories: this.trpcService.protectedProcedure().query(async () => {
-          return this.postService.getCategories();
-        }),
       }),
     };
   }

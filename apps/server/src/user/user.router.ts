@@ -53,13 +53,13 @@ export class UserRouter {
         update: this.trpcService
           .protectedProcedure()
           .input(UserUpdateDto)
-          .mutation(async ({ input }) => {
-            return this.userService.update(input);
+          .mutation(async ({ input, ctx }) => {
+            return this.userService.update(input, ctx.user);
           }),
 
         // remove user
         remove: this.trpcService
-          .protectedProcedure([Roles.Admin])
+          .protectedProcedure([Roles.Admin, Roles.User])
           .input(UserRemoveDto)
           .mutation(async ({ input, ctx }) => {
             return this.userService.remove(input.id, ctx.user);
@@ -83,7 +83,7 @@ export class UserRouter {
 
         // get user by id
         verifyAccessToken: this.trpcService
-          .protectedProcedure()
+          .publicProcedure()
           .input(UserVerifyAccessTokenDto)
           .query(async ({ input }) => {
             return this.userService.verifyAccessToken(input.accessToken);
@@ -91,7 +91,7 @@ export class UserRouter {
 
         // reset user password
         resetPassword: this.trpcService
-          .protectedProcedure()
+          .publicProcedure()
           .input(UserResetPasswordDto)
           .mutation(async ({ input }) => {
             return this.userService.resetPassword({ email: input.email });
