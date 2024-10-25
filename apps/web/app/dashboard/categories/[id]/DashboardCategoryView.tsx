@@ -5,7 +5,7 @@ import {
   CategoryUpdateDto,
   CategoryUpdateDtoType,
 } from "@server/category/category.dto";
-import { Uploader } from "@web/components/forms/Uploader";
+import { Uploader } from "@web/components/common/forms/Uploader";
 import { useTrpc } from "@web/contexts/TrpcContext";
 import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";

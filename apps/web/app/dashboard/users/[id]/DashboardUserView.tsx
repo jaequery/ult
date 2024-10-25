@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { UserUpdateDto, UserUpdateDtoType } from "@server/user/user.dto";
 import { Roles } from "@shared/interfaces";
 import { useUserContext } from "@web/app/user/UserContext";
-import { Uploader } from "@web/components/forms/Uploader";
+import { Uploader } from "@web/components/common/forms/Uploader";
 import { useTrpc } from "@web/contexts/TrpcContext";
 import _ from "lodash";
 import { useParams } from "next/navigation";

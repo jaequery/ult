@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserCreateDtoType, UserSignupDto } from "@server/user/user.dto";
-import { CircularProgress } from "@web/components/preloaders/CircularProgress";
+import { CircularProgress } from "@web/components/common/preloaders/CircularProgress";
 import { useTrpc } from "@web/contexts/TrpcContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

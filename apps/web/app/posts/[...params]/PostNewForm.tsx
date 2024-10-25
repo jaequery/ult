@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PostCreateDto, PostCreateDtoType } from "@server/post/post.dto";
 import { PostById } from "@shared/interfaces";
-import { Uploader } from "@web/components/forms/Uploader";
+import { Uploader } from "@web/components/common/forms/Uploader";
 import { useTrpc } from "@web/contexts/TrpcContext";
 import dynamic from "next/dynamic";
 import Link from "next/link";

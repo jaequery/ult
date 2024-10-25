@@ -1,9 +1,9 @@
 "use client";
 
 import { Roles } from "@shared/interfaces";
-import WithAuth from "@web/components/WithAuth";
 import _ from "lodash";
 import { useUserContext } from "../user/UserContext";
+import WithAuth from "@web/components/common/auth/WithAuth";
 
 const Dashboard = () => {
   const { currentUser } = useUserContext();

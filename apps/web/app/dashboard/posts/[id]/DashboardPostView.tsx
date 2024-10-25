@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PostUpdateDto, PostUpdateDtoType } from "@server/post/post.dto";
-import { Uploader } from "@web/components/forms/Uploader";
+import { Uploader } from "@web/components/common/forms/Uploader";
 import { useTrpc } from "@web/contexts/TrpcContext";
 import dynamic from "next/dynamic";
 import { useParams, useRouter } from "next/navigation";
