@@ -45,7 +45,7 @@
     "next-query-params": "^5.0.0",
     "pdfjs-dist": "^4.0.379",
     "preline": "^2.0.3",
-    "quill": "^2.0.0",
+    "quill": "^2.0.1",
     "react": "^18",
     "react-aria": "^3.32.1",
     "react-dom": "^18",
