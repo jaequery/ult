@@ -1,12 +1,10 @@
-import DashboardLayout from "../../DashboardLayout";
+import DashboardSidebar from "../../DashboardSidebar";
 import DashboardRoleView from "./DashboardRoleView";
 
 export default function DashboardRoleViewPage() {
   return (
-    <>
-      <DashboardLayout>
-        <DashboardRoleView />
-      </DashboardLayout>
-    </>
+    <DashboardSidebar>
+      <DashboardRoleView />
+    </DashboardSidebar>
   );
 }

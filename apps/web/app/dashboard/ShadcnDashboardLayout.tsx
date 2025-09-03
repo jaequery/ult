@@ -151,14 +151,13 @@ const ShadcnDashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => 
           </nav>
         </div>
 
-        <div className="flex h-full">
+        <div className="flex">
           {/* Sidebar */}
           <aside
             className={cn(
-              "fixed inset-y-0 z-50 flex w-64 flex-col lg:relative lg:inset-y-auto lg:z-0",
-              "transform transition-transform duration-200 ease-in-out lg:translate-x-0",
-              sidebarOpen ? "translate-x-0" : "-translate-x-full",
-              "lg:block"
+              "fixed inset-y-0 top-16 z-50 w-64 lg:sticky lg:top-16 lg:z-30 lg:block lg:h-[calc(100vh-4rem)]",
+              "transform transition-transform duration-200 ease-in-out lg:transform-none",
+              sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
             )}
           >
             {/* Overlay for mobile */}
@@ -170,7 +169,7 @@ const ShadcnDashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => 
             )}
 
             {/* Sidebar content */}
-            <div className="relative z-50 flex h-full w-full flex-col border-r bg-card">
+            <div className="flex h-full w-full flex-col border-r bg-card">
               <div className="flex h-16 items-center border-b px-6 lg:hidden">
                 <Link href="/dashboard" className="flex items-center space-x-2">
                   <span className="text-xl font-bold">Ult</span>
@@ -211,8 +210,8 @@ const ShadcnDashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => 
           </aside>
 
           {/* Main content */}
-          <main className="flex-1 overflow-y-auto">
-            <div className="container mx-auto p-6">
+          <main className="flex-1 overflow-y-auto bg-muted/10">
+            <div className="p-6 lg:p-8 max-w-full">
               {children}
             </div>
           </main>
