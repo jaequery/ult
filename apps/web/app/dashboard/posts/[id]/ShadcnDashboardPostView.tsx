@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PostUpdateDto, PostUpdateDtoType } from "@server/post/post.dto";
-import { Uploader } from "@web/components/common/forms/Uploader";
+import { S3Uploader } from "@web/components/common/forms/S3Uploader";
 import { Button } from "@web/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@web/components/ui/card";
 import { Input } from "@web/components/ui/input";
@@ -135,7 +135,7 @@ export default function ShadcnDashboardPostView() {
                     Upload photo
                   </Button>
                   {showImageUrlUploader && (
-                    <Uploader
+                    <S3Uploader
                       onClose={() => setShowImageUrlUploader(false)}
                       onUpload={(file) => {}}
                       onComplete={(file) => {

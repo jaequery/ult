@@ -10,6 +10,20 @@ services:
       - ./postgres-data:/var/lib/postgresql/data
     networks:
       - app-network
+  localstack:
+    image: localstack/localstack:0.12.17.3
+    # volumes:
+    #   - ./localstack:/tmp/localstack
+    ports:
+      - 4566:4566
+    environment:
+      - SERVICES=s3
+      - USE_SSL=false
+      - DEFAULT_REGION=us-west-2
+      # - DATA_DIR=/tmp/localstack/data
+      # - DEBUG=1
+    networks:
+      - app-network
 
 networks:
   app-network:

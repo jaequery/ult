@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { OpenaiModule } from './openai/openai.module';
 import { PrismaService } from './prisma/prisma.service';
 import { TrpcModule } from './trpc/trpc.module';
+import { UploadModule } from './upload/upload.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -52,12 +53,19 @@ import { UserModule } from './user/user.module';
 
         // Pinecone config
         PINECONE_API_KEY: Joi.string(),
+
+        // AWS S3 config
+        AWS_REGION: Joi.string().default('us-east-1'),
+        AWS_S3_BUCKET: Joi.string().default('ult-uploads'),
+        AWS_ACCESS_KEY_ID: Joi.string().optional(),
+        AWS_SECRET_ACCESS_KEY: Joi.string().optional(),
       }),
     }),
     TrpcModule,
     UserModule,
     AuthModule,
     OpenaiModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PostUpdateDto, PostUpdateDtoType } from "@server/post/post.dto";
-import { Uploader } from "@web/components/common/forms/Uploader";
+import { S3Uploader } from "@web/components/common/forms/S3Uploader";
 import { useTrpc } from "@web/contexts/TrpcContext";
 import dynamic from "next/dynamic";
 import { useParams, useRouter } from "next/navigation";
@@ -130,7 +130,7 @@ export default function DashboardPostView() {
                       Upload photo
                     </button>
                     {showImageUrlUploader && (
-                      <Uploader
+                      <S3Uploader
                         onClose={() => {
                           setShowImageUrlUploader(false);
                         }}

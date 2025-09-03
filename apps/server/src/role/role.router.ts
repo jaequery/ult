@@ -3,7 +3,6 @@ import { RoleService } from '@server/role/role.service';
 import { TrpcExceptionFilter } from '@server/trpc/trpc.exception-handler';
 import { TrpcService } from '@server/trpc/trpc.service';
 import { Roles } from '@shared/interfaces';
-import type { AnyRouter } from '@trpc/server';
 import {
   RoleCreateDto,
   RoleFindAllDto,
@@ -19,9 +18,8 @@ export class RoleRouter {
     private readonly trpcService: TrpcService,
     private readonly roleService: RoleService,
   ) {}
-  apply(): { roleRouter: AnyRouter } {
-    return {
-      roleRouter: this.trpcService.trpc.router({
+  apply() {
+    const roleRouter = this.trpcService.trpc.router({
         // creates a role from dashboard
         create: this.trpcService
           .protectedProcedure([Roles.Admin])
@@ -67,7 +65,10 @@ export class RoleRouter {
           .query(async ({ input }) => {
             return this.roleService.findAll(input);
           }),
-      }),
-    };
+    });
+
+    return {
+      roleRouter,
+    } as const;
   }
 }

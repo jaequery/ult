@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { UserUpdateDto, UserUpdateDtoType } from "@server/user/user.dto";
 import { Roles } from "@shared/interfaces";
 import { useUserContext } from "@web/app/user/UserContext";
-import { Uploader } from "@web/components/common/forms/Uploader";
+import { S3Uploader } from "@web/components/common/forms/S3Uploader";
 import { Avatar, AvatarFallback, AvatarImage } from "@web/components/ui/avatar";
 import { Button } from "@web/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@web/components/ui/card";
@@ -132,7 +132,7 @@ export default function ShadcnDashboardUserView() {
                     Upload photo
                   </Button>
                   {showProfilePicUrlUploader && (
-                    <Uploader
+                    <S3Uploader
                       onClose={() => setShowProfilePicUrlUploader(false)}
                       onUpload={(file) => {
                         setValue("profilePicUrl", file.url);

@@ -3,7 +3,6 @@ import { PostService } from '@server/post/post.service';
 import { TrpcExceptionFilter } from '@server/trpc/trpc.exception-handler';
 import { TrpcService } from '@server/trpc/trpc.service';
 import { Roles } from '@shared/interfaces';
-import type { AnyRouter } from '@trpc/server';
 import {
   PostCommentCreateDto,
   PostCommentRemoveDto as PostCommentDeleteDto,
@@ -22,9 +21,8 @@ export class PostRouter {
     private readonly trpcService: TrpcService,
     private readonly postService: PostService,
   ) {}
-  apply(): { postRouter: AnyRouter } {
-    return {
-      postRouter: this.trpcService.trpc.router({
+  apply() {
+    const postRouter = this.trpcService.trpc.router({
         // creates a post from dashboard
         create: this.trpcService
           .protectedProcedure()
@@ -100,7 +98,10 @@ export class PostRouter {
               return this.postService.deleteComment(input, ctx.user);
             }
           }),
-      }),
-    };
+    });
+
+    return {
+      postRouter,
+    } as const;
   }
 }
