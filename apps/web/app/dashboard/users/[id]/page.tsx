@@ -1,12 +1,10 @@
-import DashboardLayout from "../../DashboardLayout";
+import ShadcnDashboardLayout from "../../ShadcnDashboardLayout";
 import DashboardUserView from "./DashboardUserView";
 
 export default function DashboardUserViewPage() {
   return (
-    <>
-      <DashboardLayout>
-        <DashboardUserView />
-      </DashboardLayout>
-    </>
+    <ShadcnDashboardLayout>
+      <DashboardUserView />
+    </ShadcnDashboardLayout>
   );
 }

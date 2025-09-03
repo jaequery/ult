@@ -1,12 +1,10 @@
-import DashboardLayout from "../DashboardLayout";
+import ShadcnDashboardLayout from "../ShadcnDashboardLayout";
 import DashboardUserList from "./DashboardUserList";
 
 export default function DashboardUserListPage() {
   return (
-    <>
-      <DashboardLayout>
-        <DashboardUserList />
-      </DashboardLayout>
-    </>
+    <ShadcnDashboardLayout>
+      <DashboardUserList />
+    </ShadcnDashboardLayout>
   );
 }
