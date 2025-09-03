@@ -1,10 +1,5 @@
-import PlainLayout from "@web/components/home/layouts/PlainLayout";
-import VerifyEmail from "./VerifyEmail";
+import ShadcnVerifyEmail from "./ShadcnVerifyEmail";
 
 export default function VerifyEmailPage() {
-  return (
-    <PlainLayout>
-      <VerifyEmail />
-    </PlainLayout>
-  );
+  return <ShadcnVerifyEmail />;
 }

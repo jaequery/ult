@@ -1,11 +1,5 @@
-import HomeLayout from "@web/components/home/layouts/HomeLayout";
-import ForgotPassword from "./ForgotPassword";
-import PlainLayout from "@web/components/home/layouts/PlainLayout";
+import ShadcnForgotPassword from "./ShadcnForgotPassword";
 
 export default function ForgotPasswordPage() {
-  return (
-    <PlainLayout>
-      <ForgotPassword />
-    </PlainLayout>
-  );
+  return <ShadcnForgotPassword />;
 }
