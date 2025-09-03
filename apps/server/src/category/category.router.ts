@@ -3,6 +3,7 @@ import { CategoryService } from '@server/category/category.service';
 import { TrpcExceptionFilter } from '@server/trpc/trpc.exception-handler';
 import { TrpcService } from '@server/trpc/trpc.service';
 import { Roles } from '@shared/interfaces';
+import type { AnyRouter } from '@trpc/server';
 import {
   CategoryCreateDto,
   CategoryFindAllDto,
@@ -18,7 +19,7 @@ export class CategoryRouter {
     private readonly trpcService: TrpcService,
     private readonly categoryService: CategoryService,
   ) {}
-  apply() {
+  apply(): { categoryRouter: AnyRouter } {
     return {
       categoryRouter: this.trpcService.trpc.router({
         // creates a category from dashboard
